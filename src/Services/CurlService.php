@@ -25,14 +25,15 @@ class CurlService extends AbstractController
         $url = $requestDto->getWebsiteUrl();
 
         $curl = new Curl();
-        $curl->get($url);
-
         $curl = $this->setCurlOptsForGetMethodScrapping($curl);
 
+        $curl->get($url);
         $curlResponse = $curl->getResponse();
+        $curl->close();
 
         $responseDto = new JobSearchResponseDTO();
         $responseDto->setCurlResponse($curlResponse);
+        $responseDto->setWebsiteUrl($url);
 
         return $responseDto;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Logic;
 
 use App\DTO\AjaxScrapDataRequestDTO;
 use App\DTO\JobSearchRequestDTO;
@@ -63,7 +63,7 @@ class ScrappingController extends AbstractController
         $responseDtos = [];
 
         foreach( $dtos as $dto ){
-            $responseDto = $this->scrapDataForWebsite($dto);
+            $responseDto    = $this->scrapDataForWebsite($dto);
             $responseDtos[] = $responseDto;
         }
 

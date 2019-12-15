@@ -25,6 +25,8 @@ class AjaxScrapDataRequestDTO extends AbstractController
     const KEY_HEADER_QUERY_SELECTOR = "headerQuerySelector";
     const KEY_LINK_QUERY_SELECTOR   = "linkQuerySelector";
 
+    const KEY_REGEX_FOR_LINKS_SKIPPING = 'regexForLinksSkipping';
+
     /**
      * Url pattern used to build final urls for scrapping
      * @info must contain the same pattern as in $pageOffsetReplacePattern
@@ -73,6 +75,13 @@ class AjaxScrapDataRequestDTO extends AbstractController
      * @var string $linkQuerySelector
      */
     private $linkQuerySelector = '';
+
+    /**
+     * This regex (if not empty) will be used to filter the unwanted scrapped links as often on such pages there are
+     * sponsored offers which pretty much are repeated on every pagination.
+     * @var string $regexForLinksSkipping
+     */
+    private $regexForLinksSkipping = '';
 
     /**
      * @return string
@@ -184,6 +193,33 @@ class AjaxScrapDataRequestDTO extends AbstractController
      */
     public function setLinkQuerySelector(string $linkQuerySelector): void {
         $this->linkQuerySelector = $linkQuerySelector;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRegexForLinksSkipping(): string {
+        return $this->regexForLinksSkipping;
+    }
+
+    /**
+     * @param string $regexForLinksSkipping
+     */
+    public function setRegexForLinksSkipping(string $regexForLinksSkipping): void {
+        $this->regexForLinksSkipping = $regexForLinksSkipping;
+    }
+
+    public function getDomainWithProtocol($withTrailingSlash = false){
+        $protocol = parse_url($this->urlPattern, PHP_URL_SCHEME);
+        $host     = parse_url($this->urlPattern, PHP_URL_HOST);
+
+        $domainWithProtocol = $protocol . '://' . $host;
+
+        if( $withTrailingSlash ){
+            $domainWithProtocol .= '/';
+        }
+
+        return $domainWithProtocol;
     }
 
     /**

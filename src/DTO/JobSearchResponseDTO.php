@@ -15,9 +15,16 @@ class JobSearchResponseDTO extends AbstractController
     const KEY_CURL_RESPONSE = "curlResponse";
 
     /**
+     * Content returned from scrapping
      * @var string $curlResponse
      */
     private $curlResponse = '';
+
+    /**
+     * Url of scrapped website
+     * @var string $websiteUrl
+     */
+    private $websiteUrl = '';
 
     /**
      * @return string
@@ -31,6 +38,20 @@ class JobSearchResponseDTO extends AbstractController
      */
     public function setCurlResponse(string $curlResponse): void {
         $this->curlResponse = $curlResponse;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWebsiteUrl(): string {
+        return $this->websiteUrl;
+    }
+
+    /**
+     * @param string $websiteUrl
+     */
+    public function setWebsiteUrl(string $websiteUrl): void {
+        $this->websiteUrl = $websiteUrl;
     }
 
 }
