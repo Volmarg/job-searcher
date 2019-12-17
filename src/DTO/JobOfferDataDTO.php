@@ -28,6 +28,8 @@ class JobOfferDataDTO {
 
     private $isRejected = false;
 
+    private $rejectionPercentage = 0;
+
     /**
      * @return string
      */

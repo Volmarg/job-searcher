@@ -2,6 +2,7 @@
 
 namespace App\Controller\Logic;
 
+use App\Controller\Application;
 use App\DTO\AjaxScrapDataRequestDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DomCrawler\Crawler;
@@ -49,6 +50,11 @@ class DomCrawlerController extends AbstractController
      */
     private $crawler;
 
+    /**
+     * @var Application $app
+     */
+    private $app;
+
     public function setParamsFromAjaxScrapDataRequestDto(AjaxScrapDataRequestDTO $ajaxScrapDataRequestDTO): void{
         $this->linkQuerySelector     = $ajaxScrapDataRequestDTO->getLinkQuerySelector();
         $this->bodyQuerySelector     = $ajaxScrapDataRequestDTO->getBodyQuerySelector();
@@ -64,6 +70,10 @@ class DomCrawlerController extends AbstractController
         $this->text = $text;
     }
 
+    public function __construct(Application $app) {
+        $this->app = $app;
+    }
+
     /**
      * This function initialize the new Crawler instance
      */
@@ -75,6 +85,7 @@ class DomCrawlerController extends AbstractController
      * This function will get links for every text in response dto
      * @param array $responseDtos
      * @return array
+     * @throws \Exception
      */
     public function getLinksFromJobSearchResponseDtos(array $responseDtos): array {
 
@@ -96,13 +107,15 @@ class DomCrawlerController extends AbstractController
 
     /**
      * This function will get the offer body from the text - via query selector
+     * @throws \Exception
      */
     public function getOfferBodyFromText(){
+
+        $this->validateCrawler();
 
         $body           = '';
         $crawlerResults = $this->crawler->filter($this->bodyQuerySelector);
 
-        //todo error if crawler or text are not initialized
         /**
          * @var \DOMElement $crawlerResult;
          */
@@ -121,13 +134,14 @@ class DomCrawlerController extends AbstractController
 
     /**
      * This function will get the offer header from the text - via query selector
+     * @throws \Exception
      */
     public function getOfferHeaderFromText(){
 
+        $this->validateCrawler();
+
         $header         = '';
         $crawlerResults = $this->crawler->filter($this->headerQuerySelector);
-
-        //todo error if crawler or text are not initialized
 
         /**
          * @var \DOMElement $crawlerResult;
@@ -145,11 +159,12 @@ class DomCrawlerController extends AbstractController
     }
 
     /**
+     * This function will attempt to extract the links to direct offer page (from search result - based on query selectors)
      * @return array
+     * @throws \Exception
      */
     private function getLinksFromText(){
-
-        //todo error if crawler or text are not initialized
+        $this->validateCrawler();
 
         $links          = [];
         $crawlerResults = $this->crawler->filter($this->linkQuerySelector);
@@ -196,7 +211,14 @@ class DomCrawlerController extends AbstractController
      * - is crawler initialized?
      * - is text not empty?
      */
-    private function validateCrawlerAndText(){
+    private function validateCrawler(){
+
+        if( empty($this->crawler) ){
+            $message = $this->app->getTranslator()->trans('domCrawlerController.crawlerWasNotInitialized');
+
+            $this->app->getLogger()->critical($message);
+            throw new \Exception($message, 500);
+        }
 
     }
 }

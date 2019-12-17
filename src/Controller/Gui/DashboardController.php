@@ -53,6 +53,7 @@ class DashboardController extends AbstractController
      * @param Request $request
      * @return array|string[]
      * @throws \ErrorException
+     * @throws \Exception
      */
     public function ajaxScrapData(Request $request) {
 
@@ -147,9 +148,10 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * This function will build the @see JobOfferDataDTO
-     * @param JobSearchResponseDTO[] $jobSearchResponseDtos
+     * This function will build the @param JobSearchResponseDTO[] $jobSearchResponseDtos
      * @return array
+     * @throws \Exception
+     * @see JobOfferDataDTO
      */
     private function buildJobOfferDataDtosFromJobSearchResponseDtos(array $jobSearchResponseDtos): array {
 
@@ -164,7 +166,7 @@ class DashboardController extends AbstractController
             $this->domCrawlerController->initCrawler();
 
             $offerPageHeader = $this->domCrawlerController->getOfferHeaderFromText();
-            $offerPageBody   = $this->domCrawlerController->getOfferBodyFromText(); // todo: is empty
+            $offerPageBody   = $this->domCrawlerController->getOfferBodyFromText();
 
             $jobOfferDataDto = new JobOfferDataDTO();
             $jobOfferDataDto->setOfferLink($offerLink);

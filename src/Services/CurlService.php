@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Controller\Application;
 use App\DTO\JobSearchRequestDTO;
 use App\DTO\JobSearchResponseDTO;
 use Curl\Curl;
@@ -14,6 +15,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class CurlService extends AbstractController
 {
+
+    /**
+     * @var Application $app
+     */
+    private $app;
+
+    public function __construct(Application $app) {
+        $this->app = $app;
+    }
 
     /**
      * @param JobSearchRequestDTO $requestDto
@@ -34,6 +44,8 @@ class CurlService extends AbstractController
         $responseDto = new JobSearchResponseDTO();
         $responseDto->setCurlResponse($curlResponse);
         $responseDto->setWebsiteUrl($url);
+
+        $this->validateCurlResponse($curlResponse, $url);
 
         return $responseDto;
     }
@@ -56,6 +68,25 @@ class CurlService extends AbstractController
         $curl->setOpt(CURLOPT_COOKIEFILE, '/var/www/ip4.x/file/tmp');
 
         return $curl;
+    }
+
+
+    /**
+     * This function will check if the text used for dom crawling is empty
+     * It might be empty, as url can be invalid or something but it needs to be logged then
+     * @param string $curlResponse
+     * @param string $websiteUrl $text
+     */
+    private function validateCurlResponse(string $curlResponse, string $websiteUrl): void {
+
+        if( empty($curlResponse) ){
+            $message = $this->app->getTranslator()->trans('domCrawlerController.textIsAnEmptyString');
+
+            $this->app->getLogger()->info($message, [
+                "pageUrl" => $websiteUrl
+            ]);
+        }
+
     }
 
 }

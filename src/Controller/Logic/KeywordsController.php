@@ -13,4 +13,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class KeywordsController extends AbstractController
 {
 
+    private $foundRejectedKeywords = [];
+
+    private $fpundAcceptedKeywords = [];
+
+
 }

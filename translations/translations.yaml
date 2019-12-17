@@ -1,1 +1,5 @@
 missingRequestParameterWithName: "Missing request parameter with name:"
+
+domCrawlerController:
+  crawlerWasNotInitialized: "Crawler for DomCrawlerController was not initialized"
+  textIsAnEmptyString: "Text is an empty string"
