@@ -2,6 +2,8 @@
 
 namespace App\Controller\Gui;
 
+use App\Controller\Logic\DecisionController;
+use App\Controller\Logic\KeywordsController;
 use App\Controller\Logic\ScrappingController;
 use App\Controller\Logic\DomCrawlerController;
 use App\DTO\AjaxScrapDataRequestDTO;
@@ -17,9 +19,9 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class DashboardController
  * @package App\Controller\Gui
  */
-class DashboardController extends AbstractController
+class JobOfferScrappingController extends AbstractController
 {
-    const MAIN_PAGE_TWIG_TPL = "dashboard/index.html.twig";
+    const MAIN_PAGE_TWIG_TPL = "dashboard/index.html.twig"; //todo: change
 
     /**
      * @var ScrappingController $scrappingController
@@ -31,9 +33,26 @@ class DashboardController extends AbstractController
      */
     private $domCrawlerController;
 
-    public function __construct(ScrappingController $scrappingController, DomCrawlerController $textFilterController) {
+    /**
+     * @var KeywordsController $keywordsController
+     */
+    private $keywordsController;
+
+    /**
+     * @var DecisionController $decisionController
+     */
+    private $decisionController;
+
+    public function __construct(
+        ScrappingController     $scrappingController,
+        DomCrawlerController    $textFilterController,
+        KeywordsController      $keywordsController,
+        DecisionController      $decisionController
+    ) {
         $this->scrappingController  = $scrappingController;
         $this->domCrawlerController = $textFilterController;
+        $this->keywordsController   = $keywordsController;
+        $this->decisionController   = $decisionController;
     }
 
     /**
@@ -48,8 +67,8 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * //todo: add ajax route
      * This function handles the scrapping logic for ajax call
+     * @Route("/ajax/scrapa-data-for-request", name="ajax_scrap_data_for_request")
      * @param Request $request
      * @return array|string[]
      * @throws \ErrorException
@@ -71,6 +90,8 @@ class DashboardController extends AbstractController
         $jobSearchResponseDtosForOfferPages = $this->scrappingController->scrapDataForWebsites($jobSearchRequestsDtosForOfferPages);
 
         $jobOfferDataDtos = $this->buildJobOfferDataDtosFromJobSearchResponseDtos($jobSearchResponseDtosForOfferPages);
+        $jobOfferDataDtos = $this->searchForKeywordsInJobOffersData($jobOfferDataDtos, $ajaxScrapDataRequestDTO);
+        $jobOfferDataDtos = $this->makeDecisionsFroJobOffersData($jobOfferDataDtos);
 
         var_dump($jobOfferDataDtos);
 
@@ -78,6 +99,32 @@ class DashboardController extends AbstractController
         //return new JsonResponse($links);
     }
 
+    /**
+     * @param JobOfferDataDTO[] $jobOfferDataDtos
+     * @param AjaxScrapDataRequestDTO $ajaxScrapDataRequestDTO
+     * @return array
+     */
+    private function searchForKeywordsInJobOffersData(array $jobOfferDataDtos, AjaxScrapDataRequestDTO $ajaxScrapDataRequestDTO): array {
+
+        foreach( $jobOfferDataDtos as &$jobOfferDataDto ){
+            $this->keywordsController->findKeywords($jobOfferDataDto, $ajaxScrapDataRequestDTO);
+        }
+
+        return $jobOfferDataDtos;
+    }
+
+    /**
+     * @param JobOfferDataDTO[] $jobOfferDataDtos
+     * @return array
+     */
+    private function makeDecisionsFroJobOffersData(array $jobOfferDataDtos): array {
+
+        foreach( $jobOfferDataDtos as &$jobOfferDataDto ){
+            $this->decisionController->makeDecision($jobOfferDataDto);
+        }
+
+        return $jobOfferDataDtos;
+    }
     /**
      * This function will attempt build ajax request dto from request
      * @param Request $request
@@ -96,6 +143,9 @@ class DashboardController extends AbstractController
         $linkQuerySelector   = '';
 
         $regexForLinksSkipping = '';
+
+        $acceptableKeywords = [];
+        $rejectableKeywords = [];
 
         if( $request->request->has(AjaxScrapDataRequestDTO::KEY_END_PAGE_OFFSET) ) {
             $endPageOffset = $request->request->get(AjaxScrapDataRequestDTO::KEY_END_PAGE_OFFSET);
@@ -133,6 +183,14 @@ class DashboardController extends AbstractController
             $regexForLinksSkipping = $request->request->get(AjaxScrapDataRequestDTO::KEY_REGEX_FOR_LINKS_SKIPPING);
         }
 
+        if( $request->request->has(AjaxScrapDataRequestDTO::KEY_ACCEPTED_KEYWORDS) ) {
+            $acceptableKeywords = $request->request->get(AjaxScrapDataRequestDTO::KEY_ACCEPTED_KEYWORDS);
+        }
+
+        if( $request->request->has(AjaxScrapDataRequestDTO::KEY_REJECTED_KEYWORDS) ) {
+            $rejectableKeywords = $request->request->get(AjaxScrapDataRequestDTO::KEY_REJECTED_KEYWORDS);
+        }
+
         $ajaxScrapDataRequestDTO = new AjaxScrapDataRequestDTO();
         $ajaxScrapDataRequestDTO->setEndPageOffset($endPageOffset);
         $ajaxScrapDataRequestDTO->setStartPageOffset($startPageOffset);
@@ -143,6 +201,8 @@ class DashboardController extends AbstractController
         $ajaxScrapDataRequestDTO->setBodyQuerySelector($bodyQuerySelector);
         $ajaxScrapDataRequestDTO->setHeaderQuerySelector($headerQuerySelector);
         $ajaxScrapDataRequestDTO->setRegexForLinksSkipping($regexForLinksSkipping);
+        $ajaxScrapDataRequestDTO->setAcceptedKeywords($acceptableKeywords);
+        $ajaxScrapDataRequestDTO->setRejectedKeywords($rejectableKeywords);
 
         return $ajaxScrapDataRequestDTO;
     }
@@ -186,7 +246,7 @@ class DashboardController extends AbstractController
     public function tests(){
 
         $request = new Request();
-        $request->request->set(AjaxScrapDataRequestDTO::KEY_END_PAGE_OFFSET, 20);
+        $request->request->set(AjaxScrapDataRequestDTO::KEY_END_PAGE_OFFSET, 10);
         $request->request->set(AjaxScrapDataRequestDTO::KEY_START_PAGE_OFFSET,10);
         $request->request->set(AjaxScrapDataRequestDTO::KEY_PAGE_OFFSET_STEPS, 10);
         $request->request->set(AjaxScrapDataRequestDTO::KEY_PAGE_OFFSET_REPLACE_PATTERN, "{test}");
@@ -197,6 +257,9 @@ class DashboardController extends AbstractController
         $request->request->set(AjaxScrapDataRequestDTO::KEY_LINK_QUERY_SELECTOR, '.result .title .jobtitle ');
 
         $request->request->set(AjaxScrapDataRequestDTO::KEY_REGEX_FOR_LINKS_SKIPPING, '\/pagead\/');
+
+        $request->request->set(AjaxScrapDataRequestDTO::KEY_ACCEPTED_KEYWORDS, ["php", "css", "js"]);
+        $request->request->set(AjaxScrapDataRequestDTO::KEY_REJECTED_KEYWORDS, ["deutsche", "sprache", "c#"]);
 
         $scrappedData = $this->ajaxScrapData($request);
 

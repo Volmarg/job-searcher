@@ -18,16 +18,18 @@ class DecisionController extends AbstractController
     const STATUS_ACCEPTED           = "ACCEPTED";
     const STATUS_PARTIALLY_ACCEPTED = "PARTIALLY_ACCEPTED";
 
-    const REJECTION_REASON_NO_HEADER                            = "";
-    const REJECTION_REASON_NO_BODY                              = "";
-    const REJECTION_REASON_NO_KEYWORDS_FOUND                    = "";
-    const REJECTION_REASON_TO_MANY_REJECTED_KEYWORDS_WERE_FOUND = "";
+    const REJECTION_REASON_NO_HEADER                            = "Offer header is empty";
+    const REJECTION_REASON_NO_BODY                              = "Offer body is empty";
+    const REJECTION_REASON_NO_KEYWORDS_FOUND                    = "No matching keywords were found for this offer";
+    const REJECTION_REASON_TO_MANY_REJECTED_KEYWORDS_WERE_FOUND = "To many rejected keywords are present";
+
+    const ACCEPTANCE_REASON_INITIAL = "Initially accepted";
 
     /**
      * If the percentage of accepted keywords in all found keywords is equal to this value then it will be partially accepted
      * @var int
      */
-    private $partialAcceptancePercentTreshold = 70;
+    private $partialAcceptancePercentThreshold = 70;
 
     public function makeDecision(JobOfferDataDTO $jobOfferDataDTO): JobOfferDataDTO {
         $jobOfferDataDTO = $this->voteForRejection($jobOfferDataDTO);
@@ -64,7 +66,7 @@ class DecisionController extends AbstractController
             $isReasonSet = true;
         }
 
-        if( !$isNoKeywordFound && !$isReasonSet ){
+        if( $isNoKeywordFound && !$isReasonSet ){
             $jobOfferDataDTO->setRejectReason(self::REJECTION_REASON_NO_KEYWORDS_FOUND);
             $isReasonSet = true;
         }
@@ -108,9 +110,15 @@ class DecisionController extends AbstractController
         $rejectedKeywordsCount = count($rejectedKeywords);
         $acceptedKeywordsCount = count($acceptedKeywords);
 
+        $divideBy = ( $acceptedKeywordsCount + $rejectedKeywordsCount );
+
+        if( 0 === $divideBy){
+            return false;
+        }
+
         $acceptedKeywordsPercentage = $acceptedKeywordsCount / ( $acceptedKeywordsCount + $rejectedKeywordsCount ) * 100;
 
-        return !( $acceptedKeywordsPercentage >= $this->partialAcceptancePercentTreshold) ;
+        return !( $acceptedKeywordsPercentage >= $this->partialAcceptancePercentThreshold) ;
     }
 
     /**

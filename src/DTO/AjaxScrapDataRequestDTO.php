@@ -27,6 +27,9 @@ class AjaxScrapDataRequestDTO extends AbstractController
 
     const KEY_REGEX_FOR_LINKS_SKIPPING = 'regexForLinksSkipping';
 
+    const KEY_ACCEPTED_KEYWORDS = "acceptedKeywords";
+    const KEY_REJECTED_KEYWORDS = "rejectedKeywords";
+
     /**
      * Url pattern used to build final urls for scrapping
      * @info must contain the same pattern as in $pageOffsetReplacePattern
@@ -82,6 +85,18 @@ class AjaxScrapDataRequestDTO extends AbstractController
      * @var string $regexForLinksSkipping
      */
     private $regexForLinksSkipping = '';
+
+    /**
+     * These are acceptable keywords
+     * @var array $acceptedKeywords
+     */
+    private $acceptedKeywords = [];
+
+    /**
+     * These ar rejectable keywords
+     * @var array $rejectedKeywords
+     */
+    private $rejectedKeywords = [];
 
     /**
      * @return string
@@ -220,6 +235,34 @@ class AjaxScrapDataRequestDTO extends AbstractController
         }
 
         return $domainWithProtocol;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAcceptedKeywords(): array {
+        return $this->acceptedKeywords;
+    }
+
+    /**
+     * @param array $acceptedKeywords
+     */
+    public function setAcceptedKeywords(array $acceptedKeywords): void {
+        $this->acceptedKeywords = $acceptedKeywords;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRejectedKeywords(): array {
+        return $this->rejectedKeywords;
+    }
+
+    /**
+     * @param array $rejectedKeywords
+     */
+    public function setRejectedKeywords(array $rejectedKeywords): void {
+        $this->rejectedKeywords = $rejectedKeywords;
     }
 
     /**

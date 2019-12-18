@@ -3,6 +3,8 @@
 
 namespace App\DTO;
 
+use App\Controller\Logic\DecisionController;
+
 /**
  * This class contains data of job offer after all filtering and checking keywords
  * Class JobOfferDataDTO
@@ -22,7 +24,7 @@ class JobOfferDataDTO {
 
     private $acceptedKeywords = [];
 
-    private $acceptReason = '';
+    private $acceptReason = DecisionController::ACCEPTANCE_REASON_INITIAL;
 
     private $rejectReason = '';
 
@@ -156,4 +158,7 @@ class JobOfferDataDTO {
         $this->isRejected = $isRejected;
     }
 
+    public function isAccepted(): bool {
+        return !$this->isRejected;
+    }
 }
