@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Controller\Logic;
+namespace App\Controller\Logic\JobOffer;
 
 use App\DTO\JobOfferDataDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * This class is responsible for handling the logic of decisions which mark offer as proper or not
+ * This class is responsible for handling the logic of decisions which mark offer as accepted/rejected
  * Class DecisionController
  * @package App\Controller\Logic
  */

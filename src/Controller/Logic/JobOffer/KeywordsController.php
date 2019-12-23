@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Logic;
+namespace App\Controller\Logic\JobOffer;
 
 use App\DTO\AjaxScrapDataRequestDTO;
 use App\DTO\JobOfferDataDTO;
@@ -8,25 +8,32 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * This class handles the logic of searching for given keywords in texts
+ * This class handles the logic of searching and marking for given keywords in texts
  * Class KeywordsController
  * @package App\Controller\Logic
  */
 class KeywordsController extends AbstractController
 {
-    public function findKeywords(JobOfferDataDTO $jobOfferDataDTO, AjaxScrapDataRequestDTO $ajaxScrapDataRequestDTO): JobOfferDataDTO {
+    /**
+     * @param JobOfferDataDTO $jobOfferDataDTO
+     * @param AjaxScrapDataRequestDTO $ajaxScrapDataRequestDTO
+     * @return JobOfferDataDTO
+     */
+    public function findKeywordsInText(JobOfferDataDTO $jobOfferDataDTO, AjaxScrapDataRequestDTO $ajaxScrapDataRequestDTO): JobOfferDataDTO {
         $foundAcceptedKeywords = $this->findAcceptedKeywords($jobOfferDataDTO, $ajaxScrapDataRequestDTO);
         $foundRejectedKeywords = $this->findRejectedKeywords($jobOfferDataDTO, $ajaxScrapDataRequestDTO);
 
         $jobOfferDataDTO->setRejectedKeywords($foundRejectedKeywords);
         $jobOfferDataDTO->setAcceptedKeywords($foundAcceptedKeywords);
 
-        $jobOfferDataDTO = $this->markKeywordsInText($jobOfferDataDTO);
-
         return $jobOfferDataDTO;
     }
 
-    private function markKeywordsInText(JobOfferDataDTO $jobOfferDataDTO){
+    /**
+     * @param JobOfferDataDTO $jobOfferDataDTO
+     * @return JobOfferDataDTO
+     */
+    public function markKeywordsInText(JobOfferDataDTO $jobOfferDataDTO){
         $foundAcceptedKeywords = $jobOfferDataDTO->getAcceptedKeywords();
         $foundRejectedKeywords = $jobOfferDataDTO->getRejectedKeywords();
 
@@ -60,8 +67,8 @@ class KeywordsController extends AbstractController
         $body = $jobOfferDataDTO->getDescription();
         $head = $jobOfferDataDTO->getHeader();
 
-        $foundRejectedKeywordsInBody = $this->findKeywordsInText($body, $rejectedKeywords);
-        $foundRejectedKeywordsInHead = $this->findKeywordsInText($head, $rejectedKeywords);
+        $foundRejectedKeywordsInBody = $this->findKeywords($body, $rejectedKeywords);
+        $foundRejectedKeywordsInHead = $this->findKeywords($head, $rejectedKeywords);
 
         $foundRejectedKeywords = array_merge($foundRejectedKeywordsInBody, $foundRejectedKeywordsInHead);
         $foundRejectedKeywords = array_unique($foundRejectedKeywords);
@@ -80,8 +87,8 @@ class KeywordsController extends AbstractController
         $body = $jobOfferDataDTO->getDescription();
         $head = $jobOfferDataDTO->getHeader();
 
-        $foundAcceptedKeywordsInBody = $this->findKeywordsInText($body, $acceptedKeywords);
-        $foundAcceptedKeywordsInHead = $this->findKeywordsInText($head, $acceptedKeywords);
+        $foundAcceptedKeywordsInBody = $this->findKeywords($body, $acceptedKeywords);
+        $foundAcceptedKeywordsInHead = $this->findKeywords($head, $acceptedKeywords);
 
         $foundAcceptedKeywords = array_merge($foundAcceptedKeywordsInBody, $foundAcceptedKeywordsInHead);
         $foundAcceptedKeywords = array_unique($foundAcceptedKeywords);
@@ -94,7 +101,7 @@ class KeywordsController extends AbstractController
      * @param array $keywords
      * @return array
      */
-    private function findKeywordsInText(string $text, array $keywords): array {
+    private function findKeywords(string $text, array $keywords): array {
         $foundKeywords = [];
 
         foreach($keywords as $keyword){

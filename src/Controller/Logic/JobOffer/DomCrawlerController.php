@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Logic;
+namespace App\Controller\Logic\JobOffer;
 
 use App\Controller\Application;
 use App\DTO\AjaxScrapDataRequestDTO;

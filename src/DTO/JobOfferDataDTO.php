@@ -3,7 +3,7 @@
 
 namespace App\DTO;
 
-use App\Controller\Logic\DecisionController;
+use App\Controller\Logic\JobOffer\DecisionController;
 
 /**
  * This class contains data of job offer after all filtering and checking keywords
@@ -12,24 +12,54 @@ use App\Controller\Logic\DecisionController;
  */
 class JobOfferDataDTO {
 
+    /**
+     * @var string $header
+     */
     private $header = '';
 
+    /**
+     * @var string $description
+     */
     private $description = '';
 
+    /**
+     * @var string $offerLink
+     */
     private $offerLink = '';
 
+    /**
+     * @var array $allFoundKeywords
+     */
     private $allFoundKeywords = [];
 
+    /**
+     * @var array $rejectedKeywords
+     */
     private $rejectedKeywords = [];
 
+    /**
+     * @var array $acceptedKeywords
+     */
     private $acceptedKeywords = [];
 
+    /**
+     * @var string $acceptReason
+     */
     private $acceptReason = DecisionController::ACCEPTANCE_REASON_INITIAL;
 
+    /**
+     * @var string $rejectReason
+     */
     private $rejectReason = '';
 
+    /**
+     * @var bool $isRejected
+     */
     private $isRejected = false;
 
+    /**
+     * @var int $rejectionPercentage
+     */
     private $rejectionPercentage = 0;
 
     /**

@@ -21,6 +21,11 @@ class Application extends AbstractController
     private $translator;
 
     /**
+     * @var Repositories $repositories
+     */
+    private $repositories;
+
+    /**
      * @return LoggerInterface
      */
     public function getLogger(): LoggerInterface {
@@ -34,10 +39,14 @@ class Application extends AbstractController
         return $this->translator;
     }
 
-    public function __construct(TranslatorInterface $translator, LoggerInterface $logger) {
-        $this->translator = $translator;
-        $this->logger     = $logger;
+    public function getRepositories(): Repositories {
+        return $this->repositories;
     }
 
+    public function __construct(TranslatorInterface $translator, LoggerInterface $logger, Repositories $repositories) {
+        $this->repositories = $repositories;
+        $this->translator   = $translator;
+        $this->logger       = $logger;
+    }
 
 }
