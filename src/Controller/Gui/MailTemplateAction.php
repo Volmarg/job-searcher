@@ -95,7 +95,7 @@ class MailTemplateAction extends AbstractController
     }
 
     /**
-     * @Route("mail-template/ajax/remove/{id}"
+     * @Route("mail-template/ajax/remove/{id}", name="mail_template_ajax_remove")
      * @param string $id
      * @throws ORMException
      */

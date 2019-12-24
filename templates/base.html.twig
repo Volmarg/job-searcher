@@ -1,12 +1,56 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+<!--[if lt IE 7 ]>              <html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]>                 <html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]>                 <html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--> <html lang="en">                <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>
+        {{ "page.title" | trans }}
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {# Bootadmin core css #}
+    <link rel="stylesheet" href="/bootadmin/style/vendor/library.min.css">
+    <link rel="stylesheet" href="/bootadmin/style/vendor/jqueryui-flat/jquery-ui.min.css">
+    <link rel="stylesheet" href="/css/libs/fontawesome/all.css">
+    <link rel="stylesheet" href="/bootadmin/style/core/style.min.css">
+
+    <link rel="shortcut icon" href="/bootadmin/images/favicon/favicon.ico">
+
+    {# Js Libs #}
+    <script src="js/libs/jQuery/jquery-3.4.1.min.js"></script>
+
+</head>
+
+<body id="landing" class="sidebar-open">
+<div class="loading">
+    <div class="loading-center"><img src="/bootadmin/images/loading/map.gif" alt="Loading" /></div>
+</div>
+<div class="page-container animsition">
+    <div id="dashboardPage">
+
+        <!-- Main Menu -->
+        {% include 'components/topbar.twig' %}
+        {% include 'components/sidebar.twig' %}
+        <main>
+            <div class="container-fluid main-container-wrapper">
+                {% include 'modules/job-search/job-search.twig' %}
+            </div>
+            {% include 'components/fotter.twig' %}
+        </main>
+    </div>
+
+</div>
+
+<!-- Bootadmin core js -->
+<script src="/js/libs/jQueryUi/jquery-ui.min.js"></script>
+<script src="/js/libs/popper/popper.min.js"></script>
+<script src="/bootadmin/scripts/vendor/bootstrap.min.js"></script>
+<script src="/bootadmin/scripts/vendor/library.min.js"></script>
+<script src="/bootadmin/scripts/core/main.js"></script>
+
+</body>
 </html>

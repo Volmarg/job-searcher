@@ -32,7 +32,7 @@ class SearchSettingsAction extends AbstractController
 
     /**
      * This function handles saving new/updating existing record in DB via ajax call
-     * @Route("search-settings/ajax/save/{?id}" name="search_settings_ajax_save")
+     * @Route("search-settings/ajax/save/{?id}", name="search_settings_ajax_save")
      * @param Request $request
      * @param string|null $id
      * @throws ORMException
@@ -105,7 +105,7 @@ class SearchSettingsAction extends AbstractController
 
     /**
      * This function handles removing settings via ajax call
-     * @Route("search-settings/ajax/remove/{id}" name="search_settings_ajax_remove")
+     * @Route("search-settings/ajax/remove/{id}", name="search_settings_ajax_remove")
      * @param Request $request
      * @param string $id
      * @return JsonResponse
