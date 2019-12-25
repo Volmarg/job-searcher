@@ -9,6 +9,25 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SearchSetting
 {
+
+    const KEY_URL_PATTERN                 = 'urlPattern';
+
+    const KEY_START_PAGE_OFFSET           = 'startPageOffset';
+    const KEY_END_PAGE_OFFSET             = 'endPageOffset';
+
+    const KEY_PAGE_OFFSET_STEPS           = 'pageOffsetSteps';
+
+    const KEY_PAGE_OFFSET_REPLACE_PATTERN = 'pageOffsetReplacePattern';
+
+    const KEY_BODY_QUERY_SELECTOR   = "bodyQuerySelector";
+    const KEY_HEADER_QUERY_SELECTOR = "headerQuerySelector";
+    const KEY_LINK_QUERY_SELECTOR   = "linkQuerySelector";
+
+    const KEY_LINKS_SKIPPING_REGEX = 'linksSkippingRegex';
+
+    const KEY_ACCEPTED_KEYWORDS = "acceptedKeywords";
+    const KEY_REJECTED_KEYWORDS = "rejectedKeywords";
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

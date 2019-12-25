@@ -2,9 +2,8 @@
 
 namespace App\Controller\Gui;
 
-use App\Controller\Logic\JobOffer\DecisionController;
+use App\Controller\Application;
 use App\Controller\Logic\JobOffer\JobOfferScrappingController;
-use App\Controller\Logic\JobOffer\KeywordsController;
 use App\Controller\Logic\JobOffer\ScrappingController;
 use App\Controller\Logic\JobOffer\DomCrawlerController;
 use App\DTO\AjaxScrapDataRequestDTO;
@@ -37,11 +36,18 @@ class JobOfferScrappingAction extends AbstractController
      */
     private $jobOfferScrappingController;
 
+    /**
+     * @var Application $app
+     */
+    private $app;
+
     public function __construct(
         ScrappingController         $scrappingController,
         DomCrawlerController        $textFilterController,
-        JobOfferScrappingController $jobOfferScrappingController
+        JobOfferScrappingController $jobOfferScrappingController,
+        Application                 $app
     ) {
+        $this->app                          = $app;
         $this->scrappingController          = $scrappingController;
         $this->domCrawlerController         = $textFilterController;
         $this->jobOfferScrappingController  = $jobOfferScrappingController;
@@ -52,8 +58,15 @@ class JobOfferScrappingAction extends AbstractController
      */
     public function index()
     {
+        $jobOfferScrappingForm = $this->app->getForms()->getJobOfferScrappingForm();
+        $searchSettings        = $this->app->getRepositories()->searchSettingsRepository()->findAll();
 
-        $data = [];
+        $data = [
+            "jobOfferScrappingForm" => $jobOfferScrappingForm->createView(),
+            "searchSettings"        => $searchSettings,
+        ];
+
+
 
         return $this->render(self::MAIN_PAGE_TWIG_TPL, $data);
     }

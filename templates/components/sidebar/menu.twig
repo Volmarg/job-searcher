@@ -1,8 +1,19 @@
+{% set dialogsController             = "App\\Controller\\DialogsController::" %}
+{% set TEMPLATE_TYPE_SEARCH_SETTINGS = constant(dialogsController ~ 'TEMPLATE_TYPE_SEARCH_SETTINGS') %}
+
 <ul id="sidebarCookie">
     <li class="spacer"></li>
     <li class="spacer"></li>
     <li class="nav-item">
-        <a class="" href="#">
+        <a class="" href="#"
+           {# bootbox dialog data#}
+           data-call-bootbox-dialog="true"
+           data-bootbox-size="{{ BOOTBOX_SIZE_LARGE }}"
+           data-bootbox-type="{{ BOOTBOX_TYPE_ALERT }}"
+           data-bootbox-message="Move me to translation file"
+           data-bootbox-callback-type="{{ BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE }}"
+           data-bootbox-callback-type-template-name="{{ TEMPLATE_TYPE_SEARCH_SETTINGS }}"
+        >
             <i class="feather icon-sidebar"></i>
             <span class="menu-title">{{ 'menu.searchSettings' | trans }}</span>
         </a>

@@ -1,0 +1,8 @@
+/* Job search form*/
+#jobSearchWrapper form .form-group {
+    padding: 10px;
+}
+
+* {
+    font-size: 13px;
+}

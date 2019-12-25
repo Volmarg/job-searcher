@@ -4,8 +4,7 @@ namespace App\Controller\Gui;
 
 use App\Controller\Application;
 use App\Controller\ConstantsController;
-use App\Controller\Logic\JobOffer\JobOfferScrappingController;
-use App\Entity\SearchSetting;
+use App\Controller\Utils;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,46 +31,48 @@ class SearchSettingsAction extends AbstractController
 
     /**
      * This function handles saving new/updating existing record in DB via ajax call
-     * @Route("search-settings/ajax/save/{?id}", name="search_settings_ajax_save")
+     * @Route("/search-settings/ajax/save", name="search_settings_ajax_save", methods={"POST"})
      * @param Request $request
-     * @param string|null $id
+     * @return JsonResponse
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function ajaxSaveSettings(Request $request, ?string $id) {
-        $ajaxScrapDataRequestDTO = JobOfferScrappingController::buildAjaxScrapDataRequestDTOFromRequest($request);
+    public function ajaxSaveSettings(Request $request): JsonResponse {
 
-        if( !empty($id) ) {
-            $setting = $this->app->getRepositories()->searchSettingsRepository()->find($id);
-        } else {
-            $setting = new SearchSetting();
+        if( !$request->request->has(ConstantsController::KEY_REQUEST_NAME) ){
+            $message = $this->app->getTranslator()->trans("request.missingKey") . ConstantsController::KEY_REQUEST_NAME;
+            return Utils::buildAjaxResponse($message, true, 500);
         }
 
-        $rejectedKeywords         = $ajaxScrapDataRequestDTO->getRejectedKeywords();
-        $acceptedKeywords         = $ajaxScrapDataRequestDTO->getAcceptedKeywords();
-        $regexForLinksScrapping   = $ajaxScrapDataRequestDTO->getRegexForLinksSkipping();
-        $headerQuerySelector      = $ajaxScrapDataRequestDTO->getHeaderQuerySelector();
-        $bodyQuerySelector        = $ajaxScrapDataRequestDTO->getBodyQuerySelector();
-        $linkQuerySelector        = $ajaxScrapDataRequestDTO->getLinkQuerySelector();
-        $urlPattern               = $ajaxScrapDataRequestDTO->getUrlPattern();
-        $pageOffsetReplacePattern = $ajaxScrapDataRequestDTO->getPageOffsetReplacePattern();
-        $pageOffsetSteps          = $ajaxScrapDataRequestDTO->getPageOffsetSteps();
-        $startPageOffset          = $ajaxScrapDataRequestDTO->getStartPageOffset();
-        $endPageOffset            = $ajaxScrapDataRequestDTO->getEndPageOffset();
+        $id   = $request->request->get(ConstantsController::KEY_REQUEST_ID, "");
+        $name = $request->request->get(ConstantsController::KEY_REQUEST_NAME);
 
-        $setting->setRejectedKeywords($rejectedKeywords);
-        $setting->setAcceptedKeywords($acceptedKeywords);
-        $setting->setHeaderQuerySelector($headerQuerySelector);
-        $setting->setBodyQuerySelector($bodyQuerySelector);
-        $setting->setLinkQuerySelector($linkQuerySelector);
-        $setting->setUrlPattern($urlPattern);
-        $setting->setPageOffsetReplacePattern($pageOffsetReplacePattern);
-        $setting->setPageOffsetSteps($pageOffsetSteps);
-        $setting->setStartPageOffset($startPageOffset);
-        $setting->setEndPageOffset($endPageOffset);
-        $setting->setLinksSkippingRegex($regexForLinksScrapping);
+        $jobScrappingForm = $this->app->getForms()->getJobOfferScrappingForm();
+        $jobScrappingForm->handleRequest($request);
 
-        $this->app->getRepositories()->searchSettingsRepository()->saveSettings($setting);
+        if( !empty($id) ) {
+            $searchSetting = $this->app->getRepositories()->searchSettingsRepository()->find($id);
+
+            if( empty($searchSetting) ){
+                $message = $this->app->getTranslator()->trans("searchSetting.save.failure.noSearchSettingForId");
+                return Utils::buildAjaxResponse($message, true, 500);
+            }
+
+        } else {
+            $searchSetting = $jobScrappingForm->getData();
+        }
+
+        if( empty($name) ){
+            $message = $this->app->getTranslator()->trans("searchSetting.save.failure.nameMissing");
+            return Utils::buildAjaxResponse($message, true, 400);
+        }
+
+        $searchSetting->setName($name);
+        $message = $this->app->getTranslator()->trans("searchSetting.save.success");
+
+        $this->app->getRepositories()->searchSettingsRepository()->saveSettings($searchSetting);
+
+        return Utils::buildAjaxResponse($message, false, 200);
     }
 
     /**

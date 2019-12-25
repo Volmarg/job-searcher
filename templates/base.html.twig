@@ -1,3 +1,19 @@
+{% set constantsControllerClass         = "App\\Controller\\ConstantsController::" %}
+{% set bootboxController                = "App\\Controller\\BootboxController::" %}
+
+{% set KEY_JSON_RESPONSE_ERROR          =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_ERROR') %}
+{% set KEY_JSON_RESPONSE_MESSAGE        =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_MESSAGE') %}
+{% set KEY_JSON_RESPONSE_TEMPLATE       =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_TEMPLATE') %}
+{% set KEY_JSON_RESPONSE_SEARCH_SETTING =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_SEARCH_SETTING') %}
+
+{% set KEY_REQUEST_ID   =  constant(constantsControllerClass ~ 'KEY_REQUEST_ID') %}
+{% set KEY_REQUEST_NAME =  constant(constantsControllerClass ~ 'KEY_REQUEST_NAME') %}
+
+{% set BOOTBOX_SIZE_LARGE                  = constant(bootboxController ~ 'BOOTBOX_SIZE_LARGE') %}
+{% set BOOTBOX_TYPE_CONFIRM                = constant(bootboxController ~ 'BOOTBOX_TYPE_CONFIRM') %}
+{% set BOOTBOX_TYPE_ALERT                  = constant(bootboxController ~ 'BOOTBOX_TYPE_ALERT') %}
+{% set BOOTBOX_TYPE_ALERT                  = constant(bootboxController ~ 'BOOTBOX_TYPE_ALERT') %}
+{% set BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE = constant(bootboxController ~ 'BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE') %}
 <!DOCTYPE html>
 <!--[if lt IE 7 ]>              <html class="ie ie6" lang="en"> <![endif]-->
 <!--[if IE 7 ]>                 <html class="ie ie7" lang="en"> <![endif]-->
@@ -22,12 +38,20 @@
 
     {# Js Libs #}
     <script src="js/libs/jQuery/jquery-3.4.1.min.js"></script>
+    <script src="js/libs/bootbox/bootbox.min.js"></script>
+    <script src="js/libs/DataTables/datatables.min.js"></script>
+
+    {# Css libs #}
+    <link rel="stylesheet" href="js/libs/DataTables/datatables.min.css">
+
+    {# Main css #}
+    <link rel="stylesheet" href="css/main.css">
 
 </head>
 
 <body id="landing" class="sidebar-open">
 <div class="loading">
-    <div class="loading-center"><img src="/bootadmin/images/loading/map.gif" alt="Loading" /></div>
+    <div class="loading-center"><img src="images/spinner.gif" alt="Loading" /></div>
 </div>
 <div class="page-container animsition">
     <div id="dashboardPage">
@@ -51,6 +75,32 @@
 <script src="/bootadmin/scripts/vendor/bootstrap.min.js"></script>
 <script src="/bootadmin/scripts/vendor/library.min.js"></script>
 <script src="/bootadmin/scripts/core/main.js"></script>
+
+{# Libs #}
+<script src="/js/libs/bootstrapNotify/bootstrap-notify.min.js"></script>
+
+{# Core #}
+<script>
+    var KEY_JSON_RESPONSE_ERROR    = '{{ KEY_JSON_RESPONSE_ERROR }}';
+    var KEY_JSON_RESPONSE_MESSAGE  = '{{ KEY_JSON_RESPONSE_MESSAGE }}';
+    var KEY_JSON_RESPONSE_TEMPLATE = '{{ KEY_JSON_RESPONSE_TEMPLATE }}';
+
+    var BOOTBOX_SIZE_LARGE                  = '{{ BOOTBOX_SIZE_LARGE }}';
+    var BOOTBOX_TYPE_CONFIRM                = '{{ BOOTBOX_TYPE_CONFIRM }}';
+    var BOOTBOX_TYPE_ALERT                  = '{{ BOOTBOX_TYPE_ALERT}}';
+    var BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE = '{{ BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE }}';
+
+    var KEY_REQUEST_ID   = '{{ KEY_REQUEST_ID }}';
+    var KEY_REQUEST_NAME = '{{ KEY_REQUEST_NAME }}';
+</script>
+
+{# Core personall libs#}
+<script src="/js/core/loaders/index.js"></script>
+<script src="/js/core/infoBox/index.js"></script>
+<script src="/js/core/tables/index.js"></script>
+
+<script src="/js/core/dialogs/index.js"></script>
+<script src="/js/core/events/index.js"></script>
 
 </body>
 </html>

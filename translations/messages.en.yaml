@@ -11,3 +11,38 @@ menu:
 
 page:
   title: JobSearcher
+
+modules:
+  jobSearch:
+    header:
+      main: Job search
+      sub: Fill required fields to start searching for job offers
+
+forms:
+  buttons:
+    submit: Submit
+  JobOfferScrappingType:
+    placeholders:
+      urlPattern: "Provide pattern for search result page, example: "
+      pageOffsetReplacePattern: "Provide the same pattern as in urlPattern, example: "
+      pageOffsetSteps: "Steps between each search results, example: page1 -> p=1, page2 -> p=3, so steps = 2"
+      endPageOffset: "Last page number to scrap from, example: 3rd page -> p=5, steps = 2, page1 = 1, so endPage = 5"
+      startPageOffset: "Start page number to scrap from, example, 3rd page -> p=5, steps = 2, page1 = 1, so startPage = 1"
+      bodyQuerySelector: "Css selector for element that contain job offer description (from offer page - not search page), example: .body div.offer .description"
+      headerQuerySelector: "Css selector for element that contain job offer header (from offer page - not search page), example: .body div.offer .header"
+      linksQuerySelector: "Css selector for job offers (will be scrapped from search result page), example: .body div.offer"
+      regexForLinksSkipping: "Regex rule for skipping links with given format, example: #/ad-paid-offer/#"
+      acceptedKeywords: "This keywords will be used to mark job offer as accepted/rejected"
+      rejectedKeywords: "This keywords will be used to mark job offer as accepted/rejected"
+
+dialogs:
+  searchSettings:
+    table:
+      id: Id
+      name: Name
+  messages:
+    success:
+      templateLoadedSuccessfully: Template has been loaded successfully
+    failure:
+      dialogTypeWasNotProvided: Dialog type was not provided
+      thisDialogTypeIsNotSupported: This dialog type is not supported

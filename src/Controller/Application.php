@@ -26,6 +26,11 @@ class Application extends AbstractController
     private $repositories;
 
     /**
+     * @var Forms $forms
+     */
+    private $forms;
+
+    /**
      * @return LoggerInterface
      */
     public function getLogger(): LoggerInterface {
@@ -43,10 +48,15 @@ class Application extends AbstractController
         return $this->repositories;
     }
 
-    public function __construct(TranslatorInterface $translator, LoggerInterface $logger, Repositories $repositories) {
+    public function getForms(): Forms {
+        return $this->forms;
+    }
+
+    public function __construct(TranslatorInterface $translator, LoggerInterface $logger, Repositories $repositories, Forms $forms) {
         $this->repositories = $repositories;
         $this->translator   = $translator;
         $this->logger       = $logger;
+        $this->forms        = $forms;
     }
 
 }

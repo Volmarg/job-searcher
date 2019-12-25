@@ -49,4 +49,13 @@ class SearchSettingRepository extends ServiceEntityRepository
         throw new \Exception("No search setting was found for id {$id}.", 400);
 
     }
+
+    /**
+     * This function will return SearchSettings
+     * @return SearchSetting[]
+     */
+    public function getAllSearchSettings(): array {
+        $searchSettings = $this->_em->getRepository(SearchSetting::class)->findAll();
+        return $searchSettings;
+    }
 }
