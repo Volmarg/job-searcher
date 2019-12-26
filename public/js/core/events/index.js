@@ -26,13 +26,24 @@ var events = {
     selectors: {
         classes: {
             bootboxBody: ".bootbox-body"
+        },
+        query: {
+            searchSettingsTable: "#searchSettingsDialogWrapper table",
+            jobSearchForm      : "#jobSearchWrapper form"
         }
     },
     api: {
-      saveSearchSetting: {
-          url   : "search-settings/ajax/save",
-          method: "POST",
-      }
+        saveSearchSetting: {
+            url   : "search-settings/ajax/save",
+            method: "POST",
+        },
+        loadSearchSetting: {
+            urlWithoutParams   : "search-settings/ajax/load",
+            method: "GET",
+        }
+    },
+    messages: {
+      couldNotHandleAjaxResponse: "Could not handle the ajax response"
     },
     init: function(){
       this.attachCallBootBoxDialog();
@@ -115,6 +126,7 @@ var events = {
                             let callback = function(){
                                 tables.datatables.init();
                                 _this.attachAjaxCallForElementClick();
+                                _this.dataTables.attachDatatableEvent(templateType);
                             };
                             dialogs.setDialogBody($bootboxBody);
                             dialogs.makeAjaxCallForDialogTemplateType(templateType, callback);
@@ -201,6 +213,9 @@ var events = {
         })
 
     },
+    /**
+     * Handle general ajax call
+     */
     ajaxCalls: {
         /**
          * This function will perform call to either save new search setting or update existing one
@@ -209,7 +224,7 @@ var events = {
         saveSearchSetting: function(jsonParams){
 
             let paramsObject        = JSON.parse(jsonParams);
-            let $form               = $("#jobSearchWrapper form");
+            let $form               = $(events.selectors.query.jobSearchForm);
             let serializedFormArray = $form.serializeArray();
 
             try{
@@ -217,7 +232,7 @@ var events = {
                 var name = paramsObject.name;
             }catch(Exception){
                 throw({
-                    "message"   : "Could not assign decoded json values to variables",
+                    "message"   : events.messages.couldNotHandleAjaxResponse,
                     "exception" : Exception,
                     "hint#1"    : "Object may not contains give params"
                 })
@@ -242,15 +257,15 @@ var events = {
                 method  : events.api.saveSearchSetting.method,
                 data    : ajaxData
             }).always( (data) => {
-                let responseJson = data.responseJSON;
 
-                if( "undefined" === typeof responseJson ){
-                    infoBox.showDangerBox("Could not handle the request.");
-                    return;
+                try{
+                    var error   = data[KEY_JSON_RESPONSE_ERROR];
+                    var message = data[KEY_JSON_RESPONSE_MESSAGE];
+                }catch(Exception){
+                    throw({
+                        "message": events.messages.couldNotHandleAjaxResponse
+                    })
                 }
-
-                let error   = responseJson[KEY_JSON_RESPONSE_ERROR];
-                let message = responseJson[KEY_JSON_RESPONSE_MESSAGE];
 
                 if( true === error ){
                     loaders.spinner.hideSpinner();
@@ -262,9 +277,90 @@ var events = {
                 loaders.spinner.hideSpinner();
             });
 
+        },
+        /**
+         * This function will load search setting for given id
+         * @param id {string}
+         */
+        loadSearchSetting: function(id){
+
+            $.ajax({
+                url: events.api.loadSearchSetting.urlWithoutParams + '/' + id,
+                method: events.api.loadSearchSetting.method
+            }).always( (data) => {
+
+                try{
+                    var error   = data[KEY_JSON_RESPONSE_ERROR];
+                    var message = data[KEY_JSON_RESPONSE_MESSAGE];
+                }catch(Exception){
+                    throw({
+                        "message"  : "Could not handle the ajax response",
+                        "exception": Exception
+                    })
+                }
+
+                if( error ){
+                    infoBox.showDangerBox(message);
+                    return;
+                }
+
+                let searchSettingString = data[KEY_JSON_RESPONSE_SEARCH_SETTING];
+                let searchSettingJson   = JSON.parse(searchSettingString);
+
+                let $jobSearchForm      = $(events.selectors.query.jobSearchForm);
+                let jobSearchFormInputs = $jobSearchForm.find('input');
+
+                $.each( jobSearchFormInputs, (index, input) => {
+                   let $input = $(input);
+
+                   $.each( searchSettingJson, (name, value) => {
+                       if( $input.attr("name") === "job_offer_scrapping["+ name +"]"){
+                           $input.val(value);
+                       }
+                   });
+                });
+            });
         }
     },
+    /**
+     * Handle events for bootbox
+     */
     bootbox: {
+    },
+    /**
+     * Handle events for dataTables
+     */
+    dataTables: {
+        /**
+         * This function will attach logic to datable
+         * @param templateType
+         */
+        attachDatatableEvent:function (templateType){
+
+            switch( templateType ){
+                case TEMPLATE_TYPE_SEARCH_SETTINGS:
+
+                    $table = $(events.selectors.query.searchSettingsTable);
+                    $rows  = $table.find("tbody tr");
+
+                    $.each($rows, (index, row) => {
+                        let $row      = $(row);
+
+                        $row.on('click', () => {
+                            let settingId = $row.find('.id').text();
+                            events.ajaxCalls.loadSearchSetting(settingId);
+                        });
+
+                    });
+
+                    break;
+                default:
+                    throw({
+                        "message"       : "DataTable event attaching could not been done, give template type is not supported",
+                        "templateType" :  templateType
+                    })
+            }
+        }
     }
 };
 

@@ -8,13 +8,15 @@
     <table data-is-datatable="true" class="table table-striped table-bordered">
         <thead>
             <tr>
+                <th class="d-none">{{ "dialogs.searchSettings.table.id" | trans }}</th>
                 <th>{{ "dialogs.searchSettings.table.name" | trans }}</th>
             </tr>
         </thead>
         <tbody>
                 {% for searchSetting in _context[TWIG_VAR_SEARCH_SETTINGS] %}
                     <tr>
-                        <td>{{ searchSetting.getName() }}</td>
+                        <td class="d-none id">{{ searchSetting.getId() }}</td>
+                        <td class="name">{{ searchSetting.getName() }}</td>
                     </tr>
                 {% endfor %}
         </tbody>

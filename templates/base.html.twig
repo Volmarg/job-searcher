@@ -1,5 +1,6 @@
 {% set constantsControllerClass         = "App\\Controller\\ConstantsController::" %}
 {% set bootboxController                = "App\\Controller\\BootboxController::" %}
+{% set dialogController                 = "App\\Controller\\DialogsController::" %}
 
 {% set KEY_JSON_RESPONSE_ERROR          =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_ERROR') %}
 {% set KEY_JSON_RESPONSE_MESSAGE        =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_MESSAGE') %}
@@ -14,6 +15,8 @@
 {% set BOOTBOX_TYPE_ALERT                  = constant(bootboxController ~ 'BOOTBOX_TYPE_ALERT') %}
 {% set BOOTBOX_TYPE_ALERT                  = constant(bootboxController ~ 'BOOTBOX_TYPE_ALERT') %}
 {% set BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE = constant(bootboxController ~ 'BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE') %}
+
+{% set TEMPLATE_TYPE_SEARCH_SETTINGS       = constant(dialogController ~ 'TEMPLATE_TYPE_SEARCH_SETTINGS') %}
 <!DOCTYPE html>
 <!--[if lt IE 7 ]>              <html class="ie ie6" lang="en"> <![endif]-->
 <!--[if IE 7 ]>                 <html class="ie ie7" lang="en"> <![endif]-->
@@ -81,14 +84,17 @@
 
 {# Core #}
 <script>
-    var KEY_JSON_RESPONSE_ERROR    = '{{ KEY_JSON_RESPONSE_ERROR }}';
-    var KEY_JSON_RESPONSE_MESSAGE  = '{{ KEY_JSON_RESPONSE_MESSAGE }}';
-    var KEY_JSON_RESPONSE_TEMPLATE = '{{ KEY_JSON_RESPONSE_TEMPLATE }}';
+    var KEY_JSON_RESPONSE_ERROR          = '{{ KEY_JSON_RESPONSE_ERROR }}';
+    var KEY_JSON_RESPONSE_MESSAGE        = '{{ KEY_JSON_RESPONSE_MESSAGE }}';
+    var KEY_JSON_RESPONSE_TEMPLATE       = '{{ KEY_JSON_RESPONSE_TEMPLATE }}';
+    var KEY_JSON_RESPONSE_SEARCH_SETTING = '{{ KEY_JSON_RESPONSE_SEARCH_SETTING }}';
 
     var BOOTBOX_SIZE_LARGE                  = '{{ BOOTBOX_SIZE_LARGE }}';
     var BOOTBOX_TYPE_CONFIRM                = '{{ BOOTBOX_TYPE_CONFIRM }}';
     var BOOTBOX_TYPE_ALERT                  = '{{ BOOTBOX_TYPE_ALERT}}';
     var BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE = '{{ BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE }}';
+
+    var TEMPLATE_TYPE_SEARCH_SETTINGS = '{{ TEMPLATE_TYPE_SEARCH_SETTINGS }}';
 
     var KEY_REQUEST_ID   = '{{ KEY_REQUEST_ID }}';
     var KEY_REQUEST_NAME = '{{ KEY_REQUEST_NAME }}';
