@@ -94,11 +94,12 @@ var events = {
                     })
             }
 
+            $element.off("click");
             $element.on("click", function(event){
                 event.preventDefault();
 
                 // call bootbox
-            bootbox[bootboxType]({
+                let bootboxInstance = bootbox[bootboxType]({
                     message : bootboxMessage,
                     backdrop: true,
                     size    : bootboxSize,
@@ -108,7 +109,10 @@ var events = {
                     }
                 }).init(function () {
 
-                }).bind(_this.eventsNames.bootstrap.showModal, () => {
+                });
+
+                bootboxInstance.unbind(_this.eventsNames.bootstrap.showModal);
+                bootboxInstance.bind(_this.eventsNames.bootstrap.showModal, () => {
                     // add content to dialog body
                     switch(bootboxCallbackType){
 
@@ -346,6 +350,7 @@ var events = {
                     $.each($rows, (index, row) => {
                         let $row      = $(row);
 
+                        $row.off('click');
                         $row.on('click', () => {
                             let settingId = $row.find('.id').text();
                             events.ajaxCalls.loadSearchSetting(settingId);
@@ -355,10 +360,7 @@ var events = {
 
                     break;
                 default:
-                    throw({
-                        "message"       : "DataTable event attaching could not been done, give template type is not supported",
-                        "templateType" :  templateType
-                    })
+                    //do nothing
             }
         }
     }
