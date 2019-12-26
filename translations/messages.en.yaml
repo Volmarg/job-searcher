@@ -40,6 +40,8 @@ dialogs:
     table:
       id: Id
       name: Name
+    buttons:
+      remove: Remove
   messages:
     success:
       templateLoadedSuccessfully: Template has been loaded successfully

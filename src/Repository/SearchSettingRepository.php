@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\SearchSetting;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
@@ -47,7 +48,29 @@ class SearchSettingRepository extends ServiceEntityRepository
         }
 
         throw new \Exception("No search setting was found for id {$id}.", 400);
+    }
 
+    /**
+     * This function will remove search settings for given ids if such exist
+     * @param array $ids
+     * @throws ORMException
+     */
+    public function removeSettingsForIds(array $ids): void {
+
+        $queryBuilder = $this->createQueryBuilder('qb');
+        $queryBuilder->select('s')
+            ->from(SearchSetting::class, "s")
+            ->where("s.id IN (:ids)")
+            ->setParameter(":ids", $ids, Connection::PARAM_STR_ARRAY);
+
+        $query = $queryBuilder->getQuery();
+
+        $searchSettings = $query->getResult();
+
+        foreach( $searchSettings as $searchSetting ){
+            $this->_em->remove($searchSetting);
+        }
+        $this->_em->flush();
     }
 
     /**

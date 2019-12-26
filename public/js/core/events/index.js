@@ -10,6 +10,14 @@ var events = {
                 bootboxCallbackType         : "data-bootbox-callback-type",
                 bootboxCallbackTemplateType : "data-bootbox-callback-type-template-name",
             },
+            buttons: {
+                entityName                  : "data-entity-name",
+                removeEntity                : "data-remove-entity",
+                ajaxRemovalLink             : "data-entity-removal-ajax-link",
+                removedIdsElementsSelector  : "data-entity-removed-ids-elements-selector",
+                entityId                    : "data-entity-id",
+                parentToRemoveSelector      : "data-parent-element-to-remove-selector"
+            },
             ajax: {
                 callOnClick          : "data-ajax-call-on-click",
                 callForSelectorClick : "data-call-ajax-for-selector-click",
@@ -47,6 +55,7 @@ var events = {
     },
     init: function(){
       this.attachCallBootBoxDialog();
+      this.buttons.attachRemoveEntitiesEvent();
     },
     /**
      * This function will the bootbox dialog and append logic to it based on html attributes
@@ -128,7 +137,11 @@ var events = {
                             // todo:
                             let $bootboxBody = $(_this.selectors.classes.bootboxBody);
                             let callback = function(){
+                                tables.datatables.domElements.init();
                                 tables.datatables.init();
+
+                                events.buttons.attachRemoveEntitiesEvent();
+
                                 _this.attachAjaxCallForElementClick();
                                 _this.dataTables.attachDatatableEvent(templateType);
                             };
@@ -288,10 +301,13 @@ var events = {
          */
         loadSearchSetting: function(id){
 
+
+            loaders.spinner.showSpinner();
             $.ajax({
                 url: events.api.loadSearchSetting.urlWithoutParams + '/' + id,
                 method: events.api.loadSearchSetting.method
             }).always( (data) => {
+                loaders.spinner.hideSpinner();
 
                 try{
                     var error   = data[KEY_JSON_RESPONSE_ERROR];
@@ -323,7 +339,19 @@ var events = {
                        }
                    });
                 });
+
+                infoBox.showSuccessBox(message);
             });
+        },
+        /**
+         * This function will delete searchSettings with given id
+         * If the id sent to the backend does no exist then it will just be skipped and information will be returned
+         * @param ids
+         */
+        deleteSearchSettings: function(ids){
+
+
+
         }
     },
     /**
@@ -344,16 +372,46 @@ var events = {
             switch( templateType ){
                 case TEMPLATE_TYPE_SEARCH_SETTINGS:
 
-                    $table = $(events.selectors.query.searchSettingsTable);
-                    $rows  = $table.find("tbody tr");
+                    let $table = $(events.selectors.query.searchSettingsTable);
+                    let $rows  = $table.find("tbody tr");
 
                     $.each($rows, (index, row) => {
                         let $row      = $(row);
+                        let $nameCell = $row.find('.name');
+                        let $checkbox = $row.find('input');
 
-                        $row.off('click');
-                        $row.on('click', () => {
+                        $nameCell.off('click');
+                        $nameCell.on('click', () => {
                             let settingId = $row.find('.id').text();
                             events.ajaxCalls.loadSearchSetting(settingId);
+                        });
+
+                        $checkbox.off("click");
+                        $checkbox.on('click', (event) => {
+                            let $clickedCheckbox = $(event.currentTarget);
+
+                            if( $clickedCheckbox.prop('checked') ){
+                                tables.datatables.markRowSelected($row);
+                            }else{
+                                tables.datatables.unmarkRowSelected($row);
+                            }
+
+                            let allCheckboxes          = $table.find('input');
+                            let checkedCheckboxesCount = 0;
+
+                            $.each(allCheckboxes, (index, checkbox) => {
+                               let $checkbox = $(checkbox);
+                               if( $checkbox.prop('checked') ){
+                                   checkedCheckboxesCount++;
+                               }
+                            });
+
+                            if( checkedCheckboxesCount > 0 ){
+                                tables.datatables.enableRemoveButton();
+                            }else{
+                                tables.datatables.disableRemoveButton();
+                            }
+
                         });
 
                     });
@@ -362,6 +420,95 @@ var events = {
                 default:
                     //do nothing
             }
+        }
+    },
+    buttons: {
+        /**
+         * This function will remove entities of given type with given ids
+         * @param ids      {array}
+         * @param callback {function}
+         */
+        attachRemoveEntitiesEvent: function(ids, callback) {
+            let buttonsToHandle = $("[" + events.attributes.data.buttons.removeEntity + "='true']");
+
+            $.each(buttonsToHandle, (index, button) => {
+                let $button = $(button);
+
+                $button.off("click");
+                $button.on('click', () => {
+                    let ajaxRemovalLink             = $button.attr(events.attributes.data.buttons.ajaxRemovalLink);
+                    let removedIdsElementsSelector  = $button.attr(events.attributes.data.buttons.removedIdsElementsSelector);
+                    let parentToRemoveSelector      = $button.attr(events.attributes.data.buttons.parentToRemoveSelector);
+                    let elementsToRemove            = [];
+
+                    let allElementsWithIds = $(removedIdsElementsSelector);
+                    let idsToRemove        = [];
+                    if( "undefined" === typeof ids ) {
+                        $.each(allElementsWithIds, (index, element) => {
+                            let $element = $(element);
+
+                            if( !$element.is("INPUT") ){
+                                throw({
+                                    "message": "Target element is not input",
+                                    "hint#1" : "Input must be of type checkbox"
+                                })
+                            }
+
+                            if( $element.prop('checked') ){
+                                let id  = $element.attr(events.attributes.data.buttons.entityId);
+
+                                if( "undefined" !== parentToRemoveSelector ){
+                                    let elementToRemove = $element.closest(parentToRemoveSelector);
+                                    elementsToRemove.push(elementToRemove);
+                                }
+
+                                idsToRemove.push(id)
+                            }
+                        });
+                    } else {
+                        idsToRemove = ids;
+                    }
+
+                    if( 0 === idsToRemove.length ){
+                        console.info("There are no elements with id's to remove");
+                        return;
+                    }
+
+                    let ajaxData = {
+                        "ids": idsToRemove
+                    };
+
+                    loaders.spinner.showSpinner();
+                    $.ajax({
+                        url    : ajaxRemovalLink,
+                        method : "POST",
+                        data   : ajaxData
+                    }).always( (data) => {
+
+                        try{
+                            var error   = data[KEY_JSON_RESPONSE_ERROR];
+                            var message = data[KEY_JSON_RESPONSE_MESSAGE];
+                        }catch(Exception){
+                            throw({
+                                "message": events.messages.couldNotHandleAjaxResponse
+                            })
+                        }
+
+                        if( true === error ){
+                            loaders.spinner.hideSpinner();
+                            infoBox.showDangerBox(message);
+                            return;
+                        }
+
+                        $.each(elementsToRemove, (index, element) => {
+                            let $element = $(element);
+                            $element.remove();
+                        });
+
+                        infoBox.showSuccessBox(message);
+                    });
+                });
+            })
         }
     }
 };

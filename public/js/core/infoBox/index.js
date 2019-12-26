@@ -7,7 +7,10 @@ var infoBox = {
     showSuccessBox: function(message){
         $.notify(
             {message: message},
-            {type: "success"});
+            {
+                type    : "success",
+                z_index : 9999
+            });
     },
     /**
      * Show box with orange background
@@ -16,7 +19,10 @@ var infoBox = {
     showWarningBox: function(message){
         $.notify(
             {message: message},
-            {type: "warning"});
+            {
+                type    : "warning",
+                z_index : 9999
+            });
     },
     /**
      * Show box with red background
@@ -25,7 +31,10 @@ var infoBox = {
     showDangerBox: function(message){
         $.notify(
             {message: message},
-            {type: "danger"});
+            {
+                type    : "danger",
+                z_index : 9999
+            });
     }
 };
 

@@ -96,33 +96,28 @@ class SearchSettingsAction extends AbstractController
 
     /**
      * This function handles removing settings via ajax call
-     * @Route("search-settings/ajax/remove/{id}", name="search_settings_ajax_remove")
+     * @Route("/search-settings/ajax/remove/", name="search_settings_ajax_remove")
      * @param Request $request
-     * @param string $id
      * @return JsonResponse
      */
-    public function ajaxRemoveSettings(Request $request, string $id): JsonResponse {
+    public function ajaxRemoveSettings(Request $request): JsonResponse {
 
-        $error = false;
-        $code  = 200;
-        $message = $this->app->getTranslator()->trans("searchSetting.remove.success");
-
-        try{
-            $this->app->getRepositories()->searchSettingsRepository()->removeSettingForId($id);
-        }catch( \Exception $e){
-            $error   = true;
-            $message = $this->app->getTranslator()->trans("searchSettings.remove.fail.noEntityForId");
-            $code    = $e->getCode();
+        if( !$request->request->has(ConstantsController::KEY_REQUEST_IDS) ){
+            $message = $this->app->getTranslator()->trans("request.missingKey") . ConstantsController::KEY_REQUEST_IDS;
+            return Utils::buildAjaxResponse($message, true, 400);
         }
 
-        $responseData = [
-            ConstantsController::KEY_JSON_RESPONSE_ERROR   => $error,
-            ConstantsController::KEY_JSON_RESPONSE_MESSAGE => $message,
-        ];
+        try{
+            $ids = $request->request->get(ConstantsController::KEY_REQUEST_IDS);
+            $this->app->getRepositories()->searchSettingsRepository()->removeSettingsForIds($ids);
+        }catch( \Exception $e){
+            $message = $this->app->getTranslator()->trans("searchSettings.remove.fail.noEntityForId");
+            $code    = $e->getCode();
+            return Utils::buildAjaxResponse($message, true, $code);
+        }
 
-        $jsonResponse = new JsonResponse($responseData, $code);
-
-        return $jsonResponse;
+        $message = $this->app->getTranslator()->trans("searchSetting.remove.success");
+        return Utils::buildAjaxResponse($message, false, 200);
     }
 
 }
