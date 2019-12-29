@@ -18,11 +18,19 @@ var events = {
                 entityId                    : "data-entity-id",
                 parentToRemoveSelector      : "data-parent-element-to-remove-selector"
             },
+            forms: {
+                submitViaAjax               : "data-submit-via-ajax",
+                ajaxUrl                     : "data-ajax-url"
+            },
             ajax: {
                 callOnClick          : "data-ajax-call-on-click",
                 callForSelectorClick : "data-call-ajax-for-selector-click",
                 callMethod           : "data-ajax-call-method",
                 callMethodParams     : "data-ajax-call-method-params"
+            },
+            jobSearchResult: {
+                offerDescription : "data-job-offer-description",
+                offerLink        : "data-job-offer-offer-link"
             }
         },
     },
@@ -33,11 +41,13 @@ var events = {
     },
     selectors: {
         classes: {
-            bootboxBody: ".bootbox-body"
+            bootboxBody          : ".bootbox-body",
+            mainContainerWrapper : ".main-container-wrapper"
         },
         query: {
-            searchSettingsTable: "#searchSettingsDialogWrapper table",
-            jobSearchForm      : "#jobSearchWrapper form"
+            searchSettingsTable : "#searchSettingsDialogWrapper table",
+            jobSearchResultTable: "#jobSearchResultWrapper table",
+            jobSearchForm       : "#jobSearchWrapper form"
         }
     },
     api: {
@@ -53,9 +63,16 @@ var events = {
     messages: {
       couldNotHandleAjaxResponse: "Could not handle the ajax response"
     },
+    domElements: {
+      mainContainerWrapper: null,
+      init: function () {
+        this.mainContainerWrapper = $(events.selectors.classes.mainContainerWrapper);
+      }
+    },
     init: function(){
       this.attachCallBootBoxDialog();
       this.buttons.attachRemoveEntitiesEvent();
+      this.forms.submitViaAjax();
     },
     /**
      * This function will the bootbox dialog and append logic to it based on html attributes
@@ -371,6 +388,7 @@ var events = {
 
             switch( templateType ){
                 case TEMPLATE_TYPE_SEARCH_SETTINGS:
+                {
 
                     let $table = $(events.selectors.query.searchSettingsTable);
                     let $rows  = $table.find("tbody tr");
@@ -400,10 +418,10 @@ var events = {
                             let checkedCheckboxesCount = 0;
 
                             $.each(allCheckboxes, (index, checkbox) => {
-                               let $checkbox = $(checkbox);
-                               if( $checkbox.prop('checked') ){
-                                   checkedCheckboxesCount++;
-                               }
+                                let $checkbox = $(checkbox);
+                                if( $checkbox.prop('checked') ){
+                                    checkedCheckboxesCount++;
+                                }
                             });
 
                             if( checkedCheckboxesCount > 0 ){
@@ -413,9 +431,28 @@ var events = {
                             }
 
                         });
+                    });
+                }
+                    break;
+                case TEMPLATE_JOB_SEARCH_RESULTS:
+                {
+                    let $table = $(events.selectors.query.jobSearchResultTable);
+                    let $rows  = $table.find("tbody tr");
 
+                    $.each($rows, (index, row) => {
+                        let $row      = $(row);
+                        let $nameCell = $row.find('.job-offer-header');
+
+                        let offerDescription = $row.attr(events.attributes.data.jobSearchResult.offerDescription);
+                        let offerLink        = $row.attr(events.attributes.data.jobSearchResult.offerLink);
+
+                        $nameCell.off('click');
+                        $nameCell.on('click', () => {
+                            console.log('test');
+                        });
                     });
 
+                }
                     break;
                 default:
                     //do nothing
@@ -510,9 +547,72 @@ var events = {
                 });
             })
         }
+    },
+    forms: {
+        submitViaAjax: function() {
+            let _this            = this;
+            let allFormsToHandle = $("[" + events.attributes.data.forms.submitViaAjax + "=true]");
+
+            $.each(allFormsToHandle, (index, form) => {
+                let $form         = $(form);
+                let $submitButton = $form.find('button[type="submit"');
+
+                $submitButton.on('click', function(event) {
+                    event.preventDefault();
+
+                   let $clickedButton = $(event.currentTarget);
+                   let serializedForm = $form.serializeArray();
+                   let ajaxUrl        = $form.attr(events.attributes.data.forms.ajaxUrl);
+
+                   if( "undefined" === ajaxUrl ){
+                       throw({
+                           "message": "Ajax url is missing for form to be submitted via ajax",
+                           "hint#1" : "Form is missing attribute: " + events.attributes.data.forms.ajaxUrl
+                       })
+                   }
+
+                   loaders.spinner.showSpinner();
+                    $.ajax({
+                        url     : ajaxUrl,
+                        method  : "POST",
+                        data    : serializedForm
+                    }).always( (data) => {
+
+                        try{
+                            var error    = data[KEY_JSON_RESPONSE_ERROR];
+                            var message  = data[KEY_JSON_RESPONSE_MESSAGE]
+                            var template = data[KEY_JSON_RESPONSE_TEMPLATE];
+                        }catch(Exception){
+                            throw({
+                                "message": events.messages.couldNotHandleAjaxResponse
+                            })
+                        }
+
+                        if( true === error ){
+                            loaders.spinner.hideSpinner();
+                            infoBox.showDangerBox(message);
+                            return;
+                        }
+
+                        if( "undefined" !== typeof template ) {
+                            events.domElements.mainContainerWrapper.html(template);
+                            tables.datatables.init();
+                            events.init();
+                        }
+
+                        infoBox.showSuccessBox(message);
+                        loaders.spinner.hideSpinner();
+
+                    });
+
+                });
+
+            });
+        }
     }
 };
 
 $(document).ready(function(){
+    events.domElements.init();
     events.init();
 });

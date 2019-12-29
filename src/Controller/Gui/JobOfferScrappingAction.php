@@ -3,13 +3,15 @@
 namespace App\Controller\Gui;
 
 use App\Controller\Application;
+use App\Controller\ConstantsController;
 use App\Controller\Logic\JobOffer\JobOfferScrappingController;
 use App\Controller\Logic\JobOffer\ScrappingController;
 use App\Controller\Logic\JobOffer\DomCrawlerController;
-use App\DTO\AjaxScrapDataRequestDTO;
+use App\DTO\JobOfferDataDTO;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -19,7 +21,10 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class JobOfferScrappingAction extends AbstractController
 {
-    const MAIN_PAGE_TWIG_TPL = "dashboard/index.html.twig"; //todo: change
+    const MAIN_PAGE_TWIG_TPL            = "dashboard/index.html.twig"; //todo: change
+    const TEMPLATE_JOB_SEARCH_RESULTS   = "modules/job-search/job-search-results.twig";
+
+    const TEMPLATE_VAR_JOB_OFFER_DATA_DTOS = "jobOfferDataDtos";
 
     /**
      * @var ScrappingController $scrappingController
@@ -51,6 +56,7 @@ class JobOfferScrappingAction extends AbstractController
         $this->scrappingController          = $scrappingController;
         $this->domCrawlerController         = $textFilterController;
         $this->jobOfferScrappingController  = $jobOfferScrappingController;
+
     }
 
     /**
@@ -73,65 +79,70 @@ class JobOfferScrappingAction extends AbstractController
 
     /**
      * This function handles the scrapping logic for ajax call
-     * @Route("/ajax/scrapa-data-for-request", name="ajax_scrap_data_for_request")
+     * @Route("/ajax/scrap-data-for-request", name="ajax_scrap_data_for_request")
      * @param Request $request
-     * @return array|string[]
-     * @throws \ErrorException
-     * @throws \Exception
+     * @return JsonResponse
+     * @throws Exception
      */
     public function ajaxScrapData(Request $request) {
 
-        $ajaxScrapDataRequestDTO               = JobOfferScrappingController::buildAjaxScrapDataRequestDTOFromRequest($request);
-        $searchResultsLinks                    = $this->scrappingController->buildLinksForScrappingFromAjaxScrapDataRequest($ajaxScrapDataRequestDTO);
+        $templateString = '';
+        $error          = false;
+        $message        = $this->app->getTranslator()->trans("ajaxScrapData.status.success");
+        $code           = 200;
 
-        $jobSearchRequestsDtosForSearchResults = $this->scrappingController->buildJobSearchRequestDtosFromLinks($searchResultsLinks);
-        $jobSearchResponseDtosForSearchResults = $this->scrappingController->scrapDataForWebsites($jobSearchRequestsDtosForSearchResults);
+        try {
+            $ajaxScrapDataRequestDTO               = $this->jobOfferScrappingController->buildAjaxScrapDataRequestDTOFromRequest($request);
+            $searchResultsLinks                    = $this->scrappingController->buildLinksForScrappingFromAjaxScrapDataRequest($ajaxScrapDataRequestDTO);
 
-        $this->domCrawlerController->setParamsFromAjaxScrapDataRequestDto($ajaxScrapDataRequestDTO);
+            $jobSearchRequestsDtosForSearchResults = $this->scrappingController->buildJobSearchRequestDtosFromLinks($searchResultsLinks);
+            $jobSearchResponseDtosForSearchResults = $this->scrappingController->scrapDataForWebsites($jobSearchRequestsDtosForSearchResults);
 
-        $directJobOfferPagesLinks           = $this->domCrawlerController->getLinksFromJobSearchResponseDtos($jobSearchResponseDtosForSearchResults);
+            $this->domCrawlerController->setParamsFromAjaxScrapDataRequestDto($ajaxScrapDataRequestDTO);
 
-        $jobSearchRequestsDtosForOfferPages = $this->scrappingController->buildJobSearchRequestDtosFromLinks($directJobOfferPagesLinks);
-        $jobSearchResponseDtosForOfferPages = $this->scrappingController->scrapDataForWebsites($jobSearchRequestsDtosForOfferPages);
+            $directJobOfferPagesLinks           = $this->domCrawlerController->getLinksFromJobSearchResponseDtos($jobSearchResponseDtosForSearchResults);
 
-        $jobOfferDataDtos = $this->jobOfferScrappingController->buildJobOfferDataDtosFromJobSearchResponseDtos($jobSearchResponseDtosForOfferPages);
-        $jobOfferDataDtos = $this->jobOfferScrappingController->searchForKeywordsInJobOffersDataDtos($jobOfferDataDtos, $ajaxScrapDataRequestDTO);
-        $jobOfferDataDtos = $this->jobOfferScrappingController->markKeywordsInJobOffersDataDtos($jobOfferDataDtos);
-        $jobOfferDataDtos = $this->jobOfferScrappingController->makeDecisionsForJobOffersDataDtos($jobOfferDataDtos);
+            $jobSearchRequestsDtosForOfferPages = $this->scrappingController->buildJobSearchRequestDtosFromLinks($directJobOfferPagesLinks);
+            $jobSearchResponseDtosForOfferPages = $this->scrappingController->scrapDataForWebsites($jobSearchRequestsDtosForOfferPages);
 
-        var_dump($jobOfferDataDtos);
+            $jobOfferDataDtos = $this->jobOfferScrappingController->buildJobOfferDataDtosFromJobSearchResponseDtos($jobSearchResponseDtosForOfferPages);
+            $jobOfferDataDtos = $this->jobOfferScrappingController->searchForKeywordsInJobOffersDataDtos($jobOfferDataDtos, $ajaxScrapDataRequestDTO);
+            $jobOfferDataDtos = $this->jobOfferScrappingController->markKeywordsInJobOffersDataDtos($jobOfferDataDtos);
+            $jobOfferDataDtos = $this->jobOfferScrappingController->makeDecisionsForJobOffersDataDtos($jobOfferDataDtos);
 
-        return $directJobOfferPagesLinks;
-        //return new JsonResponse($links);
+            $templateString = $this->renderJobOfferScrappingResultTemplate($jobOfferDataDtos);
+        } catch (Exception $e){
+            $error   = true;
+            $code    = $e->getCode();
+            $message = $this->app->getTranslator()->trans("ajaxScrapData.status.failure.exception");
+        }
+
+        $responseData = [
+            ConstantsController::KEY_JSON_RESPONSE_TEMPLATE => $templateString,
+            ConstantsController::KEY_JSON_RESPONSE_ERROR    => $error,
+            ConstantsController::KEY_JSON_RESPONSE_CODE     => $code,
+            ConstantsController::KEY_JSON_RESPONSE_MESSAGE  => $message,
+        ];
+
+        $jsonResponse = new JsonResponse($responseData, 200);
+
+        return $jsonResponse;
     }
 
     /**
-     * @Route("/tests", name="tests")
-     * @throws \ErrorException
+     * @param JobOfferDataDTO[] $jobOfferDataDtos
+     * @return string
      */
-    public function tests(){
+    private function renderJobOfferScrappingResultTemplate(array $jobOfferDataDtos): string {
 
-        $request = new Request();
-        $request->request->set(AjaxScrapDataRequestDTO::KEY_END_PAGE_OFFSET, 10);
-        $request->request->set(AjaxScrapDataRequestDTO::KEY_START_PAGE_OFFSET,10);
-        $request->request->set(AjaxScrapDataRequestDTO::KEY_PAGE_OFFSET_STEPS, 10);
-        $request->request->set(AjaxScrapDataRequestDTO::KEY_PAGE_OFFSET_REPLACE_PATTERN, "{test}");
-        $request->request->set(AjaxScrapDataRequestDTO::KEY_URL_PATTERN, "https://de.indeed.com/Jobs?q=php+developer&l=Frankfurt+am+Main&start={test}");
+        $templateData =[
+            self::TEMPLATE_VAR_JOB_OFFER_DATA_DTOS => $jobOfferDataDtos
+        ];
 
-        $request->request->set(AjaxScrapDataRequestDTO::KEY_BODY_QUERY_SELECTOR, ".jobsearch-JobComponent-description #jobDescriptionText");
-        $request->request->set(AjaxScrapDataRequestDTO::KEY_HEADER_QUERY_SELECTOR, "h3.jobsearch-JobInfoHeader-title");
-        $request->request->set(AjaxScrapDataRequestDTO::KEY_LINK_QUERY_SELECTOR, '.result .title .jobtitle ');
+        $template = $this->render(self::TEMPLATE_JOB_SEARCH_RESULTS, $templateData);
+        $templateString = $template->getContent();
 
-        $request->request->set(AjaxScrapDataRequestDTO::KEY_REGEX_FOR_LINKS_SKIPPING, '\/pagead\/');
-
-        $request->request->set(AjaxScrapDataRequestDTO::KEY_ACCEPTED_KEYWORDS, ["php", "css", "js"]);
-        $request->request->set(AjaxScrapDataRequestDTO::KEY_REJECTED_KEYWORDS, ["deutsche", "sprache", "c#"]);
-
-        $scrappedData = $this->ajaxScrapData($request);
-
-        var_dump($scrappedData);
-
-        return new Response("");
-
+        return $templateString;
     }
+
 }

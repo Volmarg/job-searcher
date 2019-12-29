@@ -1,0 +1,81 @@
+{# todo: move to dir: ajaxCalls/ etc.#}
+{% set jobOfferScrappingClass           = "App\\Controller\\Gui\\JobOfferScrappingAction::" %}
+{% set bootboxController                = "App\\Controller\\BootboxController::" %}
+{% set dialogController                 = "App\\Controller\\DialogsController::" %}
+
+{% set TEMPLATE_VAR_JOB_OFFER_DATA_DTOS    = constant(jobOfferScrappingClass ~ "TEMPLATE_VAR_JOB_OFFER_DATA_DTOS") %}
+{% set TEMPLATE_TYPE_SEARCH_RESULT_DETAILS = constant(dialogController ~ 'TEMPLATE_TYPE_SEARCH_RESULT_DETAILS') %}
+
+{% set BOOTBOX_SIZE_LARGE                  = constant(bootboxController ~ 'BOOTBOX_SIZE_LARGE') %}
+{% set BOOTBOX_TYPE_ALERT                  = constant(bootboxController ~ 'BOOTBOX_TYPE_ALERT') %}
+{% set BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE = constant(bootboxController ~ 'BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE') %}
+
+<div class="row" style="margin-top:50px;">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+
+                <div class="d-md-flex justify-content-center">
+                    <div>
+                        <h4 class="card-title">{{ "modules.jobSearchResults.header.main" | trans }}</h4>
+                        <p class="card-subtitle"><i>{{ "modules.jobSearchResults.header.sub" | trans }}</i></p>
+                    </div>
+                </div>
+
+
+                <section id="jobSearchResultWrapper" style="padding:5px;">
+
+                    <table data-is-datatable="true" class="table table-hover table-bordered">
+                        <thead>
+                        <tr>
+                            <th>{{ "modules.jobSearchResults.table.header" | trans }}</th>
+                            <th>{{ "modules.jobSearchResults.table.reason" | trans }}</th>
+                            <th>{{ "modules.jobSearchResults.table.status.label" | trans }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for jobOfferDataDto in _context[TEMPLATE_VAR_JOB_OFFER_DATA_DTOS] %}
+                            <tr>
+                                <td
+                                        class="clickable-cell job-offer-header"
+                                        data-job-offer-description="{{ jobOfferDataDto.getDescription() }}"
+                                        data-job-offer-offer-link="{{ jobOfferDataDto.getOfferLink() }}"
+                                        {# bootbox dialog data#}
+                                        data-call-bootbox-dialog="true"
+                                        data-bootbox-size="{{ BOOTBOX_SIZE_LARGE }}"
+                                        data-bootbox-type="{{ BOOTBOX_TYPE_ALERT }}"
+                                        data-bootbox-message="Move me to translation file"
+                                        data-bootbox-callback-type="{{ BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE }}"
+                                        data-bootbox-callback-type-template-name="{{ TEMPLATE_TYPE_SEARCH_RESULT_DETAILS }}"
+                                >
+                                    {{ jobOfferDataDto.getHeader() }}
+                                </td>
+                                <td class="job-offer-reason">
+                                    {% if jobOfferDataDto.isRejected() %}
+                                        {{ jobOfferDataDto.getRejectReason() }}
+                                    {% else %}
+                                        {{ jobOfferDataDto.getAcceptReason() }}
+                                    {% endif %}
+                                </td>
+
+                                <td class="">
+                                    {% if jobOfferDataDto.isRejected() %}
+                                        <i class="feather text-danger icon-x-circle job-offer-status" data-is-rejected="true"></i>
+                                    {% else %}
+                                        <i class="feather text-success icon-check-circle job-offer-status" data-is-rejected="false"></i>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </section>
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -152,7 +152,7 @@ class DomCrawlerController extends AbstractController
                 continue;
             }
 
-            $header = $crawlerResult->nodeValue;
+            $header = strip_tags($crawlerResult->nodeValue);
         }
 
         return $header;

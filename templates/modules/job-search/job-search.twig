@@ -13,7 +13,10 @@
             </div>
 
         <section id="jobSearchWrapper">
-            {{ form_start(jobOfferScrappingForm) }}
+            {{ form_start(jobOfferScrappingForm, {"attr": {
+                "data-submit-via-ajax": "true",
+                "data-ajax-url"       : path("ajax_scrap_data_for_request")
+            }}) }}
             {{ form_end(jobOfferScrappingForm) }}
         </section>
 

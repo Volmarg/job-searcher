@@ -91,7 +91,9 @@ class JobOfferScrappingType extends AbstractType
                     "placeholder" => $this->app->getTranslator()->trans("forms.JobOfferScrappingType.placeholders.rejectedKeywords"),
                 ]
             ])
-            ->add( $this->app->getTranslator()->trans("forms.buttons.submit"), SubmitType::class)
+            ->add( $this->app->getTranslator()->trans("forms.buttons.submit"), SubmitType::class, [
+
+            ])
             ->add( $this->app->getTranslator()->trans(self::KEY_SAVE_SEARCH_SETTING), SubmitType::class, [
                 "attr" => [
                     "data-bootbox-callback-type-template-name"  => DialogsController::TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS,

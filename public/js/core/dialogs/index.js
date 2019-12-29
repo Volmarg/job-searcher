@@ -59,7 +59,7 @@ var dialogs = {
             }
 
             if( "function" === typeof callbackAfter ){
-                callbackAfter();
+                callbackAfter(template);
             }
 
             loaders.spinner.hideSpinner();

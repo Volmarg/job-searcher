@@ -4,15 +4,18 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DialogsController extends AbstractController {
 
-    const DIALOG_TEMPLATE_SEARCH_SETTINGS     = "dialogs/search-settings.twig";
-    const DIALOG_TEMPLATE_SAVE_SEARCH_SETTING = "dialogs/save-search-settings.twig";
+    const DIALOG_TEMPLATE_SEARCH_SETTINGS       = "dialogs/search-settings.twig";
+    const DIALOG_TEMPLATE_SAVE_SEARCH_SETTING   = "dialogs/save-search-settings.twig";
+    const DIALOG_TEMPLATE_SEARCH_RESULT_DETAILS = "dialogs/search-result-details.twig";
 
-    const TEMPLATE_TYPE_SEARCH_SETTINGS      = "templateTypeSearchSettings";
-    const TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS = "templateTypeSaveSearchSettings";
+    const TEMPLATE_TYPE_SEARCH_SETTINGS       = "templateTypeSearchSettings";
+    const TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS  = "templateTypeSaveSearchSettings";
+    const TEMPLATE_TYPE_SEARCH_RESULT_DETAILS = "templateTypeSearchResultDetails";
 
     const TWIG_VAR_SEARCH_SETTINGS = "searchSettings";
 
@@ -27,10 +30,11 @@ class DialogsController extends AbstractController {
 
     /**
      * @Route("/dialog-template/ajax/load/{templateType}", name="dialog_template_ajax_load_template_type")
+     * @param Request $request
      * @param string $templateType
      * @return JsonResponse
      */
-    public function getDialogTemplate(string $templateType = ""): JsonResponse {
+    public function getDialogTemplate(Request $request, string $templateType = ""): JsonResponse {
 
         $template = "";
         $errors   = false;
@@ -48,6 +52,9 @@ class DialogsController extends AbstractController {
                 break;
             case self::TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS:
                 $template = $this->getTemplateForSavingSearchSetting();
+                break;
+            case self::TEMPLATE_TYPE_SEARCH_RESULT_DETAILS:
+                $template = $this->getTemplateForSearchResultDetails($request);
                 break;
             default:
                 $code    = 500;
@@ -86,4 +93,12 @@ class DialogsController extends AbstractController {
         return $templateString;
     }
 
+    private function getTemplateForSearchResultDetails(Request $request){
+        $templateData      = [
+        ];
+        $templateResponse  = $this->render(self::DIALOG_TEMPLATE_SEARCH_RESULT_DETAILS, $templateData);
+        $templateString    = $templateResponse->getContent();
+
+        return $templateString;
+    }
 }

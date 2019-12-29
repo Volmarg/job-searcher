@@ -225,9 +225,15 @@ class SearchSetting
         return $this->acceptedKeywords;
     }
 
-    public function setAcceptedKeywords(?array $acceptedKeywords): self
+    public function setAcceptedKeywords($acceptedKeywords): self
     {
-        $this->acceptedKeywords = $acceptedKeywords;
+        if( is_string($acceptedKeywords) ){
+            $this->acceptedKeywords = explode(",", $acceptedKeywords);
+        }elseif( is_null($acceptedKeywords) ){
+            $this->acceptedKeywords = [];
+        }else{
+            $this->acceptedKeywords = $acceptedKeywords;
+        }
 
         return $this;
     }
@@ -237,9 +243,15 @@ class SearchSetting
         return $this->rejectedKeywords;
     }
 
-    public function setRejectedKeywords(?array $rejectedKeywords): self
+    public function setRejectedKeywords($rejectedKeywords): self
     {
-        $this->rejectedKeywords = $rejectedKeywords;
+        if( is_string($rejectedKeywords) ){
+            $this->rejectedKeywords = explode(",", $rejectedKeywords);
+        }elseif( is_null($rejectedKeywords) ){
+            $this->rejectedKeywords = [];
+        }else{
+            $this->rejectedKeywords = $rejectedKeywords;
+        }
 
         return $this;
     }

@@ -7,7 +7,7 @@ domCrawlerController:
 menu:
   mailTemplates: Mail templates
   searchSettings: Search settings
-  credits: Credits
+  about: About
 
 page:
   title: JobSearcher
@@ -17,6 +17,16 @@ modules:
     header:
       main: Job search
       sub: Fill required fields to start searching for job offers
+  jobSearchResults:
+    table:
+      header: Name
+      status:
+        label: Status
+      url: Url
+      reason: Reason
+    header:
+      main: Job search results
+      sub: Click on name for more details
 
 forms:
   buttons:

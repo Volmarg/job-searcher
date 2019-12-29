@@ -1,6 +1,8 @@
+{# todo: move this all to includable file? + add includable file for js based vars?#}
 {% set constantsControllerClass         = "App\\Controller\\ConstantsController::" %}
 {% set bootboxController                = "App\\Controller\\BootboxController::" %}
 {% set dialogController                 = "App\\Controller\\DialogsController::" %}
+{% set jobOfferScrappingAction          = "App\\Controller\\Gui\\JobOfferScrappingAction::" %}
 
 {% set KEY_JSON_RESPONSE_ERROR          =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_ERROR') %}
 {% set KEY_JSON_RESPONSE_MESSAGE        =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_MESSAGE') %}
@@ -15,10 +17,11 @@
 {% set BOOTBOX_SIZE_LARGE                  = constant(bootboxController ~ 'BOOTBOX_SIZE_LARGE') %}
 {% set BOOTBOX_TYPE_CONFIRM                = constant(bootboxController ~ 'BOOTBOX_TYPE_CONFIRM') %}
 {% set BOOTBOX_TYPE_ALERT                  = constant(bootboxController ~ 'BOOTBOX_TYPE_ALERT') %}
-{% set BOOTBOX_TYPE_ALERT                  = constant(bootboxController ~ 'BOOTBOX_TYPE_ALERT') %}
 {% set BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE = constant(bootboxController ~ 'BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE') %}
 
 {% set TEMPLATE_TYPE_SEARCH_SETTINGS       = constant(dialogController ~ 'TEMPLATE_TYPE_SEARCH_SETTINGS') %}
+{% set TEMPLATE_TYPE_SEARCH_RESULT_DETAILS = constant(dialogController ~ 'TEMPLATE_TYPE_SEARCH_RESULT_DETAILS') %}
+{% set TEMPLATE_JOB_SEARCH_RESULTS         = constant(jobOfferScrappingAction~ 'TEMPLATE_JOB_SEARCH_RESULTS') %}
 <!DOCTYPE html>
 <!--[if lt IE 7 ]>              <html class="ie ie6" lang="en"> <![endif]-->
 <!--[if IE 7 ]>                 <html class="ie ie7" lang="en"> <![endif]-->
@@ -98,7 +101,9 @@
 
     var ENTITY_NAME_SEARCH_SETTING = '{{ ENTITY_NAME_SEARCH_SETTING }}';
 
-    var TEMPLATE_TYPE_SEARCH_SETTINGS = '{{ TEMPLATE_TYPE_SEARCH_SETTINGS }}';
+    var TEMPLATE_TYPE_SEARCH_SETTINGS       = '{{ TEMPLATE_TYPE_SEARCH_SETTINGS }}';
+    var TEMPLATE_TYPE_SEARCH_RESULT_DETAILS = '{{ TEMPLATE_TYPE_SEARCH_RESULT_DETAILS }}';
+    var TEMPLATE_JOB_SEARCH_RESULTS         = '{{ TEMPLATE_JOB_SEARCH_RESULTS }}';
 
     var KEY_REQUEST_ID   = '{{ KEY_REQUEST_ID }}';
     var KEY_REQUEST_NAME = '{{ KEY_REQUEST_NAME }}';
