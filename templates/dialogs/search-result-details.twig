@@ -1,1 +1,35 @@
-<h1> oh hi</h1>
+{% set dialogController = "App\\Controller\\DialogsController::" %}
+
+{% set KEY_PARAM_JOB_OFFER_DESCRIPTION     = constant(dialogController ~ 'KEY_PARAM_JOB_OFFER_DESCRIPTION') %}
+{% set KEY_PARAM_JOB_OFFER_HEADER          = constant(dialogController ~ 'KEY_PARAM_JOB_OFFER_HEADER') %}
+{% set KEY_PARAM_JOB_OFFER_LINK            = constant(dialogController ~ 'KEY_PARAM_JOB_OFFER_LINK') %}
+
+{% set KEY_PARAM_JOB_OFFER_REJECTED_KEYWORDS = constant(dialogController ~ 'KEY_PARAM_JOB_OFFER_REJECTED_KEYWORDS') %}
+{% set KEY_PARAM_JOB_OFFER_ACCEPTED_KEYWORDS = constant(dialogController ~ 'KEY_PARAM_JOB_OFFER_ACCEPTED_KEYWORDS') %}
+
+<h5>{{ _context[KEY_PARAM_JOB_OFFER_HEADER] | raw}}</h5>
+<h4><a href="{{ _context[KEY_PARAM_JOB_OFFER_LINK] |raw}}">{{ _context[KEY_PARAM_JOB_OFFER_LINK] |raw}}</a> </h4>
+<div id="jobOfferDetailsWrapper" style="padding:5px;">
+    <section class="job-offer-detail-description">
+        <i>
+            {{ _context[KEY_PARAM_JOB_OFFER_DESCRIPTION] | raw}}
+        </i>
+    </section>
+    <hr>
+    <section class="job-offer-detail-rejected-keywords">
+        <ul>
+            {% for keyword in _context[KEY_PARAM_JOB_OFFER_REJECTED_KEYWORDS] %}
+                <li>{{ keyword | raw}}</li>
+            {% endfor %}
+        </ul>
+    </section>
+    <hr>
+    {# todo: make this sections visible only when there really are keywords + add headers #}
+    <section class="job-offer-detail-rejected-keywords">
+        <ul>
+            {% for keyword in _context[KEY_PARAM_JOB_OFFER_ACCEPTED_KEYWORDS] %}
+                <li>{{ keyword | raw}}</li>
+            {% endfor %}
+        </ul>
+    </section>
+</div>

@@ -31,15 +31,20 @@ var dialogs = {
      * This function will make ajax call and returns the template body
      * @param templateType  {string}
      * @param callbackAfter {function}
+     * @param params        {string}
      */
-    makeAjaxCallForDialogTemplateType: function(templateType, callbackAfter){
+    makeAjaxCallForDialogTemplateType: function(templateType, callbackAfter, params){
 
         let _this = this;
+        let data = {
+            "params": params
+        };
 
         loaders.spinner.showSpinner();
         $.ajax({
            method: this.api.ajaxGetTemplateForTemplateType.method,
            url   : this.api.ajaxGetTemplateForTemplateType.url + '/' + templateType,
+           data  : data
         }).always(function(data){
 
             let error    = data[KEY_JSON_RESPONSE_ERROR];

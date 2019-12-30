@@ -41,13 +41,15 @@ class KeywordsController extends AbstractController
         $header = $jobOfferDataDTO->getHeader();
 
         foreach( $foundRejectedKeywords as $keyword ){
-            $replaceWith = "<span class='text-danger'>{$keyword}</span>";
+            $replaceWith = "<span class='text-danger font-weight-bold'>{$keyword}</span>";
+            $header      = str_ireplace($keyword, $replaceWith, $header);
             $body        = str_ireplace($keyword, $replaceWith, $body);
         }
 
         foreach( $foundAcceptedKeywords as $keyword ){
-            $replaceWith = "<span class='text-success'>{$keyword}</span>";
+            $replaceWith = "<span class='text-success font-weight-bold'>{$keyword}</span>";
             $header      = str_ireplace($keyword, $replaceWith, $header);
+            $body        = str_ireplace($keyword, $replaceWith, $body);
         }
 
         $jobOfferDataDTO->setDescription($body);

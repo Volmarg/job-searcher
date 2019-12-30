@@ -31,4 +31,8 @@ class Utils extends AbstractController {
         return $jsonResponse;
     }
 
+    public static function newLineToSpacebar(string $text): string {
+        $replacedText = trim(preg_replace('/\s+/', ' ', $text));
+        return $replacedText;
+    }
 }

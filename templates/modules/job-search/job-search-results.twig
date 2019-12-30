@@ -10,6 +10,12 @@
 {% set BOOTBOX_TYPE_ALERT                  = constant(bootboxController ~ 'BOOTBOX_TYPE_ALERT') %}
 {% set BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE = constant(bootboxController ~ 'BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE') %}
 
+{% set KEY_PARAM_JOB_OFFER_DESCRIPTION       = constant(dialogController ~ 'KEY_PARAM_JOB_OFFER_DESCRIPTION') %}
+{% set KEY_PARAM_JOB_OFFER_HEADER            = constant(dialogController ~ 'KEY_PARAM_JOB_OFFER_HEADER') %}
+{% set KEY_PARAM_JOB_OFFER_LINK              = constant(dialogController ~ 'KEY_PARAM_JOB_OFFER_LINK') %}
+{% set KEY_PARAM_JOB_OFFER_REJECTED_KEYWORDS = constant(dialogController ~ 'KEY_PARAM_JOB_OFFER_REJECTED_KEYWORDS') %}
+{% set KEY_PARAM_JOB_OFFER_ACCEPTED_KEYWORDS = constant(dialogController ~ 'KEY_PARAM_JOB_OFFER_ACCEPTED_KEYWORDS') %}
+
 <div class="row" style="margin-top:50px;">
     <div class="col-sm-12">
         <div class="card">
@@ -38,8 +44,7 @@
                             <tr>
                                 <td
                                         class="clickable-cell job-offer-header"
-                                        data-job-offer-description="{{ jobOfferDataDto.getDescription() }}"
-                                        data-job-offer-offer-link="{{ jobOfferDataDto.getOfferLink() }}"
+                                        data-bootbox-callback-type-template-params='{"{{ KEY_PARAM_JOB_OFFER_DESCRIPTION }}" : "{{ jobOfferDataDto.getDescription() | escape }}", "{{ KEY_PARAM_JOB_OFFER_LINK }}" : "{{ jobOfferDataDto.getOfferLink() | escape }}", "{{ KEY_PARAM_JOB_OFFER_HEADER }}" : "{{ jobOfferDataDto.getHeader() | escape }}", "{{ KEY_PARAM_JOB_OFFER_REJECTED_KEYWORDS }}" : "{{ jobOfferDataDto.getRejectedKeywords() | json_encode | replace({'"':'\''}) }}", "{{ KEY_PARAM_JOB_OFFER_ACCEPTED_KEYWORDS }}" : "{{ jobOfferDataDto.getAcceptedKeywords() | json_encode | replace({'"':'\''}) }}" }'
                                         {# bootbox dialog data#}
                                         data-call-bootbox-dialog="true"
                                         data-bootbox-size="{{ BOOTBOX_SIZE_LARGE }}"
@@ -60,9 +65,11 @@
 
                                 <td class="">
                                     {% if jobOfferDataDto.isRejected() %}
-                                        <i class="feather text-danger icon-x-circle job-offer-status" data-is-rejected="true"></i>
+                                        <i class="feather text-danger icon-x-circle job-offer-status"
+                                           data-is-rejected="true"></i>
                                     {% else %}
-                                        <i class="feather text-success icon-check-circle job-offer-status" data-is-rejected="false"></i>
+                                        <i class="feather text-success icon-check-circle job-offer-status"
+                                           data-is-rejected="false"></i>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -71,7 +78,6 @@
                     </table>
 
                 </section>
-
 
 
             </div>

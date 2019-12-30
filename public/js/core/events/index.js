@@ -3,12 +3,13 @@ var events = {
     attributes: {
         data: {
             bootbox: {
-                callBootboxDialog           : "data-call-bootbox-dialog",
-                bootboxSize                 : "data-bootbox-size",
-                bootboxType                 : "data-bootbox-type",
-                bootboxMessage              : "data-bootbox-message",
-                bootboxCallbackType         : "data-bootbox-callback-type",
-                bootboxCallbackTemplateType : "data-bootbox-callback-type-template-name",
+                callBootboxDialog             : "data-call-bootbox-dialog",
+                bootboxSize                   : "data-bootbox-size",
+                bootboxType                   : "data-bootbox-type",
+                bootboxMessage                : "data-bootbox-message",
+                bootboxCallbackType           : "data-bootbox-callback-type",
+                bootboxCallbackTemplateType   : "data-bootbox-callback-type-template-name",
+                bootboxCallbackTemplateParams : "data-bootbox-callback-type-template-params"
             },
             buttons: {
                 entityName                  : "data-entity-name",
@@ -144,6 +145,7 @@ var events = {
 
                         case BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE:
                             let templateType = $element.attr(_this.attributes.data.bootbox.bootboxCallbackTemplateType);
+                            let params       = $element.attr(_this.attributes.data.bootbox.bootboxCallbackTemplateParams);
 
                             if( "undefined" == typeof templateType){
                                 throw({
@@ -163,7 +165,7 @@ var events = {
                                 _this.dataTables.attachDatatableEvent(templateType);
                             };
                             dialogs.setDialogBody($bootboxBody);
-                            dialogs.makeAjaxCallForDialogTemplateType(templateType, callback);
+                            dialogs.makeAjaxCallForDialogTemplateType(templateType, callback, params);
 
                             break;
                         default:
@@ -434,24 +436,10 @@ var events = {
                     });
                 }
                     break;
-                case TEMPLATE_JOB_SEARCH_RESULTS:
+                case TEMPLATE_TYPE_SEARCH_RESULT_DETAILS:
                 {
                     let $table = $(events.selectors.query.jobSearchResultTable);
                     let $rows  = $table.find("tbody tr");
-
-                    $.each($rows, (index, row) => {
-                        let $row      = $(row);
-                        let $nameCell = $row.find('.job-offer-header');
-
-                        let offerDescription = $row.attr(events.attributes.data.jobSearchResult.offerDescription);
-                        let offerLink        = $row.attr(events.attributes.data.jobSearchResult.offerLink);
-
-                        $nameCell.off('click');
-                        $nameCell.on('click', () => {
-                            console.log('test');
-                        });
-                    });
-
                 }
                     break;
                 default:
