@@ -31,6 +31,7 @@ modules:
 forms:
   buttons:
     submit: Submit
+    save: Save
   JobOfferScrappingType:
     placeholders:
       urlPattern: "Provide pattern for search result page, example: "
@@ -44,7 +45,12 @@ forms:
       regexForLinksSkipping: "Regex rule for skipping links with given format, example: #/ad-paid-offer/#"
       acceptedKeywords: "This keywords will be used to mark job offer as accepted/rejected"
       rejectedKeywords: "This keywords will be used to mark job offer as accepted/rejected"
-
+  MailTemplateType:
+    placeholders:
+      name: Template name
+      title: Mail title
+      description: Mail content
+      attachmentLinks: Attached files links- absolute paths
 dialogs:
   searchSettings:
     table:

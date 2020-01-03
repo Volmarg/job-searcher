@@ -75,8 +75,14 @@ class MailTemplate
         return $this->attachmentLinks;
     }
 
-    public function setAttachmentLinks(?array $attachmentLinks): self
+    public function setAttachmentLinks($attachmentLinks): self
     {
+        if( is_string($attachmentLinks) ) {
+            $attachmentLinksArray  =  explode(',',$attachmentLinks);
+            $this->attachmentLinks = $attachmentLinksArray;
+            return $this;
+        }
+
         $this->attachmentLinks = $attachmentLinks;
 
         return $this;

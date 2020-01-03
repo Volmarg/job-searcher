@@ -5,6 +5,7 @@ namespace App\Controller\Gui;
 use App\Controller\Application;
 use App\Controller\ConstantsController;
 use App\Controller\Logic\Mail\MailTemplateController;
+use App\Controller\Utils;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
@@ -21,6 +22,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class MailTemplateAction extends AbstractController
 {
 
+    const TWIG_TEMPLATE_SHOW_MANAGEMENT_PAGE = "modules/mail-templates/manage.twig";
+
     /**
      * @var Application $app
      */
@@ -36,6 +39,26 @@ class MailTemplateAction extends AbstractController
         $this->app = $app;
     }
 
+    /**
+     * @Route("mail-template/ajax/page", name="mail_template_ajax_page")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getManagementPageContent(Request $request): JsonResponse{
+
+        $allSavedTemplates = $this->app->getRepositories()->mailTemplateRepository()->findAll();
+
+        $form         = $this->app->getForms()->getMailTemplateForm();
+        $templateData = [
+            'form'      => $form->createView(),
+            'templates' => $allSavedTemplates,
+        ];
+        $renderedPage = $this->render(self::TWIG_TEMPLATE_SHOW_MANAGEMENT_PAGE, $templateData);
+        $pageContent  = $renderedPage->getContent();
+
+        return Utils::buildAjaxResponse('', false, 200, null, $pageContent);
+    }
+
     public function loadTemplateViaAjax() {
 
     }
@@ -49,7 +72,7 @@ class MailTemplateAction extends AbstractController
      * @throws OptimisticLockException
      * @throws Exception
      */
-    public function saveTemplateViaAjax(Request $request, string $id): JsonResponse {
+    public function saveTemplateViaAjax(Request $request, string $id = null): JsonResponse {
 
         $message = $this->app->getTranslator()->trans("mailTemplate.save.success");
         $code    = 200;

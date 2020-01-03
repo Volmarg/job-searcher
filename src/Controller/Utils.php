@@ -12,7 +12,15 @@ use Symfony\Component\Serializer\Serializer;
 
 class Utils extends AbstractController {
 
-    public static function buildAjaxResponse(string $message, bool $error, int $code, SearchSetting $searchSetting = null): JsonResponse {
+    /**
+     * @param string $message
+     * @param bool $error
+     * @param int $code
+     * @param SearchSetting|null $searchSetting
+     * @param string|null $template
+     * @return JsonResponse
+     */
+    public static function buildAjaxResponse(string $message, bool $error, int $code, SearchSetting $searchSetting = null, string $template = null ): JsonResponse {
 
         $serializer = new Serializer([new GetSetMethodNormalizer()], [new JsonEncoder()]);
 
@@ -25,6 +33,10 @@ class Utils extends AbstractController {
         if( !empty($searchSetting) ){
             $serializedSearchSetting = $serializer->serialize($searchSetting, 'json');
             $responseData[ConstantsController::KEY_JSON_RESPONSE_SEARCH_SETTING] = $serializedSearchSetting;
+        }
+
+        if( !empty($template) ){
+            $responseData[ConstantsController::KEY_JSON_RESPONSE_TEMPLATE] = $template;
         }
 
         $jsonResponse = new JsonResponse($responseData, 200);

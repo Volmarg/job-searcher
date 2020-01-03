@@ -28,7 +28,10 @@ var events = {
                 callOnClick          : "data-ajax-call-on-click",
                 callForSelectorClick : "data-call-ajax-for-selector-click",
                 callMethod           : "data-ajax-call-method",
-                callMethodParams     : "data-ajax-call-method-params"
+                callMethodParams     : "data-ajax-call-method-params",
+                loadPageContent      : "data-load-page-content",
+                loadPageContentUrl   : "data-load-page-content-url",
+                loadPageContentMethod: "data-load-page-content-method"
             },
             jobSearchResult: {
                 offerDescription : "data-job-offer-description",
@@ -73,6 +76,7 @@ var events = {
     },
     init: function(){
       this.attachCallBootBoxDialog();
+      this.attachAjaxPageContentLoadOnElementClick();
       this.buttons.attachRemoveEntitiesEvent();
       this.forms.submitViaAjax();
     },
@@ -250,6 +254,42 @@ var events = {
         })
 
     },
+
+    /**
+     * This function will search for elements with given attr. and attach an ajax call event on them
+     */
+    attachAjaxPageContentLoadOnElementClick: function (){
+        let _this = this;
+        let allElementsWithBootboxCall = $('[' + _this.attributes.data.ajax.loadPageContent + '= "true"]');
+
+        $.each(allElementsWithBootboxCall, function(index, element) {
+
+            let $element = $(element);
+
+            $element.off('click');
+            $element.on('click', () => {
+               let $clickedElement = $(element);
+               let url             = $clickedElement.attr(_this.attributes.data.ajax.loadPageContentUrl);
+               let method          = $clickedElement.attr(_this.attributes.data.ajax.loadPageContentMethod);
+
+               if( "undefined" === typeof url ){
+                   throw({
+                      "message": "Missing url attribute for ajax page content load",
+                      "element":  $clickedElement
+                   });
+               }
+
+                if( "undefined" === typeof method ){
+                    throw({
+                        "message": "Missing method attribute for ajax page content load",
+                        "element":  $clickedElement
+                    });
+                }
+
+                _this.ajaxCalls.loadPageTemplate(url, method);
+            });
+        })
+    },
     /**
      * Handle general ajax call
      */
@@ -357,7 +397,7 @@ var events = {
 
                        // if input has been selectized then anything inserted into value is removed
                        if( $input.attr("name") === "job_offer_scrapping["+ name +"]"){
-                           let isSelectize = ( $input.attr(selectize.attributes.data.isSelectize) == "true" );
+                           let isSelectize = ( $input.attr(selectize.attributes.data.isTinyMce) == "true" );
 
                            if( isSelectize ){
                                selectize.addItems($input, value);
@@ -379,8 +419,54 @@ var events = {
          */
         deleteSearchSettings: function(ids){
 
+        },
+        /**
+         * This function will make an ajax and place the resulted template into main content wrapper
+         * @param url    {string}
+         * @param method {string}
+         * @param data   {object}
+         */
+        loadPageTemplate: function(url, method, data){
 
+            if( "undefined" === typeof data){
+                data = {};
+            }
 
+            loaders.spinner.showSpinner();
+            $.ajax({
+                url    : url,
+                method : method,
+                data   : data
+            }).always( (data) => {
+
+                try{
+                    var error    = data[KEY_JSON_RESPONSE_ERROR];
+                    var message  = data[KEY_JSON_RESPONSE_MESSAGE];
+                    var template = data[KEY_JSON_RESPONSE_TEMPLATE];
+                }catch(Exception){
+                    throw({
+                        "message": events.messages.couldNotHandleAjaxResponse
+                    })
+                }
+
+                if( true === error ){
+                    loaders.spinner.hideSpinner();
+                    infoBox.showDangerBox(message);
+                    return;
+                }
+
+                if( "undefined" === typeof template ){
+                    throw({
+                        "message": "No template was returned for ajax call",
+                        "url"    : url,
+                    })
+                }
+
+                events.domElements.mainContainerWrapper.html(template);
+                tinyMce.init();
+                events.init();
+                selectize.init();
+            });
         }
     },
     /**

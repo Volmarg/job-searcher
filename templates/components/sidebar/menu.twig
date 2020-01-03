@@ -19,8 +19,11 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link wave-effect collapsed" data-parent="#sidebarCookie" data-toggle="collapse"
-           href="#navMailbox" aria-expanded="false" aria-controls="page-mailbox">
+        <a class="nav-link wave-effect collapsed"
+           data-load-page-content="true"
+           data-load-page-content-url="{{ path('mail_template_ajax_page') }}"
+           data-load-page-content-method="GET"
+        >
             <i class="feather icon-mail"></i>
             <span class="menu-title">{{ 'menu.mailTemplates' | trans }}</span>
         </a>

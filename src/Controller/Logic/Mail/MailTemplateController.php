@@ -31,44 +31,33 @@ class MailTemplateController extends AbstractController
      */
     public function buildMailTemplateEntityFromRequest(Request $request): MailTemplate {
 
-        $name            = "";
-        $title           = "";
-        $description     = "";
-        $attachmentLinks = "";
+        $mailTemplateForm   = $this->app->getForms()->getMailTemplateForm()->handleRequest($request);
+        /**
+         * @var $mailTemplate MailTemplate
+         */
+        $mailTemplate    = $mailTemplateForm->getData();
+        $name            = $mailTemplate->getName();
+        $description     = $mailTemplate->getDescription();;
+        $title           = $mailTemplate->getTitle();
 
         $missingFieldsNames = [];
 
-        if( !$request->request->has(MailTemplate::KEY_NAME) ){
+        if( empty($name) ){
             $missingFieldsNames[] = MailTemplate::KEY_NAME;
         }
 
-        if( !$request->request->has(MailTemplate::KEY_DESCRIPTION) ){
+        if( empty($description) ){
             $missingFieldsNames[] = MailTemplate::KEY_DESCRIPTION;
         }
 
-        if( !$request->request->has(MailTemplate::KEY_TITLE) ){
+        if( empty($title) ){
             $missingFieldsNames[] = MailTemplate::KEY_TITLE;
-        }
-
-        if( !$request->request->has(MailTemplate::KEY_ATTACHMENT_LINKS) ){
-            $missingFieldsNames[] = MailTemplate::KEY_ATTACHMENT_LINKS;
         }
 
         if( !empty($missingFieldsNames) ){
             $missingFieldsNamesString = implode(",", $missingFieldsNames);
             throw new \Exception("There are missing keys in request: {$missingFieldsNamesString}");
         }
-
-        $name            = $request->request->get(MailTemplate::KEY_NAME);
-        $description     = $request->request->get(MailTemplate::KEY_DESCRIPTION);
-        $title           = $request->request->get(MailTemplate::KEY_TITLE);
-        $attachmentLinks = $request->request->get(MailTemplate::KEY_ATTACHMENT_LINKS);
-
-        $mailTemplate = new MailTemplate()        ;
-        $mailTemplate->setDescription($description);
-        $mailTemplate->setName($name);
-        $mailTemplate->setTitle($title);
-        $mailTemplate->setAttachmentLinks($attachmentLinks);
 
         return $mailTemplate;
     }
