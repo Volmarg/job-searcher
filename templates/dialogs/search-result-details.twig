@@ -7,29 +7,35 @@
 {% set KEY_PARAM_JOB_OFFER_REJECTED_KEYWORDS = constant(dialogController ~ 'KEY_PARAM_JOB_OFFER_REJECTED_KEYWORDS') %}
 {% set KEY_PARAM_JOB_OFFER_ACCEPTED_KEYWORDS = constant(dialogController ~ 'KEY_PARAM_JOB_OFFER_ACCEPTED_KEYWORDS') %}
 
-<h5>{{ _context[KEY_PARAM_JOB_OFFER_HEADER] | raw}}</h5>
-<h4><a href="{{ _context[KEY_PARAM_JOB_OFFER_LINK] |raw}}">{{ _context[KEY_PARAM_JOB_OFFER_LINK] |raw}}</a> </h4>
+<h5 class="text-center">{{ _context[KEY_PARAM_JOB_OFFER_HEADER] | raw}}</h5>
+<h4 class="text-center"><a href="{{ _context[KEY_PARAM_JOB_OFFER_LINK] |raw}}" target="_blank">{{ _context[KEY_PARAM_JOB_OFFER_LINK] |raw}}</a> </h4>
 <div id="jobOfferDetailsWrapper" style="padding:5px;">
-    <section class="job-offer-detail-description">
+    <section class="job-offer-detail-description text-justify">
         <i>
             {{ _context[KEY_PARAM_JOB_OFFER_DESCRIPTION] | raw}}
         </i>
     </section>
     <hr>
-    <section class="job-offer-detail-rejected-keywords">
-        <ul>
-            {% for keyword in _context[KEY_PARAM_JOB_OFFER_REJECTED_KEYWORDS] %}
-                <li>{{ keyword | raw}}</li>
-            {% endfor %}
-        </ul>
-    </section>
-    <hr>
-    {# todo: make this sections visible only when there really are keywords + add headers #}
-    <section class="job-offer-detail-rejected-keywords">
-        <ul>
-            {% for keyword in _context[KEY_PARAM_JOB_OFFER_ACCEPTED_KEYWORDS] %}
-                <li>{{ keyword | raw}}</li>
-            {% endfor %}
-        </ul>
+
+    <section class="keywords-section d-flex justify-content-around">
+
+        <section class="job-offer-detail-rejected-keywords">
+            <h5>{{ "dialogs.jobSearchDetails.headers.rejectedKeywords" | trans }}</h5>
+            <ul>
+                {% for keyword in _context[KEY_PARAM_JOB_OFFER_REJECTED_KEYWORDS] %}
+                    <li>{{ keyword | raw}}</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="job-offer-detail-rejected-keywords">
+            <h5>{{ "dialogs.jobSearchDetails.headers.acceptedKeywords" | trans }}</h5>
+            <ul>
+                {% for keyword in _context[KEY_PARAM_JOB_OFFER_ACCEPTED_KEYWORDS] %}
+                    <li>{{ keyword | raw}}</li>
+                {% endfor %}
+            </ul>
+        </section>
+
     </section>
 </div>

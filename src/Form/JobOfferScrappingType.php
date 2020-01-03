@@ -83,16 +83,20 @@ class JobOfferScrappingType extends AbstractType
             ])
             ->add(SearchSetting::KEY_ACCEPTED_KEYWORDS, TextType::class, [
                 "attr" => [
-                    "placeholder" => $this->app->getTranslator()->trans("forms.JobOfferScrappingType.placeholders.acceptedKeywords"),
+                    "placeholder"       => $this->app->getTranslator()->trans("forms.JobOfferScrappingType.placeholders.acceptedKeywords"),
+                    "data-is-selectize" => "true"
                 ]
             ])
             ->add(SearchSetting::KEY_REJECTED_KEYWORDS, TextType::class, [
                 "attr" => [
-                    "placeholder" => $this->app->getTranslator()->trans("forms.JobOfferScrappingType.placeholders.rejectedKeywords"),
+                    "placeholder"       => $this->app->getTranslator()->trans("forms.JobOfferScrappingType.placeholders.rejectedKeywords"),
+                    "data-is-selectize" => "true"
                 ]
             ])
             ->add( $this->app->getTranslator()->trans("forms.buttons.submit"), SubmitType::class, [
-
+                "attr" => [
+                    "data-ajax-form-submit" => "true"
+                ]
             ])
             ->add( $this->app->getTranslator()->trans(self::KEY_SAVE_SEARCH_SETTING), SubmitType::class, [
                 "attr" => [

@@ -21,6 +21,7 @@ var events = {
             },
             forms: {
                 submitViaAjax               : "data-submit-via-ajax",
+                elementForSubmitViaAjax     : "data-ajax-form-submit",
                 ajaxUrl                     : "data-ajax-url"
             },
             ajax: {
@@ -353,12 +354,21 @@ var events = {
                    let $input = $(input);
 
                    $.each( searchSettingJson, (name, value) => {
+
+                       // if input has been selectized then anything inserted into value is removed
                        if( $input.attr("name") === "job_offer_scrapping["+ name +"]"){
+                           let isSelectize = ( $input.attr(selectize.attributes.data.isSelectize) == "true" );
+
+                           if( isSelectize ){
+                               selectize.addItems($input, value);
+                               return;
+                           }
                            $input.val(value);
                        }
                    });
                 });
 
+                selectize.init();
                 infoBox.showSuccessBox(message);
             });
         },
@@ -543,7 +553,7 @@ var events = {
 
             $.each(allFormsToHandle, (index, form) => {
                 let $form         = $(form);
-                let $submitButton = $form.find('button[type="submit"');
+                let $submitButton = $form.find("[" + events.attributes.data.forms.elementForSubmitViaAjax + "=true]");
 
                 $submitButton.on('click', function(event) {
                     event.preventDefault();

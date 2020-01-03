@@ -58,3 +58,7 @@ dialogs:
     failure:
       dialogTypeWasNotProvided: Dialog type was not provided
       thisDialogTypeIsNotSupported: This dialog type is not supported
+  jobSearchDetails:
+    headers:
+      rejectedKeywords: Rejected keywords
+      acceptedKeywords: Accepted keywords
