@@ -17,7 +17,9 @@ var events = {
                 ajaxRemovalLink             : "data-entity-removal-ajax-link",
                 removedIdsElementsSelector  : "data-entity-removed-ids-elements-selector",
                 entityId                    : "data-entity-id",
-                parentToRemoveSelector      : "data-parent-element-to-remove-selector"
+                parentToRemoveSelector      : "data-parent-element-to-remove-selector",
+                loadMailTemplate            : "data-load-mail-template",
+                mailTemplateId              : "data-mail-template-id",
             },
             forms: {
                 submitViaAjax               : "data-submit-via-ajax",
@@ -52,7 +54,8 @@ var events = {
         query: {
             searchSettingsTable : "#searchSettingsDialogWrapper table",
             jobSearchResultTable: "#jobSearchResultWrapper table",
-            jobSearchForm       : "#jobSearchWrapper form"
+            jobSearchForm       : "#jobSearchWrapper form",
+            mailTemplateForm    : "#mailManageWrapper form"
         }
     },
     api: {
@@ -62,6 +65,14 @@ var events = {
         },
         loadSearchSetting: {
             urlWithoutParams   : "search-settings/ajax/load",
+            method: "GET",
+        },
+        loadEmailTemplate: {
+            urlWithoutParams   : "mail-template/ajax/load",
+            method: "GET",
+        },
+        saveEmailTemplate: {
+            urlWithoutParams   : "mail-template/ajax/save/",
             method: "GET",
         }
     },
@@ -78,6 +89,7 @@ var events = {
       this.attachCallBootBoxDialog();
       this.attachAjaxPageContentLoadOnElementClick();
       this.buttons.attachRemoveEntitiesEvent();
+      this.buttons.attachLoadMailTemplateEvent();
       this.forms.submitViaAjax();
     },
     /**
@@ -397,7 +409,7 @@ var events = {
 
                        // if input has been selectized then anything inserted into value is removed
                        if( $input.attr("name") === "job_offer_scrapping["+ name +"]"){
-                           let isSelectize = ( $input.attr(selectize.attributes.data.isTinyMce) == "true" );
+                           let isSelectize = ( $input.attr(selectize.attributes.data.isSelectize) == "true" );
 
                            if( isSelectize ){
                                selectize.addItems($input, value);
@@ -411,14 +423,6 @@ var events = {
                 selectize.init();
                 infoBox.showSuccessBox(message);
             });
-        },
-        /**
-         * This function will delete searchSettings with given id
-         * If the id sent to the backend does no exist then it will just be skipped and information will be returned
-         * @param ids
-         */
-        deleteSearchSettings: function(ids){
-
         },
         /**
          * This function will make an ajax and place the resulted template into main content wrapper
@@ -466,6 +470,76 @@ var events = {
                 tinyMce.init();
                 events.init();
                 selectize.init();
+            });
+        },
+        /**
+         * This function will load the saved email template
+         * @param id
+         */
+        loadEmailTemplate: function(id){
+            loaders.spinner.showSpinner();
+            $.ajax({
+                url: events.api.loadEmailTemplate.urlWithoutParams + '/' + id,
+                method: events.api.loadEmailTemplate.method
+            }).always( (data) => {
+                loaders.spinner.hideSpinner();
+
+                try{
+                    var error   = data[KEY_JSON_RESPONSE_ERROR];
+                    var message = data[KEY_JSON_RESPONSE_MESSAGE];
+                }catch(Exception){
+                    throw({
+                        "message"  : "Could not handle the ajax response",
+                        "exception": Exception
+                    })
+                }
+
+                if( error ){
+                    infoBox.showDangerBox(message);
+                    return;
+                }
+
+                let mailTemplateString = data[KEY_JSON_RESPONSE_MAIL_TEMPLATE];
+                let mailTemplateJson   = JSON.parse(mailTemplateString);
+
+                let $mailTemplateForm        = $(events.selectors.query.mailTemplateForm);
+                let mailTemplateFormElements = $mailTemplateForm.find('input, textarea');
+
+                $.each( mailTemplateFormElements, (index, input) => {
+                    let $formElement = $(input);
+
+                    $.each( mailTemplateJson, (name, value) => {
+
+                        if( $formElement.attr("name") === "mail_template["+ name +"]") {
+                            
+                            // if textarea is tinymce then we need to handle passing data to textarea and tinymce editor
+                            if( $formElement.is("textarea")){
+                                let isTinymce = ( $formElement.attr(tinyMce.attributes.data.isTinyMce) == "true" );
+                                $formElement.text(value);
+
+                                if( isTinymce ){
+                                    tinymce.get($formElement.attr('id')).setContent(value);
+                                    tinyMce.init();
+                                }
+
+                                return;
+                            }
+
+                            // if element has been selectized then anything inserted into value is removed
+                            let isSelectize = ( $formElement.attr(selectize.attributes.data.isSelectize) == "true" );
+
+                            if( isSelectize ){
+                                selectize.addItems($formElement, value);
+                                return;
+                            }
+
+                            $formElement.val(value);
+                        }
+                    });
+                });
+
+                selectize.init();
+                infoBox.showSuccessBox(message);
             });
         }
     },
@@ -630,6 +704,36 @@ var events = {
                     });
                 });
             })
+        },
+        /**
+         * This function attaches the mail template load event handling
+         */
+        attachLoadMailTemplateEvent: function(){
+            let allElementsToHandle = $("[" + events.attributes.data.buttons.loadMailTemplate + "='true']");
+
+            $.each(allElementsToHandle, (index, element) => {
+                let $element = $(element);
+
+                $element.off("click");
+                $element.on('click', (event) => {
+                    let $clickedElement = $(event.currentTarget);
+                    let mailTemplateId  = $clickedElement.attr(events.attributes.data.buttons.mailTemplateId);
+
+                    if( "undefined" === typeof mailTemplateId ){
+                        throw({
+                            "message"       : "Mail template id attribute is missing for mail template load",
+                            "clickedElement": $clickedElement
+                        });
+                    }
+
+                    events.ajaxCalls.loadEmailTemplate(mailTemplateId);
+
+                    // set the id of edited template to form action attribute.
+                    let $mailTemplateForm = $(events.selectors.query.mailTemplateForm);
+                    let ajaxUrl           = events.api.saveEmailTemplate.urlWithoutParams + mailTemplateId;
+                    $mailTemplateForm.attr(events.attributes.data.forms.ajaxUrl, ajaxUrl);
+                });
+            });
         }
     },
     forms: {

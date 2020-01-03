@@ -14,8 +14,8 @@
 
                 <div class="d-md-flex justify-content-center">
                     <div>
-                        <h4 class="card-title">{{ "modules.jobSearchResults.header.main" | trans }}</h4>
-                        <p class="card-subtitle"><i>{{ "modules.jobSearchResults.header.sub" | trans }}</i></p>
+                        <h4 class="card-title text-center" >{{ "modules.mailTemplatesManage.header.main" | trans }}</h4>
+                        <p class="card-subtitle text-center"><i>{{ "modules.mailTemplatesManage.header.sub" | trans }}</i></p>
                     </div>
                 </div>
 
@@ -25,14 +25,18 @@
                     <div class="row">
                         <div class="col-sm-3 col-md-2">
                             <div class="p-2">
-                                <a href="#" class="btn btn-danger btn-block" role="button">COMPOSE</a> {#todo: trans#}
+                                <a href="#" class="btn btn-danger btn-block" role="button">{{ 'modules.mailTemplatesManage.builder.compose' | trans }}</a>
                             </div>
 
                             <ul class="list-group mt-4">
-                                <li class="list-group-item list-group-item-title font-weight-bold">Saved templates</li> {#todo: trans#}
+                                <li class="list-group-item list-group-item-title font-weight-bold">{{ 'modules.mailTemplatesManage.builder.savedTemplates' | trans }}</li>
                                 {% for template in templates %}
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <a href="javascript:void(0)" class="active list-group-item-action" data-id="{{ template.getId() }}">
+                                        <a href="javascript:void(0)"
+                                           class="active list-group-item-action"
+                                           data-mail-template-id="{{ template.getId() }}"
+                                           data-load-mail-template="true"
+                                        >
                                             <i class="mdi mdi-inbox"></i> {{ template.getName() }}
                                         </a>
                                     </li>
@@ -44,7 +48,7 @@
                             <div class="card">
                                 {{ form_start(form, {
                                     "attr": {
-                                        "data-ajax-url"         : path('mail_template_ajax_save'),
+                                        "data-ajax-url"         : path('mail_template_ajax_save', {"id": null} ),
                                         "data-submit-via-ajax"  : "true"
                                     }
                                 }) }}

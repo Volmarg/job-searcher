@@ -1,11 +1,11 @@
 var selectize = {
     attributes: {
         data: {
-            isTinyMce: "data-is-selectize"
+            isSelectize: "data-is-selectize"
         }
     },
     init: function(){
-        let allSelectizeElements = $("[" + this.attributes.data.isTinyMce + "]");
+        let allSelectizeElements = $("[" + this.attributes.data.isSelectize + "]");
 
         $.each(allSelectizeElements, function(index, element) {
            let $element = $(element);

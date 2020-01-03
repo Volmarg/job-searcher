@@ -5,6 +5,9 @@ namespace App\Controller;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Application extends AbstractController
@@ -31,6 +34,11 @@ class Application extends AbstractController
     private $forms;
 
     /**
+     * @var Serializer $serializer
+     */
+    private $serializer;
+
+    /**
      * @return LoggerInterface
      */
     public function getLogger(): LoggerInterface {
@@ -52,11 +60,16 @@ class Application extends AbstractController
         return $this->forms;
     }
 
+    public function getSerializer(): Serializer {
+        return $this->serializer;
+    }
+
     public function __construct(TranslatorInterface $translator, LoggerInterface $logger, Repositories $repositories, Forms $forms) {
         $this->repositories = $repositories;
         $this->translator   = $translator;
         $this->logger       = $logger;
         $this->forms        = $forms;
+        $this->serializer   = new Serializer([new GetSetMethodNormalizer()], [new JsonEncoder()]);
     }
 
 }

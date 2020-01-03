@@ -27,6 +27,17 @@ modules:
     header:
       main: Job search results
       sub: Click on name for more details
+  mailTemplatesManage:
+    header:
+      main: Mail templates
+      sub: Save new template or edit existing one
+    builder:
+      compose: COMPOSE
+      savedTemplates: Saved templates
+    load:
+      success: Mail template has been successfully loaded
+      fail:
+        noTemplateFoundForId: No template was found for given id
 
 forms:
   buttons:

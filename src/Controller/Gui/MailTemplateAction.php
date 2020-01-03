@@ -59,12 +59,25 @@ class MailTemplateAction extends AbstractController
         return Utils::buildAjaxResponse('', false, 200, null, $pageContent);
     }
 
-    public function loadTemplateViaAjax() {
+    /**
+     * @Route("mail-template/ajax/load/{id}", name="mail_template_ajax_load")
+     * @param string $id
+     * @return JsonResponse
+     */
+    public function loadTemplateViaAjax(string $id): JsonResponse {
+        $mailTemplate = $this->app->getRepositories()->mailTemplateRepository()->find($id);
 
+        if( empty($mailTemplate) ){
+            $message = $this->app->getTranslator()->trans("modules.mailTemplatesManage.load.fail.noTemplateFoundForId");
+            return Utils::buildAjaxResponse($message, true, 200);
+        }
+
+        $message = $this->app->getTranslator()->trans("modules.mailTemplatesManage.load.success");
+        return Utils::buildAjaxResponse($message, false, 200, null, null, $mailTemplate);
     }
 
     /**
-     * @Route("mail-template/ajax/save{?id}", name="mail_template_ajax_save")
+     * @Route("mail-template/ajax/save/{id}", name="mail_template_ajax_save")
      * @param Request $request
      * @param string $id
      * @return JsonResponse

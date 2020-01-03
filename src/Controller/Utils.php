@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+use App\Entity\MailTemplate;
 use App\Entity\SearchSetting;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,14 +14,23 @@ use Symfony\Component\Serializer\Serializer;
 class Utils extends AbstractController {
 
     /**
+     * //todo: turn params into dto if this will keep growing.
      * @param string $message
      * @param bool $error
      * @param int $code
      * @param SearchSetting|null $searchSetting
      * @param string|null $template
+     * @param MailTemplate|null $mailTemplate
      * @return JsonResponse
      */
-    public static function buildAjaxResponse(string $message, bool $error, int $code, SearchSetting $searchSetting = null, string $template = null ): JsonResponse {
+    public static function buildAjaxResponse(
+        string        $message,
+        bool          $error,
+        int           $code,
+        SearchSetting $searchSetting = null,
+        string        $template      = null,
+        MailTemplate  $mailTemplate  = null
+    ): JsonResponse {
 
         $serializer = new Serializer([new GetSetMethodNormalizer()], [new JsonEncoder()]);
 
@@ -37,6 +47,11 @@ class Utils extends AbstractController {
 
         if( !empty($template) ){
             $responseData[ConstantsController::KEY_JSON_RESPONSE_TEMPLATE] = $template;
+        }
+
+        if( !empty($mailTemplate) ){
+            $serializedMailTemplate = $serializer->serialize($mailTemplate, 'json');
+            $responseData[ConstantsController::KEY_JSON_RESPONSE_MAIL_TEMPLATE] = $serializedMailTemplate;
         }
 
         $jsonResponse = new JsonResponse($responseData, 200);
