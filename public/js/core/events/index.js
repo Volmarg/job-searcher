@@ -697,16 +697,21 @@ var events = {
                     let idsToRemove        = [];
                     if( "undefined" === typeof ids ) {
                         $.each(allElementsWithIds, (index, element) => {
-                            let $element = $(element);
+                            let $element  = $(element);
+                            let isRemoved = false;
 
                             // if this is checkbox then we handle removal for each selected checkbox, otherwise only clicked element
-                            if( $element.is("INPUT") && $element.prop('checked')){
-                                var id  = $element.attr(events.attributes.data.buttons.entityId);
+                            if( $element.is("INPUT") ){
+                                if( $element.prop('checked') ){
+                                    var id    = $element.attr(events.attributes.data.buttons.entityId);
+                                    isRemoved = true;
+                                }
                             }else {
-                                var id  = $button.attr(events.attributes.data.buttons.entityId);
+                                var id    = $button.attr(events.attributes.data.buttons.entityId);
+                                isRemoved = true;
                             }
 
-                            if( "undefined" !== parentToRemoveSelector ){
+                            if( "undefined" !== parentToRemoveSelector && isRemoved ){
                                 let elementToRemove = $element.closest(parentToRemoveSelector);
                                 elementsToRemove.push(elementToRemove);
                             }

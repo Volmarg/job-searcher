@@ -190,7 +190,7 @@ class MailTemplateAction extends AbstractController
         }
 
         if( !empty($jobOfferHeader) ){
-            $text = str_replace(MailTemplateController::MAIL_TEMPLATE_VARIABLE_JOB_OFFER_URL, $jobOfferHeader, $text);
+            $text = str_replace(MailTemplateController::MAIL_TEMPLATE_VARIABLE_JOB_OFFER_URL, $jobOfferUrl, $text);
         }
 
         return $text;
