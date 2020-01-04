@@ -1,8 +1,5 @@
 <p align="center">
-<img src="https://github.com/Volmarg/personal-management-system/blob/beta1.0/public/assets/images/logo/smaller.png?raw=true" width="150px;" />
-</p>
-<p align="center">
-<img src="https://github.com/Volmarg/personal-management-system/blob/main/github/bar.jpg?raw=true" />
+<img src="https://github.com/Volmarg/job-searcher/blob/master/github/logo.png?raw=true" width="150px;" />
 </p>
 
 <h1 align="center"> Job Searcher </h1>
@@ -22,7 +19,7 @@
 </p>
 
 <p align="justify">
-    Now the reason itself is pretty simple - I was sick and tired of scrolling through the job offers over and over and over just to find on it's end that I actually don't fit in due to some missing skills where magically out of nowhere after entire php/js description it's required to know C#... Other naturall cases - why even bothering reading the offers when You barely get response from any at all, or You see email adresses like `recrutation@spam.domain.com`.
+    Now the reason itself is pretty simple - I was sick and tired of scrolling through the job offers over and over and over just to find on it's end that I actually don't fit in due to some missing skills where magically out of nowhere after entire php/js description it's required to know C#... Other naturall cases - why even bothering reading the offers when You barely get response from any at all, or You see email adresses like <b>recrutation@spam.domain.com</b>.
 </p>
 
 <p align="justify">
@@ -33,10 +30,10 @@
 <hr>
 
 <ol>
-    <li><b style="display:inline">🎯 Job searching </b> - <span align="justify"><i>Scraps the job offers details from given search result pages based on provided cryteria</i>
+    <li><b style="display:inline">🔎 Job searching </b> - <span align="justify"><i>Scraps the job offers details from given search result pages based on provided cryteria</i>
         </span></li><br/>
-        <li><b>📖 Search settings</b> <span align="justify"> - It can take some time to set up the proper cryteria to scan given pages - with this You can save Your settings and reuse them for example next week, or just change some keywords and save them as new setting,</span></li><br/>
-        <li><b>📞 Mail templates</b> - <span align="justify"> Create mail template wich can be used to generate mail content upon displaying search results.
+        <li><b>💾 Search settings</b> <span align="justify"> - It can take some time to set up the proper cryteria to scan given pages - with this You can save Your settings and reuse them for example next week, or just change some keywords and save them as new setting,</span></li><br/>
+        <li><b>📨 Mail templates</b> - <span align="justify"> Create mail template wich can be used to generate mail content upon displaying search results.
             </span></li><br/>
 </ol>
 
@@ -45,28 +42,19 @@
 <p align="center">Fully accessible demo can be found <a href="http://185.204.216.136:8001"><b>⇛Here⇚</b></a>.</p>
 <p><i><b>Info!</b> All data is removed daily - so better don't store any settings here.</i></p>
 
-<img src="https://github.com/Volmarg/personal-management-system/blob/main/github/1.20_contacts.jpg?raw=true">
+<img src="https://github.com/Volmarg/job-searcher/blob/master/github/screen1.jpg?raw=true">
 
 <hr>	
 	
-<img src="https://github.com/Volmarg/personal-management-system/blob/main/github/preview2.png?raw=true">
+<img src="https://github.com/Volmarg/job-searcher/blob/master/github/screen2.jpg?raw=true">
 
-<hr>
-
-<img src="https://github.com/Volmarg/personal-management-system/blob/main/github/preview3.png?raw=true">
 </div>
 
 <hr>
 
-<h2>How to install/documentation</h2>
+<h2>How to install/use</h2>
 <p>
-You can find all the informations <a href="https://volmarg.github.io"><b>⇛Here⇚</b></a>.
-</p>
 
-<h3> Linux installer </h3>
-<p>
-	The project can also be installed by simply calling <b>composer install</b> in project root folder <b>(Read the information that will popup)</b>.
-You will be guided through the autoinstaller - it won't do everything for You but will attempt to help You setting up the project.
 </p>
 
 <h2>Future development plans</h2>
@@ -78,14 +66,6 @@ You will be guided through the autoinstaller - it won't do everything for You bu
 <hr>
 
 <h2>Support</h2>
-
-<p align="justify">
-    I cannot guarantee support. I've got a job, personal things etc, I'm just sharing my code/my application as MIT. However feel totally free to ask about something, write issues etc. As mentioned I'm using and I will use this application from now on daily so there might be some changes even good for me.
-</p>
-
-<p align="justify">
-    As I'm working on it there will be some fixes, and new modules in future when I reach the point when I got all I need. So after reaching my goal I could handle some support requests if anyone will be interested.
-</p>
 
 <h3>Browsers Support</h3>
 <p>
@@ -148,5 +128,12 @@ This is possible to be done but answering - no, just not worth it - look at poin
 <p>
 <i>
 You can call it this way if You want that means if You are fast, got 2/3 screens then yes it turns into spam bomb. I prefer calling it "job searcher".
+</i>
+</p>
+
+5. Isn't it rude to just spam mails without reading offers?
+<p>
+<i>
+If You don't like something then try to change it, if not then drop it. Can I optimize my job searching time according to all the ignored emails and so on? Yes - so I changed it - the tool is just an answer for neverending story of useless offers reading where on the end 80% of applications are ignored, because some want 20 years experience while being 18 y old, or because someone wanted less payment.
 </i>
 </p>
