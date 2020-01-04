@@ -69,3 +69,8 @@ label.error {
     top: 32px;
     left: 0px;
 }
+/* Bootbox */
+
+.bootbox-cancel {
+    background-color: darkgray !important;
+}

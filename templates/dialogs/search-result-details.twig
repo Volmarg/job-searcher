@@ -8,7 +8,9 @@
 {% set KEY_PARAM_JOB_OFFER_ACCEPTED_KEYWORDS = constant(dialogController ~ 'KEY_PARAM_JOB_OFFER_ACCEPTED_KEYWORDS') %}
 
 <h5 class="text-center">{{ _context[KEY_PARAM_JOB_OFFER_HEADER] | raw}}</h5>
-<h4 class="text-center"><a href="{{ _context[KEY_PARAM_JOB_OFFER_LINK] |raw}}" target="_blank">{{ _context[KEY_PARAM_JOB_OFFER_LINK] |raw}}</a> </h4>
+<h4 class="text-center">
+    <a href="{{ _context[KEY_PARAM_JOB_OFFER_LINK] |raw}}" style="word-break: break-all;" target="_blank">{{ _context[KEY_PARAM_JOB_OFFER_LINK] |raw}}</a>
+</h4>
 <div id="jobOfferDetailsWrapper" style="padding:5px;">
     <section class="job-offer-detail-description text-justify">
         <i>

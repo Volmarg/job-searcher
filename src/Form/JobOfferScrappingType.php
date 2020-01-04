@@ -48,17 +48,17 @@ class JobOfferScrappingType extends AbstractType
                 ],
                 "html5" => true,
             ])
+            ->add(SearchSetting::KEY_START_PAGE_OFFSET, NumberType::class, [
+                "attr" => [
+                    "min"         => 0,
+                    "placeholder" => $this->app->getTranslator()->trans("forms.JobOfferScrappingType.placeholders.startPageOffset"),
+                ],
+                "html5" => true
+            ])
             ->add(SearchSetting::KEY_END_PAGE_OFFSET, NumberType::class, [
                 "attr" => [
                     "min"         => 1,
                     "placeholder" => $this->app->getTranslator()->trans("forms.JobOfferScrappingType.placeholders.endPageOffset"),
-                ],
-                "html5" => true
-            ])
-            ->add(SearchSetting::KEY_START_PAGE_OFFSET, NumberType::class, [
-                "attr" => [
-                    "min"         => 1,
-                    "placeholder" => $this->app->getTranslator()->trans("forms.JobOfferScrappingType.placeholders.startPageOffset"),
                 ],
                 "html5" => true
             ])
@@ -80,7 +80,8 @@ class JobOfferScrappingType extends AbstractType
             ->add(SearchSetting::KEY_LINKS_SKIPPING_REGEX, TextType::class, [
                 "attr" => [
                     "placeholder" => $this->app->getTranslator()->trans("forms.JobOfferScrappingType.placeholders.regexForLinksSkipping"),
-                ]
+                ],
+                "required" => false
             ])
             ->add(SearchSetting::KEY_ACCEPTED_KEYWORDS, TextType::class, [
                 "attr" => [

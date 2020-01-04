@@ -120,13 +120,7 @@ class DomCrawlerController extends AbstractController
          * @var \DOMElement $crawlerResult;
          */
         foreach($crawlerResults as $crawlerResult){
-
-            if( $crawlerResult->tagName !== "div" ){
-                continue;
-            }
-
             $body = $crawlerResult->nodeValue;
-
         }
 
         return $body;
@@ -147,11 +141,6 @@ class DomCrawlerController extends AbstractController
          * @var \DOMElement $crawlerResult;
          */
         foreach($crawlerResults as $crawlerResult){
-
-            if( $crawlerResult->tagName !== "h3" ){
-                continue;
-            }
-
             $header = strip_tags($crawlerResult->nodeValue);
         }
 
