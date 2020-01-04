@@ -290,6 +290,7 @@ var events = {
                let $clickedElement = $(element);
                let url             = $clickedElement.attr(_this.attributes.data.ajax.loadPageContentUrl);
                let method          = $clickedElement.attr(_this.attributes.data.ajax.loadPageContentMethod);
+               let menuElementId   = $clickedElement.prop("id");
 
                if( "undefined" === typeof url ){
                    throw({
@@ -305,7 +306,25 @@ var events = {
                     });
                 }
 
-                _this.ajaxCalls.loadPageTemplate(url, method);
+                switch(menuElementId){
+                    case MENU_ELEMENT_JOB_SEARCH:
+                        var callbackAfter = () => {
+                            let menuElementsIdsToShow = [
+                                MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING
+                            ];
+                            nav.showMenuElementsByIds(menuElementsIdsToShow)
+                        };
+                        break;
+                    default:
+                        var callbackAfter = () => {
+                            let menuElementsIdsToHide = [
+                                MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING
+                            ];
+                            nav.hideMenuElementsByIds(menuElementsIdsToHide)
+                        };
+                }
+
+                _this.ajaxCalls.loadPageTemplate(url, method, undefined, callbackAfter);
             });
         })
     },
@@ -433,11 +452,12 @@ var events = {
         },
         /**
          * This function will make an ajax and place the resulted template into main content wrapper
-         * @param url    {string}
-         * @param method {string}
-         * @param data   {object}
+         * @param url           {string}
+         * @param method        {string}
+         * @param data          {object}
+         * @param callbackAfter {function}
          */
-        loadPageTemplate: function(url, method, data){
+        loadPageTemplate: function(url, method, data, callbackAfter){
 
             if( "undefined" === typeof data){
                 data = {};
@@ -477,6 +497,10 @@ var events = {
                 tinyMce.init();
                 events.init();
                 selectize.init();
+
+                if( "function" === typeof callbackAfter){
+                    callbackAfter();
+                }
             });
         },
         /**

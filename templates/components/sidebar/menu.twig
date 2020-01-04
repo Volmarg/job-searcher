@@ -1,11 +1,17 @@
 {% set dialogsController             = "App\\Controller\\DialogsController::" %}
-{% set TEMPLATE_TYPE_SEARCH_SETTINGS = constant(dialogsController ~ 'TEMPLATE_TYPE_SEARCH_SETTINGS') %}
+{% set constantsController           = "App\\Controller\\ConstantsController::" %}
+
+{% set TEMPLATE_TYPE_SEARCH_SETTINGS         = constant(dialogsController ~ 'TEMPLATE_TYPE_SEARCH_SETTINGS') %}
+{% set MENU_ELEMENT_JOB_SEARCH               = constant(constantsController ~ 'MENU_ELEMENT_JOB_SEARCH') %}
+{% set MENU_ELEMENT_MAIL_TEMPLATES           = constant(constantsController ~ 'MENU_ELEMENT_MAIL_TEMPLATES') %}
+{% set MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING  = constant(constantsController ~ 'MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING') %}
 
 <ul id="sidebarCookie">
     <li class="spacer"></li>
     <li class="spacer"></li>
     <li class="nav-item">
         <a class="" href="#"
+           id="{{ MENU_ELEMENT_JOB_SEARCH }}"
            data-load-page-content="true"
            data-load-page-content-url="{{ path('job_search') }}"
            data-load-page-content-method="GET"
@@ -13,11 +19,11 @@
             <i class="feather icon-sidebar"></i>
             <span class="menu-title">{{ 'menu.jobSearch.label' | trans }}</span>
 
-            {# submenu #}
             <div class="collapse show" id="navDashboard" style="">
                 <ul class="flex-column sub-menu">
                     <li class="nav-item">
                         <a class="nav-link wave-effect waves-effect waves-block"
+                           id="{{ MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING }}"
                            href="#"
                            {# bootbox dialog data#}
                            data-call-bootbox-dialog="true"
@@ -33,13 +39,11 @@
                     </li>
                 </ul>
             </div>
-            {# submenu #}
-
 
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link wave-effect collapsed"
+        <a class="nav-link wave-effect collapsed" id="{{ MENU_ELEMENT_MAIL_TEMPLATES }}"
            data-load-page-content="true"
            data-load-page-content-url="{{ path('mail_template_ajax_page') }}"
            data-load-page-content-method="GET"

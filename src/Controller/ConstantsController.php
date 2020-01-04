@@ -22,4 +22,8 @@ class ConstantsController {
     const KEY_REQUEST_NAME  = "name";
 
     const ENTITY_NAME_SEARCH_SETTING = "SearchSetting";
+
+    const MENU_ELEMENT_JOB_SEARCH               = "menuElementJobSearch";
+    const MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING  = "menuElementJobSearchLoadSetting";
+    const MENU_ELEMENT_MAIL_TEMPLATES           = "menuElementMailTemplates";
 }

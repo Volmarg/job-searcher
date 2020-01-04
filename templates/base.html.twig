@@ -26,6 +26,10 @@
 {% set TEMPLATE_TYPE_SEARCH_RESULT_DETAILS          = constant(dialogController ~ 'TEMPLATE_TYPE_SEARCH_RESULT_DETAILS') %}
 {% set TEMPLATE_JOB_SEARCH_RESULTS                  = constant(jobOfferScrappingAction~ 'TEMPLATE_JOB_SEARCH_RESULTS') %}
 {% set TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE    = constant(dialogController~ 'TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE') %}
+
+{% set MENU_ELEMENT_JOB_SEARCH               = constant(constantsControllerClass ~ 'MENU_ELEMENT_JOB_SEARCH') %}
+{% set MENU_ELEMENT_MAIL_TEMPLATES           = constant(constantsControllerClass ~ 'MENU_ELEMENT_MAIL_TEMPLATES') %}
+{% set MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING  = constant(constantsControllerClass ~ 'MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING') %}
 <!DOCTYPE html>
 <!--[if lt IE 7 ]>              <html class="ie ie6" lang="en"> <![endif]-->
 <!--[if IE 7 ]>                 <html class="ie ie7" lang="en"> <![endif]-->
@@ -117,6 +121,10 @@
     var TEMPLATE_JOB_SEARCH_RESULTS                 = '{{ TEMPLATE_JOB_SEARCH_RESULTS }}';
     var TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE   = '{{ TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE }}';
 
+    var MENU_ELEMENT_JOB_SEARCH              = '{{ MENU_ELEMENT_JOB_SEARCH }}';
+    var MENU_ELEMENT_MAIL_TEMPLATES          = '{{ MENU_ELEMENT_MAIL_TEMPLATES }}';
+    var MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING = '{{ MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING }}';
+
     var KEY_REQUEST_ID   = '{{ KEY_REQUEST_ID }}';
     var KEY_REQUEST_NAME = '{{ KEY_REQUEST_NAME }}';
 </script>
@@ -130,6 +138,7 @@
 
 <script src="/js/core/dialogs/index.js"></script>
 <script src="/js/core/events/index.js"></script>
+<script src="/js/core/nav/index.js"></script>
 
 </body>
 </html>
