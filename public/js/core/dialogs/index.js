@@ -3,7 +3,9 @@ var dialogs = {
     data: {
       callDialog        : "data-call-dialog",
       dialogContentType : "data-dialog-content-type",
-      dialogTemplate    : "data-dialog-template"
+      dialogTemplate    : "data-dialog-template",
+      jobOfferHeader    : "data-job-offer-header-for-mail-generate-dialog",
+      jobOfferUrl       : "data-job-offer-url-for-mail-generate-dialog"
     },
     domElements: {
         dialogBody  : null,
@@ -12,6 +14,14 @@ var dialogs = {
         ajaxGetTemplateForTemplateType: {
             url: "/dialog-template/ajax/load",
             method: "GET"
+        }
+    },
+    selectors: {
+        ids:{
+            jobOfferHeaderForMail       : "#jobOfferHeaderForMail",
+            jobOfferUrlForMail          : "#jobOfferUrlForMail",
+            generatedEmailTitle         : "#generatedEmailTitle",
+            generatedEmailDescription   : "#generatedEmailDescription",
         }
     },
     /**
@@ -70,6 +80,29 @@ var dialogs = {
             loaders.spinner.hideSpinner();
         });
 
-    }
+    },
+    /**
+     * This function calls additional logic for called template - after it's rendering
+     * @param templateType          {string}
+     * @param $dialogCallingElement {object}
+     */
+    attachTemplateAfterLoadLogicForTemplateType: function(templateType, $dialogCallingElement){
+        switch( templateType ){
+            case TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE:
+            {
+                let jobOfferHeader = $dialogCallingElement.attr(this.data.jobOfferHeader);
+                let jobOfferUrl    = $dialogCallingElement.attr(this.data.jobOfferUrl);
 
+                let $jobOfferHeaderInput = $(this.selectors.ids.jobOfferHeaderForMail);
+                let $jobOfferUrlInput    = $(this.selectors.ids.jobOfferUrlForMail);
+
+                $jobOfferHeaderInput.val(jobOfferHeader);
+                $jobOfferUrlInput.val(jobOfferUrl);
+                events.buttons.attachGenerateMailFromTemplateEvent();
+            }
+                break;
+            default:
+            //do nothing
+        }
+    }
 };

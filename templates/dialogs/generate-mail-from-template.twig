@@ -1,0 +1,51 @@
+<h5>Generate mail from selected template</h5> {# todo: add to trans #}
+
+<section id="mailManageWrapper" style="padding:5px;" class="container-fluid ">
+
+    <div class="row">
+        <div class="col-sm-3 col-md-2">
+
+            <ul class="list-group mt-4">
+                <li class="list-group-item list-group-item-title font-weight-bold">{{ 'modules.mailTemplatesManage.builder.savedTemplates' | trans }}</li>
+                {% for template in templates %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="javascript:void(0)"
+                           class="active list-group-item-action"
+                           data-ajax-url="{{ path("mail_template_generate_mail", {"id": template.getId() }) }}"
+                           data-ajax-method="POST"
+                           data-generate-mail-from-template="true"
+                        >
+                            <i class="mdi mdi-inbox"></i> {{ template.getName() }}
+                        </a>
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+        <div class="col-sm-9 col-md-10">
+            <div class="card">
+
+                <div class="form-group row">
+                    <div class="col-12">
+                        <input type="text" id="generatedEmailTitle" class="form-control"/>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-12">
+                        <textarea id="generatedEmailDescription" data-is-tinymce="true" class="form-control"></textarea>
+                    </div>
+                </div>
+
+                <div class="d-none">
+                    <div class="col-12">
+                        <input id="jobOfferHeaderForMail" type="text"/>
+                        <input id="jobOfferUrlForMail" type="text"/>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</section>

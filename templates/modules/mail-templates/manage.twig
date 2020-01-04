@@ -54,6 +54,15 @@
                                         ></i>
                                     </li>
                                 {% endfor %}
+                                <li style="list-style-type: none; padding-top:15px;"></li>
+                                <li class="list-group-item-title font-weight-bold text-center" style="list-style-type: none;">{{ 'modules.mailTemplatesManage.builder.variables' | trans }}</li>
+
+                                {% for templateVariable in templateVariables %}
+                                    <li class="list-group-item-title text-center" style="list-style-type: none;">
+                                        {{ templateVariable }}
+                                    </li>
+                                {% endfor %}
+
                             </ul>
 
                         </div>

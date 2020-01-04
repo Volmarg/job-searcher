@@ -21,6 +21,8 @@ var events = {
                 loadMailTemplate            : "data-load-mail-template",
                 mailTemplateId              : "data-mail-template-id",
                 cleanMailTemplateForm       : "data-clean-mail-template-form",
+                ajaxUrl                     : "data-ajax-url",
+                ajaxMethod                  : "data-ajax-method"
             },
             forms: {
                 submitViaAjax               : "data-submit-via-ajax",
@@ -28,13 +30,14 @@ var events = {
                 ajaxUrl                     : "data-ajax-url"
             },
             ajax: {
-                callOnClick          : "data-ajax-call-on-click",
-                callForSelectorClick : "data-call-ajax-for-selector-click",
-                callMethod           : "data-ajax-call-method",
-                callMethodParams     : "data-ajax-call-method-params",
-                loadPageContent      : "data-load-page-content",
-                loadPageContentUrl   : "data-load-page-content-url",
-                loadPageContentMethod: "data-load-page-content-method"
+                callOnClick             : "data-ajax-call-on-click",
+                callForSelectorClick    : "data-call-ajax-for-selector-click",
+                callMethod              : "data-ajax-call-method",
+                callMethodParams        : "data-ajax-call-method-params",
+                loadPageContent         : "data-load-page-content",
+                loadPageContentUrl      : "data-load-page-content-url",
+                loadPageContentMethod   : "data-load-page-content-method",
+                generateMailFromTemplate: "data-generate-mail-from-template"
             },
             jobSearchResult: {
                 offerDescription : "data-job-offer-description",
@@ -92,6 +95,7 @@ var events = {
       this.buttons.attachRemoveEntitiesEvent();
       this.buttons.attachLoadMailTemplateEvent();
       this.buttons.attachClearMailTemplateFormEvent();
+      this.buttons.attachGenerateMailFromTemplateEvent();
       this.forms.submitViaAjax();
     },
     /**
@@ -182,6 +186,7 @@ var events = {
 
                                 _this.attachAjaxCallForElementClick();
                                 _this.dataTables.attachDatatableEvent(templateType);
+                                dialogs.attachTemplateAfterLoadLogicForTemplateType(templateType, $element);
                             };
                             dialogs.setDialogBody($bootboxBody);
                             dialogs.makeAjaxCallForDialogTemplateType(templateType, callback, params);
@@ -543,6 +548,59 @@ var events = {
                 selectize.init();
                 infoBox.showSuccessBox(message);
             });
+        },
+        /**
+         * This function will make ajax call that will return generated mail from template
+         * @param url     {string}
+         * @param method  {string}
+         * @param data    {object}
+         */
+        buildEmailFromEmailTemplate: function(url, method, data){
+
+            loaders.spinner.showSpinner();
+            $.ajax({
+                url    : url,
+                method : method,
+                data   : data
+            }).always( (data) => {
+
+                try{
+                    var error           = data[KEY_JSON_RESPONSE_ERROR];
+                    var message         = data[KEY_JSON_RESPONSE_MESSAGE];
+                    var mailDescription = data[KEY_JSON_RESPONSE_MAIL_DESCRIPTION];
+                    var mailTitle       = data[KEY_JSON_RESPONSE_MAIL_TITLE];
+                }catch(Exception){
+                    throw({
+                        "message": events.messages.couldNotHandleAjaxResponse
+                    })
+                }
+
+                if( true === error ){
+                    loaders.spinner.hideSpinner();
+                    infoBox.showDangerBox(message);
+                    return;
+                }
+
+                if(
+                        "undefined" === typeof mailDescription
+                    ||  "undefined" === typeof mailTitle
+                ){
+                    throw({
+                        "message"           : "No title or description in ajax response for generated mail from template",
+                        "mailDescription"   : mailDescription,
+                        "mailTitle"         : mailTitle,
+                    })
+                }
+
+                let $titleInput          = $(dialogs.selectors.ids.generatedEmailTitle);
+                let $descriptionTextarea = $(dialogs.selectors.ids.generatedEmailDescription);
+
+                $titleInput.val(mailTitle);
+                $descriptionTextarea.text(mailDescription);
+                tinyMce.init();
+                events.init();
+                selectize.init();
+            });
         }
     },
     /**
@@ -606,12 +664,6 @@ var events = {
 
                         });
                     });
-                }
-                    break;
-                case TEMPLATE_TYPE_SEARCH_RESULT_DETAILS:
-                {
-                    let $table = $(events.selectors.query.jobSearchResultTable);
-                    let $rows  = $table.find("tbody tr");
                 }
                     break;
                 default:
@@ -739,7 +791,7 @@ var events = {
         /**
          * This function will attach event that clears the mailTemplate form and resets the ajax call url on form
          */
-        attachClearMailTemplateFormEvent(){
+        attachClearMailTemplateFormEvent: function(){
             let $elementToHandle  = $("[" + events.attributes.data.buttons.cleanMailTemplateForm + "]");
 
             $elementToHandle.off('click');
@@ -774,7 +826,54 @@ var events = {
                 });
 
             })
-        }
+        },
+        /**
+         * This function attaches the on click logic to get email for saved template
+         */
+        attachGenerateMailFromTemplateEvent:function(){
+            let elementsToHandle = $("[" + events.attributes.data.ajax.generateMailFromTemplate + "=true]");
+
+            $.each(elementsToHandle, (index, element) => {
+                let $element = $(element);
+
+                $element.off("click");
+                $element.on("click", (event) => {
+
+                    let $clickedElement = $(event.currentTarget);
+                    let ajaxUrl         = $clickedElement.attr(events.attributes.data.buttons.ajaxUrl);
+                    let ajaxMethod      = $clickedElement.attr(events.attributes.data.buttons.ajaxMethod);
+
+                    if( "undefined" === typeof ajaxUrl ){
+                        throw({
+                            "message": "Ajax url is missing for generating mail from template",
+                            "element": $clickedElement
+                        })
+                    }
+
+                    if( "undefined" === typeof ajaxMethod ){
+                        throw({
+                            "message": "Ajax method is missing for generating mail from template",
+                            "element": $clickedElement
+                        })
+                    }
+
+                    let jobOfferUrl     = $(dialogs.selectors.ids.jobOfferUrlForMail).val();
+                    let jobOfferHeader  = $(dialogs.selectors.ids.jobOfferHeaderForMail).val();
+
+                    jobOfferUrl     = ( "undefined" === typeof jobOfferUrl      ? "" : jobOfferUrl );
+                    jobOfferHeader  = ( "undefined" === typeof jobOfferHeader   ? "" : jobOfferHeader );
+
+                    let data = {
+                        "{jobOfferUrl}"     : jobOfferUrl,
+                        "{jobOfferHeader}"  : jobOfferHeader,
+                    };
+
+                    events.ajaxCalls.buildEmailFromEmailTemplate(ajaxUrl, ajaxMethod, data);
+                })
+
+
+            })
+        },
     },
     /**
      * Handle events for forms

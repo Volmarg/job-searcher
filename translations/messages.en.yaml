@@ -22,6 +22,7 @@ modules:
       header: Name
       status:
         label: Status
+      actions: Actions
       url: Url
       reason: Reason
     header:
@@ -34,6 +35,7 @@ modules:
     builder:
       compose: COMPOSE
       savedTemplates: Saved templates
+      variables: Variables
     load:
       success: Mail template has been successfully loaded
       fail:

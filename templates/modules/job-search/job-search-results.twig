@@ -3,8 +3,9 @@
 {% set bootboxController                = "App\\Controller\\BootboxController::" %}
 {% set dialogController                 = "App\\Controller\\DialogsController::" %}
 
-{% set TEMPLATE_VAR_JOB_OFFER_DATA_DTOS    = constant(jobOfferScrappingClass ~ "TEMPLATE_VAR_JOB_OFFER_DATA_DTOS") %}
-{% set TEMPLATE_TYPE_SEARCH_RESULT_DETAILS = constant(dialogController ~ 'TEMPLATE_TYPE_SEARCH_RESULT_DETAILS') %}
+{% set TEMPLATE_VAR_JOB_OFFER_DATA_DTOS          = constant(jobOfferScrappingClass ~ "TEMPLATE_VAR_JOB_OFFER_DATA_DTOS") %}
+{% set TEMPLATE_TYPE_SEARCH_RESULT_DETAILS       = constant(dialogController ~ 'TEMPLATE_TYPE_SEARCH_RESULT_DETAILS') %}
+{% set TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE = constant(dialogController ~ 'TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE') %}
 
 {% set BOOTBOX_SIZE_LARGE                  = constant(bootboxController ~ 'BOOTBOX_SIZE_LARGE') %}
 {% set BOOTBOX_TYPE_ALERT                  = constant(bootboxController ~ 'BOOTBOX_TYPE_ALERT') %}
@@ -37,6 +38,7 @@
                             <th>{{ "modules.jobSearchResults.table.header" | trans }}</th>
                             <th>{{ "modules.jobSearchResults.table.reason" | trans }}</th>
                             <th>{{ "modules.jobSearchResults.table.status.label" | trans }}</th>
+                            <th>{{ "modules.jobSearchResults.table.actions" | trans }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -53,7 +55,7 @@
                                         data-bootbox-callback-type="{{ BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE }}"
                                         data-bootbox-callback-type-template-name="{{ TEMPLATE_TYPE_SEARCH_RESULT_DETAILS }}"
                                 >
-                                    {{ jobOfferDataDto.getHeader() }}
+                                    {{ jobOfferDataDto.getHeader() | striptags }}
                                 </td>
                                 <td class="job-offer-reason">
                                     {% if jobOfferDataDto.isRejected() %}
@@ -71,6 +73,22 @@
                                         <i class="feather text-success icon-check-circle job-offer-status"
                                            data-is-rejected="false"></i>
                                     {% endif %}
+                                </td>
+
+                                <td>
+                                    <a class="nav-link wave-effect collapsed waves-effect waves-block"
+                                        {# bootbox dialog data#}
+                                       data-call-bootbox-dialog="true"
+                                       data-bootbox-size="{{ BOOTBOX_SIZE_LARGE }}"
+                                       data-bootbox-type="{{ BOOTBOX_TYPE_ALERT }}"
+                                       data-bootbox-message="Move me to translation file"
+                                       data-bootbox-callback-type="{{ BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE }}"
+                                       data-bootbox-callback-type-template-name="{{ TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE }}"
+                                       data-job-offer-header-for-mail-generate-dialog="{{ jobOfferDataDto.getHeader() | escape }}"
+                                       data-job-offer-url-for-mail-generate-dialog="{{ jobOfferDataDto.getOfferLink() | escape }}"
+                                    >
+                                        <i class="feather icon-mail"></i>
+                                    </a>
                                 </td>
                             </tr>
                         {% endfor %}

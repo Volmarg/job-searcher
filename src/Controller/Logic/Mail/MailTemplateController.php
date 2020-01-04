@@ -15,6 +15,14 @@ use Symfony\Component\HttpFoundation\Request;
 class MailTemplateController extends AbstractController
 {
 
+    const MAIL_TEMPLATE_VARIABLE_JOB_OFFER_URL    = "{jobOfferUrl}";
+    const MAIL_TEMPLATE_VARIABLE_JOB_OFFER_HEADER = "{jobOfferHeader}";
+
+    const AVAILABLE_MAIL_TEMPLATE_VARIABLES = [
+        self::MAIL_TEMPLATE_VARIABLE_JOB_OFFER_HEADER,
+        self::MAIL_TEMPLATE_VARIABLE_JOB_OFFER_URL
+    ];
+
     /**
      * @var Application $app
      */

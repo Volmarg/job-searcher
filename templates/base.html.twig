@@ -4,11 +4,13 @@
 {% set dialogController                 = "App\\Controller\\DialogsController::" %}
 {% set jobOfferScrappingAction          = "App\\Controller\\Gui\\JobOfferScrappingAction::" %}
 
-{% set KEY_JSON_RESPONSE_ERROR          =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_ERROR') %}
-{% set KEY_JSON_RESPONSE_MESSAGE        =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_MESSAGE') %}
-{% set KEY_JSON_RESPONSE_TEMPLATE       =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_TEMPLATE') %}
-{% set KEY_JSON_RESPONSE_MAIL_TEMPLATE  =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_MAIL_TEMPLATE') %}
-{% set KEY_JSON_RESPONSE_SEARCH_SETTING =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_SEARCH_SETTING') %}
+{% set KEY_JSON_RESPONSE_ERROR            =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_ERROR') %}
+{% set KEY_JSON_RESPONSE_MESSAGE          =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_MESSAGE') %}
+{% set KEY_JSON_RESPONSE_TEMPLATE         =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_TEMPLATE') %}
+{% set KEY_JSON_RESPONSE_MAIL_TEMPLATE    =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_MAIL_TEMPLATE') %}
+{% set KEY_JSON_RESPONSE_SEARCH_SETTING   =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_SEARCH_SETTING') %}
+{% set KEY_JSON_RESPONSE_MAIL_TITLE       =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_MAIL_TITLE') %}
+{% set KEY_JSON_RESPONSE_MAIL_DESCRIPTION =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_MAIL_DESCRIPTION') %}
 
 {% set ENTITY_NAME_SEARCH_SETTING       =  constant(constantsControllerClass ~ 'ENTITY_NAME_SEARCH_SETTING') %}
 
@@ -20,9 +22,10 @@
 {% set BOOTBOX_TYPE_ALERT                  = constant(bootboxController ~ 'BOOTBOX_TYPE_ALERT') %}
 {% set BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE = constant(bootboxController ~ 'BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE') %}
 
-{% set TEMPLATE_TYPE_SEARCH_SETTINGS       = constant(dialogController ~ 'TEMPLATE_TYPE_SEARCH_SETTINGS') %}
-{% set TEMPLATE_TYPE_SEARCH_RESULT_DETAILS = constant(dialogController ~ 'TEMPLATE_TYPE_SEARCH_RESULT_DETAILS') %}
-{% set TEMPLATE_JOB_SEARCH_RESULTS         = constant(jobOfferScrappingAction~ 'TEMPLATE_JOB_SEARCH_RESULTS') %}
+{% set TEMPLATE_TYPE_SEARCH_SETTINGS                = constant(dialogController ~ 'TEMPLATE_TYPE_SEARCH_SETTINGS') %}
+{% set TEMPLATE_TYPE_SEARCH_RESULT_DETAILS          = constant(dialogController ~ 'TEMPLATE_TYPE_SEARCH_RESULT_DETAILS') %}
+{% set TEMPLATE_JOB_SEARCH_RESULTS                  = constant(jobOfferScrappingAction~ 'TEMPLATE_JOB_SEARCH_RESULTS') %}
+{% set TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE    = constant(dialogController~ 'TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE') %}
 <!DOCTYPE html>
 <!--[if lt IE 7 ]>              <html class="ie ie6" lang="en"> <![endif]-->
 <!--[if IE 7 ]>                 <html class="ie ie7" lang="en"> <![endif]-->
@@ -93,11 +96,13 @@
 
 {# Core #}
 <script>
-    var KEY_JSON_RESPONSE_ERROR          = '{{ KEY_JSON_RESPONSE_ERROR }}';
-    var KEY_JSON_RESPONSE_MESSAGE        = '{{ KEY_JSON_RESPONSE_MESSAGE }}';
-    var KEY_JSON_RESPONSE_TEMPLATE       = '{{ KEY_JSON_RESPONSE_TEMPLATE }}';
-    var KEY_JSON_RESPONSE_MAIL_TEMPLATE  = '{{ KEY_JSON_RESPONSE_MAIL_TEMPLATE }}';
-    var KEY_JSON_RESPONSE_SEARCH_SETTING = '{{ KEY_JSON_RESPONSE_SEARCH_SETTING }}';
+    var KEY_JSON_RESPONSE_ERROR            = '{{ KEY_JSON_RESPONSE_ERROR }}';
+    var KEY_JSON_RESPONSE_MESSAGE          = '{{ KEY_JSON_RESPONSE_MESSAGE }}';
+    var KEY_JSON_RESPONSE_TEMPLATE         = '{{ KEY_JSON_RESPONSE_TEMPLATE }}';
+    var KEY_JSON_RESPONSE_MAIL_TEMPLATE    = '{{ KEY_JSON_RESPONSE_MAIL_TEMPLATE }}';
+    var KEY_JSON_RESPONSE_SEARCH_SETTING   = '{{ KEY_JSON_RESPONSE_SEARCH_SETTING }}';
+    var KEY_JSON_RESPONSE_MAIL_TITLE       = '{{ KEY_JSON_RESPONSE_MAIL_TITLE }}';
+    var KEY_JSON_RESPONSE_MAIL_DESCRIPTION = '{{ KEY_JSON_RESPONSE_MAIL_DESCRIPTION }}';
 
     var BOOTBOX_SIZE_LARGE                  = '{{ BOOTBOX_SIZE_LARGE }}';
     var BOOTBOX_TYPE_CONFIRM                = '{{ BOOTBOX_TYPE_CONFIRM }}';
@@ -106,9 +111,10 @@
 
     var ENTITY_NAME_SEARCH_SETTING = '{{ ENTITY_NAME_SEARCH_SETTING }}';
 
-    var TEMPLATE_TYPE_SEARCH_SETTINGS       = '{{ TEMPLATE_TYPE_SEARCH_SETTINGS }}';
-    var TEMPLATE_TYPE_SEARCH_RESULT_DETAILS = '{{ TEMPLATE_TYPE_SEARCH_RESULT_DETAILS }}';
-    var TEMPLATE_JOB_SEARCH_RESULTS         = '{{ TEMPLATE_JOB_SEARCH_RESULTS }}';
+    var TEMPLATE_TYPE_SEARCH_SETTINGS               = '{{ TEMPLATE_TYPE_SEARCH_SETTINGS }}';
+    var TEMPLATE_TYPE_SEARCH_RESULT_DETAILS         = '{{ TEMPLATE_TYPE_SEARCH_RESULT_DETAILS }}';
+    var TEMPLATE_JOB_SEARCH_RESULTS                 = '{{ TEMPLATE_JOB_SEARCH_RESULTS }}';
+    var TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE   = '{{ TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE }}';
 
     var KEY_REQUEST_ID   = '{{ KEY_REQUEST_ID }}';
     var KEY_REQUEST_NAME = '{{ KEY_REQUEST_NAME }}';

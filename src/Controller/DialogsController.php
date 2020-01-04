@@ -10,9 +10,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DialogsController extends AbstractController {
 
-    const DIALOG_TEMPLATE_SEARCH_SETTINGS       = "dialogs/search-settings.twig";
-    const DIALOG_TEMPLATE_SAVE_SEARCH_SETTING   = "dialogs/save-search-settings.twig";
-    const DIALOG_TEMPLATE_SEARCH_RESULT_DETAILS = "dialogs/search-result-details.twig";
+    const DIALOG_TEMPLATE_SEARCH_SETTINGS             = "dialogs/search-settings.twig";
+    const DIALOG_TEMPLATE_SAVE_SEARCH_SETTING         = "dialogs/save-search-settings.twig";
+    const DIALOG_TEMPLATE_SEARCH_RESULT_DETAILS       = "dialogs/search-result-details.twig";
+    const DIALOG_TEMPLATE_GENERATE_MAIL_FROM_TEMPLATE = "dialogs/generate-mail-from-template.twig";
 
     const KEY_PARAMS                       = "params";
     const KEY_PARAM_JOB_OFFER_DESCRIPTION  = "jobOfferDescription";
@@ -21,9 +22,10 @@ class DialogsController extends AbstractController {
     const KEY_PARAM_JOB_OFFER_REJECTED_KEYWORDS = "jobOfferRejectedKeywords";
     const KEY_PARAM_JOB_OFFER_ACCEPTED_KEYWORDS = "jobOfferAcceptedKeywords";
 
-    const TEMPLATE_TYPE_SEARCH_SETTINGS       = "templateTypeSearchSettings";
-    const TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS  = "templateTypeSaveSearchSettings";
-    const TEMPLATE_TYPE_SEARCH_RESULT_DETAILS = "templateTypeSearchResultDetails";
+    const TEMPLATE_TYPE_SEARCH_SETTINGS             = "templateTypeSearchSettings";
+    const TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS        = "templateTypeSaveSearchSettings";
+    const TEMPLATE_TYPE_SEARCH_RESULT_DETAILS       = "templateTypeSearchResultDetails";
+    const TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE = "templateTypeGenerateMailFromTemplate";
 
     const TWIG_VAR_SEARCH_SETTINGS = "searchSettings";
 
@@ -64,6 +66,9 @@ class DialogsController extends AbstractController {
                     break;
                 case self::TEMPLATE_TYPE_SEARCH_RESULT_DETAILS:
                     $template = $this->getTemplateForSearchResultDetails($request);
+                    break;
+                case self::TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE:
+                    $template = $this->generateMailFromTemplate($request);
                     break;
                 default:
                     $code    = 500;
@@ -112,7 +117,7 @@ class DialogsController extends AbstractController {
      * @return false|string
      * @throws Exception
      */
-    private function getTemplateForSearchResultDetails(Request $request){
+    private function getTemplateForSearchResultDetails(Request $request): string {
 
         if( !$request->query->has(self::KEY_PARAMS) ){
             throw new Exception(); //todo
@@ -145,6 +150,23 @@ class DialogsController extends AbstractController {
         ];
 
         $templateResponse  = $this->render(self::DIALOG_TEMPLATE_SEARCH_RESULT_DETAILS, $templateData);
+        $templateString    = $templateResponse->getContent();
+
+        return $templateString;
+    }
+
+    /**
+     * @param Request $request
+     * @return string
+     */
+    public function generateMailFromTemplate(Request $request): string {
+        $allSavedTemplates = $this->app->getRepositories()->mailTemplateRepository()->findAll();
+
+        $templateData = [
+            'templates' => $allSavedTemplates,
+        ];
+
+        $templateResponse  = $this->render(self::DIALOG_TEMPLATE_GENERATE_MAIL_FROM_TEMPLATE, $templateData);
         $templateString    = $templateResponse->getContent();
 
         return $templateString;

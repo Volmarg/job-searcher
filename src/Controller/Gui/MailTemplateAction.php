@@ -50,8 +50,9 @@ class MailTemplateAction extends AbstractController
 
         $form         = $this->app->getForms()->getMailTemplateForm();
         $templateData = [
-            'form'      => $form->createView(),
-            'templates' => $allSavedTemplates,
+            'form'              => $form->createView(),
+            'templates'         => $allSavedTemplates,
+            'templateVariables' => MailTemplateController::AVAILABLE_MAIL_TEMPLATE_VARIABLES
         ];
         $renderedPage = $this->render(self::TWIG_TEMPLATE_SHOW_MANAGEMENT_PAGE, $templateData);
         $pageContent  = $renderedPage->getContent();
@@ -139,4 +140,59 @@ class MailTemplateAction extends AbstractController
         $this->app->getRepositories()->mailTemplateRepository()->removeMailTemplateForId($id);
     }
 
+    /**
+     * This function will build the email from saved email template
+     * @Route("mail-template/ajax/generate-mail/{id}", name="mail_template_generate_mail")
+     * @param Request $request
+     * @param string $id
+     * @return JsonResponse
+     */
+    public function buildEmailFromTemplate(Request $request, string $id): JsonResponse {
+        $jobOfferUrl    = $request->request->get(MailTemplateController::MAIL_TEMPLATE_VARIABLE_JOB_OFFER_URL, "");
+        $jobOfferHeader = $request->request->get(MailTemplateController::MAIL_TEMPLATE_VARIABLE_JOB_OFFER_HEADER, "");
+
+        $mailTemplate = $this->app->getRepositories()->mailTemplateRepository()->find($id);
+
+        if( empty($mailTemplate) ){
+            $message = $this->app->getTranslator()->trans("modules.mailTemplatesManage.message.fail.noEntity");
+            return Utils::buildAjaxResponse($message, true, 200);
+        }
+
+        $message         = $this->app->getTranslator()->trans("modules.mailTemplatesManage.message.success.emailGenerated");
+        $error           = false;
+        $code            = 200;
+        $mailTitle       = $this->replaceMailTemplateVariablesWithStrings($mailTemplate->getTitle(), $jobOfferUrl, $jobOfferHeader);
+        $mailDescription = $this->replaceMailTemplateVariablesWithStrings($mailTemplate->getDescription(), $jobOfferUrl, $jobOfferHeader);
+
+        $responseData = [
+            ConstantsController::KEY_JSON_RESPONSE_MESSAGE          => $message,
+            ConstantsController::KEY_JSON_RESPONSE_ERROR            => $error,
+            ConstantsController::KEY_JSON_RESPONSE_CODE             => $code,
+            ConstantsController::KEY_JSON_RESPONSE_MAIL_DESCRIPTION => $mailDescription,
+            ConstantsController::KEY_JSON_RESPONSE_MAIL_TITLE       => strip_tags($mailTitle),
+        ];
+
+        $jsonResponse = new JsonResponse($responseData, 200);
+        return $jsonResponse;
+    }
+
+    /**
+     * This function will replace emailTemplate variables in texts with strings
+     * @param string $text
+     * @param string|null $jobOfferUrl
+     * @param string|null $jobOfferHeader
+     * @return string
+     */
+    private function replaceMailTemplateVariablesWithStrings(string $text, ?string $jobOfferUrl = null, ?string $jobOfferHeader = null): string {
+
+        if( !empty($jobOfferUrl) ){
+            $text = str_replace(MailTemplateController::MAIL_TEMPLATE_VARIABLE_JOB_OFFER_HEADER, $jobOfferHeader, $text);
+        }
+
+        if( !empty($jobOfferHeader) ){
+            $text = str_replace(MailTemplateController::MAIL_TEMPLATE_VARIABLE_JOB_OFFER_URL, $jobOfferHeader, $text);
+        }
+
+        return $text;
+    }
 }
