@@ -22,7 +22,17 @@ var tables = {
             $.each(allTablesToTransform, function (index, table) {
                 let $table = $(table);
 
-                $table.dataTable();
+                // prevent reinit the same table
+                if( $.fn.DataTable.isDataTable( table ) ){
+                    return;
+                }
+
+                // need to attach events every time that page is changed as dom changes with that as well
+                $table.dataTable({
+                    "drawCallback": function() {
+                        events.init();
+                    }
+                });
             })
         },
         markRowSelected: function($row){
