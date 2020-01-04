@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class JobOfferScrappingAction extends AbstractController
 {
-    const MAIN_PAGE_TWIG_TPL            = "dashboard/index.html.twig"; //todo: change
+    const MAIN_PAGE_TWIG_TPL            = "dashboard/index.html.twig";
     const TEMPLATE_JOB_SEARCH_RESULTS   = "modules/job-search/job-search-results.twig";
 
     const TEMPLATE_VAR_JOB_OFFER_DATA_DTOS = "jobOfferDataDtos";
@@ -62,6 +62,7 @@ class JobOfferScrappingAction extends AbstractController
     }
 
     /**
+     * This function displays the job searching page
      * @Route("/", name="job_search")
      * @param Request $request
      * @return Response
@@ -141,6 +142,7 @@ class JobOfferScrappingAction extends AbstractController
     }
 
     /**
+     * This function returns the content of template containing job search results
      * @param JobOfferDataDTO[] $jobOfferDataDtos
      * @return string
      */
@@ -150,7 +152,7 @@ class JobOfferScrappingAction extends AbstractController
             self::TEMPLATE_VAR_JOB_OFFER_DATA_DTOS => $jobOfferDataDtos
         ];
 
-        $template = $this->render(self::TEMPLATE_JOB_SEARCH_RESULTS, $templateData);
+        $template       = $this->render(self::TEMPLATE_JOB_SEARCH_RESULTS, $templateData);
         $templateString = $template->getContent();
 
         return $templateString;

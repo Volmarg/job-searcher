@@ -38,6 +38,7 @@ class DecisionController extends AbstractController
     }
 
     /**
+     * This function handles marking the offer as accepted/rejected alongside with setting status
      * By default every offer is set to Accepted so there is need only to check for rejection
      * @param JobOfferDataDTO $jobOfferDataDTO
      * @return JobOfferDataDTO
@@ -96,7 +97,7 @@ class DecisionController extends AbstractController
      * @param string $body
      * @return bool
      */
-    private function isBody(string $body){
+    private function isBody(string $body): bool {
         return !empty($body);
     }
 
@@ -106,7 +107,7 @@ class DecisionController extends AbstractController
      * @param array $rejectedKeywords
      * @return bool
      */
-    private function isRejectedKeywordsDomination(array $acceptedKeywords, array $rejectedKeywords){
+    private function isRejectedKeywordsDomination(array $acceptedKeywords, array $rejectedKeywords): bool {
         $rejectedKeywordsCount = count($rejectedKeywords);
         $acceptedKeywordsCount = count($acceptedKeywords);
 
@@ -127,7 +128,7 @@ class DecisionController extends AbstractController
      * @param array $rejectedKeywords
      * @return bool
      */
-    private function isNoKeywordFound(array $acceptedKeywords, array $rejectedKeywords){
+    private function isNoKeywordFound(array $acceptedKeywords, array $rejectedKeywords): bool {
 
         return ( empty($acceptedKeywords) && empty($rejectedKeywords) );
     }

@@ -40,11 +40,11 @@ class MailTemplateAction extends AbstractController
     }
 
     /**
+     * This function handles showing the page for creating mail templates
      * @Route("mail-template/ajax/page", name="mail_template_ajax_page")
-     * @param Request $request
      * @return JsonResponse
      */
-    public function getManagementPageContent(Request $request): JsonResponse{
+    public function getManagementPageContent(): JsonResponse{
 
         $allSavedTemplates = $this->app->getRepositories()->mailTemplateRepository()->findAll();
 
@@ -61,6 +61,7 @@ class MailTemplateAction extends AbstractController
     }
 
     /**
+     * This function handles loading mail template
      * @Route("mail-template/ajax/load/{id}", name="mail_template_ajax_load")
      * @param string $id
      * @return JsonResponse
@@ -78,6 +79,7 @@ class MailTemplateAction extends AbstractController
     }
 
     /**
+     * This function handles saving mail template
      * @Route("mail-template/ajax/save/{id}", name="mail_template_ajax_save")
      * @param Request $request
      * @param string $id
@@ -92,7 +94,8 @@ class MailTemplateAction extends AbstractController
         $code    = 200;
         $error   = false;
 
-        $mailTemplateFromRequest = $this->mailTemplateController->buildMailTemplateEntityFromRequest($request);
+        $mailTemplateForm        = $this->app->getForms()->getMailTemplateForm()->handleRequest($request);
+        $mailTemplateFromRequest = $this->mailTemplateController->buildMailTemplateEntityFromForm($mailTemplateForm);
 
         if( empty($id) ){
             $mailTemplate = $mailTemplateFromRequest;
@@ -132,11 +135,12 @@ class MailTemplateAction extends AbstractController
     }
 
     /**
+     * This function handles removing mail template
      * @Route("mail-template/ajax/remove/{id}", name="mail_template_ajax_remove")
      * @param string $id
      * @throws ORMException
      */
-    public function removeTemplateViaAjax(string $id){
+    public function removeTemplateViaAjax(string $id): void {
         $this->app->getRepositories()->mailTemplateRepository()->removeMailTemplateForId($id);
     }
 

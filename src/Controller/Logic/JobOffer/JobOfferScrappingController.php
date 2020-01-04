@@ -17,8 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class JobOfferScrappingController extends AbstractController
 {
-    const MAIN_PAGE_TWIG_TPL = "dashboard/index.html.twig";
-
     /**
      * @var DomCrawlerController $domCrawlerController
      */

@@ -5,10 +5,11 @@ namespace App\Controller\Logic\Mail;
 use App\Controller\Application;
 use App\Entity\MailTemplate;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * This class is responsible for handling the logic of loading/saving search settings
+ * This class is responsible for handling the logic of loading/saving/removing mail templates
  * Class DecisionController
  * @package App\Controller\Logic
  */
@@ -33,13 +34,13 @@ class MailTemplateController extends AbstractController
     }
 
     /**
-     * @param Request $request
+     * This function builds mail template from request
+     * @param FormInterface $mailTemplateForm
      * @return MailTemplate
      * @throws \Exception
      */
-    public function buildMailTemplateEntityFromRequest(Request $request): MailTemplate {
+    public function buildMailTemplateEntityFromForm(FormInterface $mailTemplateForm): MailTemplate {
 
-        $mailTemplateForm   = $this->app->getForms()->getMailTemplateForm()->handleRequest($request);
         /**
          * @var $mailTemplate MailTemplate
          */

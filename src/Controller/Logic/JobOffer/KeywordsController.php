@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class KeywordsController extends AbstractController
 {
     /**
+     * This function searches for keywords in job offer and keeps only the found ones
      * @param JobOfferDataDTO $jobOfferDataDTO
      * @param AjaxScrapDataRequestDTO $ajaxScrapDataRequestDTO
      * @return JobOfferDataDTO
@@ -30,10 +31,11 @@ class KeywordsController extends AbstractController
     }
 
     /**
+     * This function marks found keywords in text by wrapping strings into html tags with classes
      * @param JobOfferDataDTO $jobOfferDataDTO
      * @return JobOfferDataDTO
      */
-    public function markKeywordsInText(JobOfferDataDTO $jobOfferDataDTO){
+    public function markKeywordsInText(JobOfferDataDTO $jobOfferDataDTO): JobOfferDataDTO{
         $foundAcceptedKeywords = $jobOfferDataDTO->getAcceptedKeywords();
         $foundRejectedKeywords = $jobOfferDataDTO->getRejectedKeywords();
 
@@ -59,6 +61,7 @@ class KeywordsController extends AbstractController
     }
 
     /**
+     * This function searches for rejected keywords
      * @param JobOfferDataDTO $jobOfferDataDTO
      * @param AjaxScrapDataRequestDTO $ajaxScrapDataRequestDTO
      * @return string[]
@@ -79,6 +82,7 @@ class KeywordsController extends AbstractController
     }
 
     /**
+     * This function searches for found keywords
      * @param JobOfferDataDTO $jobOfferDataDTO
      * @param AjaxScrapDataRequestDTO $ajaxScrapDataRequestDTO
      * @return array
@@ -99,6 +103,7 @@ class KeywordsController extends AbstractController
     }
 
     /**
+     * This function searches for keywords in text
      * @param string $text
      * @param array $keywords
      * @return array

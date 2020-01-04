@@ -3,7 +3,6 @@
 namespace App\DTO;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * This dto is request is used for scrapping

@@ -102,7 +102,6 @@ class JobOfferScrappingType extends AbstractType
                 "attr" => [
                     "data-bootbox-callback-type-template-name"  => DialogsController::TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS,
                     "data-call-bootbox-dialog"                  => "true",
-                    "data-bootbox-message"                      => "Move me to translation file",
                     "data-bootbox-size"                         => BootboxController::BOOTBOX_SIZE_LARGE,
                     "data-bootbox-type"                         => BootboxController::BOOTBOX_TYPE_CONFIRM,
                     "data-bootbox-callback-type"                => BootboxController::BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE,

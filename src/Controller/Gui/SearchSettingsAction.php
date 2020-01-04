@@ -78,11 +78,10 @@ class SearchSettingsAction extends AbstractController
     /**
      * This function handles loading saved in DB via ajax call
      * @Route("/search-settings/ajax/load/{id}", name="search_settings_ajax_load")
-     * @param Request $request
      * @param string $id
      * @return JsonResponse
      */
-    public function ajaxLoadSettings(Request $request, string $id): JsonResponse {
+    public function ajaxLoadSettings(string $id): JsonResponse {
         $setting = $this->app->getRepositories()->searchSettingsRepository()->find($id);
         $message = $this->app->getTranslator()->trans("searchSetting.load.success");
 
@@ -111,7 +110,7 @@ class SearchSettingsAction extends AbstractController
             $ids = $request->request->get(ConstantsController::KEY_REQUEST_IDS);
             $this->app->getRepositories()->searchSettingsRepository()->removeSettingsForIds($ids);
         }catch( \Exception $e){
-            $message = $this->app->getTranslator()->trans("searchSettings.remove.fail.noEntityForId");
+            $message = $this->app->getTranslator()->trans("searchSetting.remove.fail.noEntityForId");
             $code    = $e->getCode();
             return Utils::buildAjaxResponse($message, true, $code);
         }

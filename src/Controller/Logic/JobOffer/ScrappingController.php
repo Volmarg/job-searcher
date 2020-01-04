@@ -26,6 +26,7 @@ class ScrappingController extends AbstractController
     }
 
     /**
+     * This function builds array of JobSearchRequestDTO for search results links
      * @param array $links
      * @return JobSearchRequestDTO[]
      */

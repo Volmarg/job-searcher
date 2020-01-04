@@ -3,7 +3,6 @@
 namespace App\DTO;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * This dto is being built from data sent via ajax to backend for further manipulations
