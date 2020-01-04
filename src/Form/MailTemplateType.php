@@ -41,7 +41,8 @@ class MailTemplateType extends AbstractType
                 "attr" => [
                     "placeholder"     => $this->app->getTranslator()->trans("forms.MailTemplateType.placeholders.description"),
                     "data-is-tinymce" => "true"
-                ]
+                ],
+                "required" => true
             ])
             ->add( self::KEY_SAVE, SubmitType::class, [
                 "attr" => [

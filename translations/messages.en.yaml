@@ -110,6 +110,7 @@ mailTemplate:
     success: Mail template has been saved
     fail:
       noEntity: Could not update mail template - no entity for given id
+      couldNotHandleRequest: Could not handle request - required fields might be missing
   remove:
     success: Mail template has been removed
 request:

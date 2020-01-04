@@ -800,6 +800,7 @@ var events = {
                         callback: function (result) {
                             if(result){
 
+                                loaders.spinner.showSpinner();
                                 $.ajax({
                                     url    : ajaxRemovalLink,
                                     method : "POST",
@@ -833,6 +834,7 @@ var events = {
                             }
                         }
                     });
+                    loaders.spinner.hideSpinner();
                 });
             })
         },
@@ -971,10 +973,13 @@ var events = {
                     event.preventDefault();
 
                     let menuElementsIdsToHideString = $submitButton.attr(events.attributes.data.buttons.menuElementsIdsToHide);
-                    let menuElementsIdsToHideArray  = JSON.parse(menuElementsIdsToHideString);
 
-                    if( 0 !== menuElementsIdsToHideArray.length ){
-                        nav.hideMenuElementsByIds(menuElementsIdsToHideArray);
+                    if( "undefined" !== typeof menuElementsIdsToHideString ){
+                        let menuElementsIdsToHideArray  = JSON.parse(menuElementsIdsToHideString);
+
+                        if( 0 !== menuElementsIdsToHideArray.length ){
+                            nav.hideMenuElementsByIds(menuElementsIdsToHideArray);
+                        }
                     }
 
                     if( $submitButton.hasClass("disabled") ){

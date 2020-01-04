@@ -105,6 +105,7 @@ var dialogs = {
                 $jobOfferUrlInput.val(jobOfferUrl);
                 events.buttons.attachGenerateMailFromTemplateEvent();
             }
+                break;
             case TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS:
             {
                 let $dialogBody   = $(dialogs.selectors.classes.dialogBody);

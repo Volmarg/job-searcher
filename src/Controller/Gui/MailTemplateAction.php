@@ -95,8 +95,13 @@ class MailTemplateAction extends AbstractController
         $code    = 200;
         $error   = false;
 
-        $mailTemplateForm        = $this->app->getForms()->getMailTemplateForm()->handleRequest($request);
-        $mailTemplateFromRequest = $this->mailTemplateController->buildMailTemplateEntityFromForm($mailTemplateForm);
+        try{
+            $mailTemplateForm        = $this->app->getForms()->getMailTemplateForm()->handleRequest($request);
+            $mailTemplateFromRequest = $this->mailTemplateController->buildMailTemplateEntityFromForm($mailTemplateForm);
+        } catch (Exception $e){
+            $message = $this->app->getTranslator()->trans("mailTemplate.save.fail.couldNotHandleRequest");
+            return Utils::buildAjaxResponse($message, true, 400);
+        }
 
         if( empty($id) ){
             $mailTemplate = $mailTemplateFromRequest;
