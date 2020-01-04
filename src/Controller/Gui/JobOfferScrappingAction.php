@@ -7,11 +7,13 @@ use App\Controller\ConstantsController;
 use App\Controller\Logic\JobOffer\JobOfferScrappingController;
 use App\Controller\Logic\JobOffer\ScrappingController;
 use App\Controller\Logic\JobOffer\DomCrawlerController;
+use App\Controller\Utils;
 use App\DTO\JobOfferDataDTO;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -60,21 +62,30 @@ class JobOfferScrappingAction extends AbstractController
     }
 
     /**
-     * @Route("/", name="dashboard")
+     * @Route("/", name="job_search")
+     * @param Request $request
+     * @return Response
      */
-    public function index()
+    public function index(Request $request): Response
     {
         $jobOfferScrappingForm = $this->app->getForms()->getJobOfferScrappingForm();
         $searchSettings        = $this->app->getRepositories()->searchSettingsRepository()->findAll();
+        $isAjax                = $request->isXmlHttpRequest();
 
         $data = [
             "jobOfferScrappingForm" => $jobOfferScrappingForm->createView(),
             "searchSettings"        => $searchSettings,
+            "isAjax"                => $isAjax,
         ];
 
+        $renderedView = $this->render(self::MAIN_PAGE_TWIG_TPL, $data);
 
+        if( $isAjax ){
+            $viewContent = $renderedView->getContent();
+            return Utils::buildAjaxResponse('', false, 200, null, $viewContent);
+        }
 
-        return $this->render(self::MAIN_PAGE_TWIG_TPL, $data);
+        return $renderedView;
     }
 
     /**

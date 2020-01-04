@@ -6,16 +6,36 @@
     <li class="spacer"></li>
     <li class="nav-item">
         <a class="" href="#"
-           {# bootbox dialog data#}
-           data-call-bootbox-dialog="true"
-           data-bootbox-size="{{ BOOTBOX_SIZE_LARGE }}"
-           data-bootbox-type="{{ BOOTBOX_TYPE_ALERT }}"
-           data-bootbox-message="Move me to translation file"
-           data-bootbox-callback-type="{{ BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE }}"
-           data-bootbox-callback-type-template-name="{{ TEMPLATE_TYPE_SEARCH_SETTINGS }}"
+           data-load-page-content="true"
+           data-load-page-content-url="{{ path('job_search') }}"
+           data-load-page-content-method="GET"
         >
             <i class="feather icon-sidebar"></i>
-            <span class="menu-title">{{ 'menu.searchSettings' | trans }}</span>
+            <span class="menu-title">{{ 'menu.jobSearch.label' | trans }}</span>
+
+            {# submenu #}
+            <div class="collapse show" id="navDashboard" style="">
+                <ul class="flex-column sub-menu">
+                    <li class="nav-item">
+                        <a class="nav-link wave-effect waves-effect waves-block"
+                           href="#"
+                           {# bootbox dialog data#}
+                           data-call-bootbox-dialog="true"
+                           data-bootbox-size="{{ BOOTBOX_SIZE_LARGE }}"
+                           data-bootbox-type="{{ BOOTBOX_TYPE_ALERT }}"
+                           data-bootbox-message="Move me to translation file"
+                           data-bootbox-callback-type="{{ BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE }}"
+                           data-bootbox-callback-type-template-name="{{ TEMPLATE_TYPE_SEARCH_SETTINGS }}"
+                        >
+                            <i class="feather icon-layout"></i>
+                            <span class="menu-title">{{ 'menu.jobSearch.loadSetting' | trans }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            {# submenu #}
+
+
         </a>
     </li>
     <li class="nav-item">

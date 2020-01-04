@@ -1,7 +1,12 @@
-{% extends 'base.html.twig' %}
+{# Twig crashes if more than 1 extend tag is present #}
+{% if isAjax  %}
+    {% set extendedTemplate = "blank.html.twig" %}
+{% else %}
+    {% set extendedTemplate = "base.html.twig" %}
+{% endif %}
 
-{% block title %}Dashboard{% endblock %}
+{% extends extendedTemplate %}
 
-{% block body %}
-
+{% block mainContainerWrapper %}
+    {% include 'modules/job-search/job-search.twig' %}
 {% endblock %}

@@ -75,7 +75,8 @@
         {% include 'components/sidebar.twig' %}
         <main>
             <div class="container-fluid main-container-wrapper">
-                {% include 'modules/job-search/job-search.twig' %}
+                {% block mainContainerWrapper %}
+                {% endblock %}
             </div>
             {% include 'components/fotter.twig' %}
         </main>

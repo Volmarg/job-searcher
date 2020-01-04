@@ -6,7 +6,9 @@ domCrawlerController:
 
 menu:
   mailTemplates: Mail templates
-  searchSettings: Search settings
+  jobSearch:
+    label: Job search
+    loadSetting: Load setting
   about: About
 
 page:
