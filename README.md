@@ -117,8 +117,8 @@
 <ul>
 <li><a href="https://github.com/iamshipon1988/bootadmin">Bootadmin</a> <small>(Ui)</small></li>
 <li><a href="https://github.com/tinymce/">Tinymce</a> <small>(Editor)</small></li>
-<li><a href="https://github.com/selectize">Icon Picker</a> <small>(Tags/arrays in inputs)</small></li>
-<li><a href="https://github.com/makeusabrew/bootbox">Bootbox</a> (<small>Additional safety confirmations for CRUD</small>)
+<li><a href="https://github.com/selectize">Selectize</a> <small>(Tags/arrays in inputs)</small></li>
+<li><a href="https://github.com/makeusabrew/bootbox">Bootbox</a> (<small>Modals</small>)
 </li>
 <li><a href="https://github.com/DataTables/DataTables">DataTables</a> <small>(Better tables)</small></li>
 <li><a href="https://github.com/mouse0270/bootstrap-notify">BootstrapNotify</a> (<small>Notifications</small>)</li>
