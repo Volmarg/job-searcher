@@ -24,6 +24,8 @@ modules:
       header: Name
       status:
         label: Status
+      email:
+        label: Email
       actions: Actions
       url: Url
       reason: Reason

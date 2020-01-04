@@ -13,6 +13,8 @@ use Symfony\Component\Serializer\Serializer;
 
 class Utils extends AbstractController {
 
+    const EMAIL_ADDRESS_MATCH_REGEX = '/([a-z0-9_\.\-])+(\@|\[at\])+(([a-z0-9\-])+\.)+([a-z0-9]{2,4})+/i';
+
     /**
      * //todo: turn params into dto if this will keep growing.
      * @param string $message

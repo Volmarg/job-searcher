@@ -37,6 +37,7 @@
                             <th>{{ "modules.jobSearchResults.table.header" | trans }}</th>
                             <th>{{ "modules.jobSearchResults.table.reason" | trans }}</th>
                             <th>{{ "modules.jobSearchResults.table.status.label" | trans }}</th>
+                            <th>{{ "modules.jobSearchResults.table.email.label" | trans }}</th>
                             <th>{{ "modules.jobSearchResults.table.actions" | trans }}</th>
                         </tr>
                         </thead>
@@ -70,6 +71,12 @@
                                     {% else %}
                                         <i class="feather text-success icon-check-circle job-offer-status"
                                            data-is-rejected="false"></i>
+                                    {% endif %}
+                                </td>
+
+                                <td class="">
+                                    {% if jobOfferDataDto.getEmailAddress() is not empty %}
+                                        <a href="mailto:{{ jobOfferDataDto.getEmailAddress() }}">{{ jobOfferDataDto.getEmailAddress() }}</a>
                                     {% endif %}
                                 </td>
 

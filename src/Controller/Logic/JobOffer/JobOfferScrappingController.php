@@ -3,6 +3,7 @@
 namespace App\Controller\Logic\JobOffer;
 
 use App\Controller\Application;
+use App\Controller\Utils;
 use App\DTO\AjaxScrapDataRequestDTO;
 use App\DTO\JobOfferDataDTO;
 use App\DTO\JobSearchResponseDTO;
@@ -222,5 +223,25 @@ class JobOfferScrappingController extends AbstractController
         return $jobOfferDataDtos;
     }
 
+    /**
+     * This function will build search for email addresses in job offer description
+     * @param JobOfferDataDTO[]
+     * @return JobOfferDataDTO[]
+     * @see JobOfferDataDTO
+     */
+    public function searchForEmailsInJobOffersDataDtos(array $jobOfferDataDtos): array {
+
+        foreach( $jobOfferDataDtos as &$jobOfferDataDto ){
+            $offerDescription = $jobOfferDataDto->getDescription();
+            preg_match(Utils::EMAIL_ADDRESS_MATCH_REGEX, $offerDescription, $matches);
+
+            if( !empty($matches)){
+                $jobOfferDataDto->setEmailAddress(reset($matches));
+            }
+
+        }
+
+        return $jobOfferDataDtos;
+    }
 
 }

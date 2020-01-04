@@ -63,6 +63,11 @@ class JobOfferDataDTO {
     private $rejectionPercentage = 0;
 
     /**
+     * @var string $emailAddress
+     */
+    private $emailAddress = '';
+
+    /**
      * @return string
      */
     public function getHeader(): string {
@@ -191,4 +196,19 @@ class JobOfferDataDTO {
     public function isAccepted(): bool {
         return !$this->isRejected;
     }
+
+    /**
+     * @return string
+     */
+    public function getEmailAddress(): string {
+        return $this->emailAddress;
+    }
+
+    /**
+     * @param string $emailAddress
+     */
+    public function setEmailAddress(string $emailAddress): void {
+        $this->emailAddress = $emailAddress;
+    }
+
 }

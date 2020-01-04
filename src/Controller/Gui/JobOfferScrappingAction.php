@@ -118,6 +118,7 @@ class JobOfferScrappingAction extends AbstractController
             $jobSearchResponseDtosForOfferPages = $this->scrappingController->scrapDataForWebsites($jobSearchRequestsDtosForOfferPages);
 
             $jobOfferDataDtos = $this->jobOfferScrappingController->buildJobOfferDataDtosFromJobSearchResponseDtos($jobSearchResponseDtosForOfferPages);
+            $jobOfferDataDtos = $this->jobOfferScrappingController->searchForEmailsInJobOffersDataDtos($jobOfferDataDtos);
             $jobOfferDataDtos = $this->jobOfferScrappingController->searchForKeywordsInJobOffersDataDtos($jobOfferDataDtos, $ajaxScrapDataRequestDTO);
             $jobOfferDataDtos = $this->jobOfferScrappingController->markKeywordsInJobOffersDataDtos($jobOfferDataDtos);
             $jobOfferDataDtos = $this->jobOfferScrappingController->makeDecisionsForJobOffersDataDtos($jobOfferDataDtos);
