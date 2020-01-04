@@ -659,6 +659,7 @@ var events = {
                 tinyMce.init();
                 events.init();
                 selectize.init();
+                loaders.spinner.hideSpinner();
             });
         }
     },
@@ -826,6 +827,7 @@ var events = {
                                     });
 
                                     infoBox.showSuccessBox(message);
+                                    loaders.spinner.hideSpinner();
                                 });
 
                             }
