@@ -22,7 +22,8 @@ var events = {
                 mailTemplateId              : "data-mail-template-id",
                 cleanMailTemplateForm       : "data-clean-mail-template-form",
                 ajaxUrl                     : "data-ajax-url",
-                ajaxMethod                  : "data-ajax-method"
+                ajaxMethod                  : "data-ajax-method",
+                menuElementsIdsToHide       : "data-menu-elements-ids-to-hide"
             },
             forms: {
                 submitViaAjax               : "data-submit-via-ajax",
@@ -294,7 +295,7 @@ var events = {
                let $clickedElement = $(element);
                let url             = $clickedElement.attr(_this.attributes.data.ajax.loadPageContentUrl);
                let method          = $clickedElement.attr(_this.attributes.data.ajax.loadPageContentMethod);
-               let menuElementId   = $clickedElement.prop("id");
+               let elementId       = $clickedElement.prop("id");
 
                if( "undefined" === typeof url ){
                    throw({
@@ -310,7 +311,7 @@ var events = {
                     });
                 }
 
-                switch(menuElementId){
+                switch(elementId){
                     case MENU_ELEMENT_JOB_SEARCH:
                         var callbackAfter = () => {
                             let menuElementsIdsToShow = [
@@ -531,7 +532,7 @@ var events = {
                 tinyMce.init();
                 events.init();
                 selectize.init();
-
+                loaders.spinner.hideSpinner();
                 if( "function" === typeof callbackAfter){
                     callbackAfter();
                 }
@@ -965,6 +966,13 @@ var events = {
 
                 $submitButton.on('click', function(event) {
                     event.preventDefault();
+
+                    let menuElementsIdsToHideString = $submitButton.attr(events.attributes.data.buttons.menuElementsIdsToHide);
+                    let menuElementsIdsToHideArray  = JSON.parse(menuElementsIdsToHideString);
+
+                    if( 0 !== menuElementsIdsToHideArray.length ){
+                        nav.hideMenuElementsByIds(menuElementsIdsToHideArray);
+                    }
 
                     if( $submitButton.hasClass("disabled") ){
                         return;

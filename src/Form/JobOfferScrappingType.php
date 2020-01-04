@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Controller\Application;
 use App\Controller\BootboxController;
+use App\Controller\ConstantsController;
 use App\Controller\DialogsController;
 use App\Entity\SearchSetting;
 use Symfony\Component\Form\AbstractType;
@@ -95,8 +96,9 @@ class JobOfferScrappingType extends AbstractType
             ])
             ->add( $this->app->getTranslator()->trans("forms.buttons.submit"), SubmitType::class, [
                 "attr" => [
-                    "data-ajax-form-submit" => "true",
-                    "class"                 => "btn-primary btn disabled",
+                    "data-menu-elements-ids-to-hide" => '["' . ConstantsController::MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING . '"]',
+                    "data-ajax-form-submit"          => "true",
+                    "class"                          => "btn-primary btn disabled",
                 ]
             ])
             ->add( $this->app->getTranslator()->trans(self::KEY_SAVE_SEARCH_SETTING), SubmitType::class, [

@@ -3,21 +3,21 @@ var loaders = {
         ids: {
         },
         classes: {
-            spinner: ".loading"
+            spinner: ".spinner"
         }
     },
     domElements: {
       $spinner: null,
       init   : function(){
-        this.$spinner = $(loaders.selectors.ids.spinner);
+        this.$spinner = $(loaders.selectors.classes.spinner);
       }
     },
     spinner: {
         showSpinner: function (){
-            loaders.domElements.$spinner.removeClass("hidden");
+            loaders.domElements.$spinner.removeClass("d-none");
         },
         hideSpinner: function(){
-            loaders.domElements.$spinner.addClass("hidden");
+            loaders.domElements.$spinner.addClass("d-none");
         }
     }
 };
