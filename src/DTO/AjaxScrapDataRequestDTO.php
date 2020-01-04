@@ -210,16 +210,16 @@ class AjaxScrapDataRequestDTO extends AbstractController
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getRegexForLinksSkipping(): string {
+    public function getRegexForLinksSkipping():? string {
         return $this->regexForLinksSkipping;
     }
 
     /**
-     * @param string $regexForLinksSkipping
+     * @param string|null $regexForLinksSkipping
      */
-    public function setRegexForLinksSkipping(string $regexForLinksSkipping): void {
+    public function setRegexForLinksSkipping(?string $regexForLinksSkipping): void {
         $this->regexForLinksSkipping = $regexForLinksSkipping;
     }
 

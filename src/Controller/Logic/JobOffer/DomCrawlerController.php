@@ -169,7 +169,9 @@ class DomCrawlerController extends AbstractController
 
             $link = $crawlerResult->getAttribute("href");
 
-            if( preg_match("#{$this->regexForLinksSkipping}#", $link) )
+            if(
+                    !empty($this->regexForLinksSkipping)
+                &&  preg_match("#{$this->regexForLinksSkipping}#", $link) )
             {
                 continue;
             }
