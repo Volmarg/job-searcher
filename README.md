@@ -8,7 +8,7 @@
 <h3>Description</h3>
 <hr>
 <p align="justify">
-    This tool works with a variety of job portal like <b>indeed.com</b> or <b>linkedin.com</b> - it searches through the search result pages, extract the job offers with their descriptions and headers, marks the accepted/rejected keywords and displays the summary status (if job offer is anyhow suitable or not - keep in mind that this is just a tool so it's not perfect in this term). Additionally: search settings can be saved for future reusage and emails templates can be used to speed up mailing process.
+    This tool works with a variety of job portal like <b>indeed.com</b> or <b>Glassdoor.com</b> - it searches through the search result pages, extract the job offers with their descriptions and headers, marks the accepted/rejected keywords and displays the summary status (if job offer is anyhow suitable or not - keep in mind that this is just a tool so it's not perfect in this term). Additionally: search settings can be saved for future reusage and emails templates can be used to speed up mailing process.
 </p>
 
 <h3>Reasoning/Purpose</h3>
@@ -52,10 +52,35 @@
 
 <hr>
 
-<h2>How to install/use</h2>
-<p>
+<h2>How to install</h2>
 
-</p>
+- Requirements
+  - Php 7.2.x
+  - php7.2-curl
+  - php7.2-sqlite
+  - https://symfony.com/download 
+    - wget https://get.symfony.com/cli/installer -O - | bash
+    - mv /root/.symfony/bin/symfony /usr/local/bin/symfony
+- Clone my repository
+- Inside the repository run:
+  - composer install
+  - create <b>.env</b> file with content
+	````
+	APP_ENV=prod
+	APP_DEBUG=false
+
+	APP_SECRET=eb0b9c7a18f777b1ceafae71882873cc
+
+	DATABASE_URL=sqlite:///%kernel.project_dir%/var/database.db
+	````
+  - bin/console cache:clear
+  - bin/console cache:warmup
+  - bin/console doctrine:database:create
+  - bin/console doctrine:schema:create
+  - symfony server:start --port=8001
+
+
+<h2>How to use</h2>
 
 <h2>Future development plans</h2>
 
