@@ -111,7 +111,10 @@
                                     <div class="col-12">
                                         {{ form_widget(form[KEY_SAVE], {
                                             "attr": {
-                                                "data-ajax-form-submit": "true",
+                                                "data-ajax-form-submit"         : "true",
+                                                "data-load-page-content"        : "true",
+                                                "data-load-page-content-url"    : path('mail_template_ajax_page') ,
+                                                "data-load-page-content-method" : "GET"
                                             }
                                         }) }}
                                     </div>

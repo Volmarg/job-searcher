@@ -756,34 +756,52 @@ var events = {
                     };
 
                     loaders.spinner.showSpinner();
-                    $.ajax({
-                        url    : ajaxRemovalLink,
-                        method : "POST",
-                        data   : ajaxData
-                    }).always( (data) => {
 
-                        try{
-                            var error   = data[KEY_JSON_RESPONSE_ERROR];
-                            var message = data[KEY_JSON_RESPONSE_MESSAGE];
-                        }catch(Exception){
-                            throw({
-                                "message": events.messages.couldNotHandleAjaxResponse
-                            })
+                    bootbox.confirm({
+                        message : "Do You really want to remove this record?",
+                        backdrop: true,
+                        size    : BOOTBOX_SIZE_SMALL,
+                        callback: function (result) {
+                            if(result){
+
+                                $.ajax({
+                                    url    : ajaxRemovalLink,
+                                    method : "POST",
+                                    data   : ajaxData
+                                }).always( (data) => {
+
+                                    try{
+                                        var error   = data[KEY_JSON_RESPONSE_ERROR];
+                                        var message = data[KEY_JSON_RESPONSE_MESSAGE];
+                                    }catch(Exception){
+                                        throw({
+                                            "message": events.messages.couldNotHandleAjaxResponse
+                                        })
+                                    }
+
+                                    if( true === error ){
+                                        loaders.spinner.hideSpinner();
+                                        infoBox.showDangerBox(message);
+                                        return;
+                                    }
+
+                                    $.each(elementsToRemove, (index, element) => {
+                                        let $element = $(element);
+                                        $element.remove();
+                                    });
+
+                                    infoBox.showSuccessBox(message);
+                                });
+
+                            }
                         }
-
-                        if( true === error ){
-                            loaders.spinner.hideSpinner();
-                            infoBox.showDangerBox(message);
-                            return;
-                        }
-
-                        $.each(elementsToRemove, (index, element) => {
-                            let $element = $(element);
-                            $element.remove();
-                        });
-
-                        infoBox.showSuccessBox(message);
                     });
+
+
+
+
+
+
                 });
             })
         },
@@ -913,13 +931,13 @@ var events = {
             let allFormsToHandle = $("[" + events.attributes.data.forms.submitViaAjax + "=true]");
 
             $.each(allFormsToHandle, (index, form) => {
-                let $form         = $(form);
-                let $submitButton = $form.find("[" + events.attributes.data.forms.elementForSubmitViaAjax + "=true]");
+                let $form               = $(form);
+                let $submitButton       = $form.find("[" + events.attributes.data.forms.elementForSubmitViaAjax + "=true]");
+                let isLoadPageContent   = ( $submitButton.attr(events.attributes.data.ajax.loadPageContent) == "true" ) ;
 
                 $submitButton.on('click', function(event) {
                     event.preventDefault();
 
-                   let $clickedButton = $(event.currentTarget);
                    let serializedForm = $form.serializeArray();
                    let ajaxUrl        = $form.attr(events.attributes.data.forms.ajaxUrl);
 
@@ -939,7 +957,7 @@ var events = {
 
                         try{
                             var error    = data[KEY_JSON_RESPONSE_ERROR];
-                            var message  = data[KEY_JSON_RESPONSE_MESSAGE]
+                            var message  = data[KEY_JSON_RESPONSE_MESSAGE];
                             var template = data[KEY_JSON_RESPONSE_TEMPLATE];
                         }catch(Exception){
                             throw({
@@ -960,6 +978,28 @@ var events = {
                         }
 
                         infoBox.showSuccessBox(message);
+
+                        if( isLoadPageContent ){
+                            let ajaxUrl = $submitButton.attr(events.attributes.data.ajax.loadPageContentUrl);
+                            let method  = $submitButton.attr(events.attributes.data.ajax.loadPageContentMethod);
+
+                            if( "undefined" === typeof ajaxUrl ){
+                                throw({
+                                    "message": "Ajax url was not defined for loading content via ajax on template save",
+                                    "element": $submitButton
+                                })
+                            }
+
+                            if( "undefined" === typeof method ){
+                                throw({
+                                    "message": "Method for ajax was not defined for loading content via ajax on template save",
+                                    "element": $submitButton
+                                })
+                            }
+
+                            events.ajaxCalls.loadPageTemplate(ajaxUrl, method);
+                        }
+
                         loaders.spinner.hideSpinner();
 
                     });
