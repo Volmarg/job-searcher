@@ -37,11 +37,10 @@ class MailTemplateRepository extends ServiceEntityRepository
      */
     public function removeMailTemplateForId(string $id): void {
 
-        $settings = $this->_em->getRepository(MailTemplate::class)->find($id);
+        $mailTemplate = $this->_em->getRepository(MailTemplate::class)->find($id);
 
-        if( !empty($settings) ){
-            $setting = reset($settings);
-            $this->_em->remove($setting);
+        if( !empty($mailTemplate) ){
+            $this->_em->remove($mailTemplate);
             $this->_em->flush();
             return;
         }

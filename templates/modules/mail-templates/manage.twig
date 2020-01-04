@@ -25,7 +25,11 @@
                     <div class="row">
                         <div class="col-sm-3 col-md-2">
                             <div class="p-2">
-                                <a href="#" class="btn btn-danger btn-block" role="button">{{ 'modules.mailTemplatesManage.builder.compose' | trans }}</a>
+                                <a class="btn btn-danger btn-block"
+                                   data-clean-mail-template-form="true"
+                                   role="button"
+                                   href="javascript:void(0)"
+                                >{{ 'modules.mailTemplatesManage.builder.compose' | trans }}</a>
                             </div>
 
                             <ul class="list-group mt-4">
@@ -39,6 +43,15 @@
                                         >
                                             <i class="mdi mdi-inbox"></i> {{ template.getName() }}
                                         </a>
+                                        <i class="feather icon-trash hoverable pointer"
+                                           id="mailTemplateRemove_{{ template.getId() }}"
+                                           data-remove-entity="true"
+                                           data-entity-removal-ajax-link="{{ path('mail_template_ajax_remove', {"id": template.getId()}) }}"
+                                           data-entity-removed-ids-elements-selector="#mailTemplateRemove_{{ template.getId() }}"
+                                           data-entity-id="{{ template.getId() }}"
+                                           data-parent-element-to-remove-selector="li"
+                                           style="padding-left:5px;"
+                                        ></i>
                                     </li>
                                 {% endfor %}
                             </ul>

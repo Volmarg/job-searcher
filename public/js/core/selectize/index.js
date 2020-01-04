@@ -68,13 +68,31 @@ var selectize = {
         }
 
         // without clearing - onLoad items will be appended instead of inserted
-        selectize.clear();
-        selectize.clearOptions();
+        this.clear($element);
 
         $.each(items, (index, value) => {
             selectize.addOption({value: value, text: value});
             selectize.addItem(value);
         });
+
+    },
+    /**
+     * This function will clear selectize instance out of the provided element
+     * @param $element {object}
+     */
+    clear: function($element){
+
+        let input = $element[0];
+        if( !$(input).is("input") ){
+            throw({
+                "message": "Target element is not an input",
+                'element': $element
+            })
+        }
+
+        let selectize = input.selectize;
+        selectize.clear();
+        selectize.clearOptions();
 
     }
 };

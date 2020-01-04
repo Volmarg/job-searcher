@@ -15,3 +15,12 @@
 .clickable-cell {
     cursor: pointer;
 }
+
+/* DOM */
+.hoverable:hover {
+    opacity: 0.7;
+}
+
+.pointer {
+    cursor: pointer;
+}

@@ -20,6 +20,7 @@ var events = {
                 parentToRemoveSelector      : "data-parent-element-to-remove-selector",
                 loadMailTemplate            : "data-load-mail-template",
                 mailTemplateId              : "data-mail-template-id",
+                cleanMailTemplateForm       : "data-clean-mail-template-form",
             },
             forms: {
                 submitViaAjax               : "data-submit-via-ajax",
@@ -90,6 +91,7 @@ var events = {
       this.attachAjaxPageContentLoadOnElementClick();
       this.buttons.attachRemoveEntitiesEvent();
       this.buttons.attachLoadMailTemplateEvent();
+      this.buttons.attachClearMailTemplateFormEvent();
       this.forms.submitViaAjax();
     },
     /**
@@ -617,6 +619,9 @@ var events = {
             }
         }
     },
+    /**
+     * Handle events for various buttons
+     */
     buttons: {
         /**
          * This function will remove entities of given type with given ids
@@ -642,23 +647,19 @@ var events = {
                         $.each(allElementsWithIds, (index, element) => {
                             let $element = $(element);
 
-                            if( !$element.is("INPUT") ){
-                                throw({
-                                    "message": "Target element is not input",
-                                    "hint#1" : "Input must be of type checkbox"
-                                })
+                            // if this is checkbox then we handle removal for each selected checkbox, otherwise only clicked element
+                            if( $element.is("INPUT") && $element.prop('checked')){
+                                var id  = $element.attr(events.attributes.data.buttons.entityId);
+                            }else {
+                                var id  = $button.attr(events.attributes.data.buttons.entityId);
                             }
 
-                            if( $element.prop('checked') ){
-                                let id  = $element.attr(events.attributes.data.buttons.entityId);
-
-                                if( "undefined" !== parentToRemoveSelector ){
-                                    let elementToRemove = $element.closest(parentToRemoveSelector);
-                                    elementsToRemove.push(elementToRemove);
-                                }
+                            if( "undefined" !== parentToRemoveSelector ){
+                                let elementToRemove = $element.closest(parentToRemoveSelector);
+                                elementsToRemove.push(elementToRemove);
+                            }
 
                                 idsToRemove.push(id)
-                            }
                         });
                     } else {
                         idsToRemove = ids;
@@ -734,8 +735,50 @@ var events = {
                     $mailTemplateForm.attr(events.attributes.data.forms.ajaxUrl, ajaxUrl);
                 });
             });
+        },
+        /**
+         * This function will attach event that clears the mailTemplate form and resets the ajax call url on form
+         */
+        attachClearMailTemplateFormEvent(){
+            let $elementToHandle  = $("[" + events.attributes.data.buttons.cleanMailTemplateForm + "]");
+
+            $elementToHandle.off('click');
+            $elementToHandle.on('click', () => {
+                let $mailTemplateForm         = $(events.selectors.query.mailTemplateForm);
+                let $mailTemplateFormElements = $mailTemplateForm.find('input, textarea');
+
+                $.each($mailTemplateFormElements, (index, element) => {
+                    let $element = $(element);
+
+                    // if textarea is tinymce then we need to handle passing data to textarea and tinymce editor
+                    if( $element.is("textarea")){
+                        let isTinymce = ( $element.attr(tinyMce.attributes.data.isTinyMce) == "true" );
+                        $element.text('');
+
+                        if( isTinymce ){
+                            tinymce.get($element.attr('id')).setContent('');
+                            tinyMce.init();
+                        }
+
+                        return;
+                    }
+
+                    let isSelectize = ( $element.attr(selectize.attributes.data.isSelectize) == "true" );
+                    $element.val('');
+
+                    if( isSelectize ){
+                        selectize.clear($element);
+                        return;
+                    }
+
+                });
+
+            })
         }
     },
+    /**
+     * Handle events for forms
+     */
     forms: {
         submitViaAjax: function() {
             let _this            = this;
