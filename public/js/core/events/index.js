@@ -964,6 +964,7 @@ var events = {
                 let $submitButton       = $form.find("[" + events.attributes.data.forms.elementForSubmitViaAjax + "=true]");
                 let isLoadPageContent   = ( $submitButton.attr(events.attributes.data.ajax.loadPageContent) == "true" ) ;
 
+                $submitButton.off("click");
                 $submitButton.on('click', function(event) {
                     event.preventDefault();
 
