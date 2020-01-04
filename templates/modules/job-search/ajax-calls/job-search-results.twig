@@ -45,7 +45,7 @@
                             <tr>
                                 <td
                                         class="clickable-cell job-offer-header"
-                                        data-bootbox-callback-type-template-params='{"{{ KEY_PARAM_JOB_OFFER_DESCRIPTION }}" : "{{ jobOfferDataDto.getDescription() | escape }}", "{{ KEY_PARAM_JOB_OFFER_LINK }}" : "{{ jobOfferDataDto.getOfferLink() | escape }}", "{{ KEY_PARAM_JOB_OFFER_HEADER }}" : "{{ jobOfferDataDto.getHeader() | escape }}", "{{ KEY_PARAM_JOB_OFFER_REJECTED_KEYWORDS }}" : "{{ jobOfferDataDto.getRejectedKeywords() | json_encode | replace({'"':'\''}) }}", "{{ KEY_PARAM_JOB_OFFER_ACCEPTED_KEYWORDS }}" : "{{ jobOfferDataDto.getAcceptedKeywords() | json_encode | replace({'"':'\''}) }}" }'
+                                        data-bootbox-callback-type-template-params='{"{{ KEY_PARAM_JOB_OFFER_DESCRIPTION }}" : "{{ escapeDoubleQuotes(jobOfferDataDto.getDescription() ) }}", "{{ KEY_PARAM_JOB_OFFER_LINK }}" : "{{ jobOfferDataDto.getOfferLink() | escape }}", "{{ KEY_PARAM_JOB_OFFER_HEADER }}" : "{{ jobOfferDataDto.getHeader() | escape }}", "{{ KEY_PARAM_JOB_OFFER_REJECTED_KEYWORDS }}" : "{{ jobOfferDataDto.getRejectedKeywords() | json_encode | replace({'"':'\''}) }}", "{{ KEY_PARAM_JOB_OFFER_ACCEPTED_KEYWORDS }}" : "{{ jobOfferDataDto.getAcceptedKeywords() | json_encode | replace({'"':'\''}) }}" }'
                                         {# bootbox dialog data#}
                                         data-call-bootbox-dialog="true"
                                         data-bootbox-size="{{ BOOTBOX_SIZE_LARGE }}"
