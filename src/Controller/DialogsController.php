@@ -120,18 +120,21 @@ class DialogsController extends AbstractController {
     private function getTemplateForSearchResultDetails(Request $request): string {
 
         if( !$request->query->has(self::KEY_PARAMS) ){
-            throw new Exception(); //todo
+            $message = $this->app->getTranslator()->trans("request.missingKey") . self::KEY_PARAMS;
+            throw new Exception($message);
         }
 
         $paramsString = Utils::newLineToSpacebar(nl2br(trim($request->query->get(self::KEY_PARAMS))));
         $paramsArray  = json_decode($paramsString, true);
 
         if( !array_key_exists(self::KEY_PARAM_JOB_OFFER_DESCRIPTION, $paramsArray) ){
-            throw new Exception(); //todo
+            $message = $this->app->getTranslator()->trans("modules.jobSearchResults.missingParamForDetailPage" . self::KEY_PARAM_JOB_OFFER_DESCRIPTION);
+            throw new Exception($message , 400);
         }
 
         if( !array_key_exists(self::KEY_PARAM_JOB_OFFER_LINK, $paramsArray) ){
-            throw new Exception(); //todo
+            $message = $this->app->getTranslator()->trans("modules.jobSearchResults.missingParamForDetailPage" . self::KEY_PARAM_JOB_OFFER_LINK);
+            throw new Exception($message, 400);
         }
 
         $jobOfferLink             = $paramsArray[self::KEY_PARAM_JOB_OFFER_LINK];
@@ -144,7 +147,6 @@ class DialogsController extends AbstractController {
             self::KEY_PARAM_JOB_OFFER_LINK              => $jobOfferLink,
             self::KEY_PARAM_JOB_OFFER_HEADER            => $jobOfferHeader,
             self::KEY_PARAM_JOB_OFFER_DESCRIPTION       => $jobOfferDescription,
-            //todo: add a func with checks for this json decode?
             self::KEY_PARAM_JOB_OFFER_REJECTED_KEYWORDS => json_decode(str_replace("'", '"', $jobOfferRejectedKeywords), true),
             self::KEY_PARAM_JOB_OFFER_ACCEPTED_KEYWORDS => json_decode(str_replace("'", '"', $jobOfferAcceptedKeywords), true),
         ];

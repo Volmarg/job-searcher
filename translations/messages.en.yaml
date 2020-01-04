@@ -30,6 +30,7 @@ modules:
     header:
       main: Job search results
       sub: Click on name for more details
+    missingParamForDetailPage: "Missing param for detail page: "
   mailTemplatesManage:
     header:
       main: Mail templates

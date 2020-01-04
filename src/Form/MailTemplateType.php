@@ -43,11 +43,6 @@ class MailTemplateType extends AbstractType
                     "data-is-tinymce" => "true"
                 ]
             ])
-            ->add(MailTemplate::KEY_ATTACHMENT_LINKS, TextType::class, [
-                "attr" => [
-                    "placeholder" => $this->app->getTranslator()->trans("forms.MailTemplateType.placeholders.attachmentLinks"),
-                ]
-            ])
             ->add( self::KEY_SAVE, SubmitType::class, [
                 "attr" => [
                     "data-ajax-form-submit" => "true"
