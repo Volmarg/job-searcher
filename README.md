@@ -15,7 +15,7 @@
 <hr>
 
 <p align="justify">
-    First of all this is rewritten version of older project ( first attempt to create something with framework - code was ugly, unmaintinable, unreusable - general mess created before I learned how to maintain and create pretty codebase).
+    First of all this is rewritten version of older project (it was first attempt to create something with framework - code was ugly, unmaintinable, unreusable - general mess created before I learned how to maintain and create pretty codebase).
 </p>
 
 <p align="justify">
@@ -23,7 +23,7 @@
 </p>
 
 <p align="justify">
-    With this I decided that I don't want to waste any more time on such useless job searching, as rude as it sounds it's just not worth it, and with this tool i can just open `scanned` job offer in tool, take a quick look which keywords are ok/not-ok, what is the status, and hey I can even generate email for every job offer separately.
+    With this I decided that I don't want to waste any more time on such useless job searching, as rude as it sounds it's just not worth it, and with this tool i can just open scanned job offer in tool, take a quick look which keywords are ok/not-ok, what is the status, and hey I can even generate email for every job offer separately.
 </p>
 
 <h3>Available options</h3>
@@ -32,9 +32,9 @@
 <ol>
     <li><b style="display:inline">🔎 Job searching </b> - <span align="justify"><i>Scraps the job offers details from given search result pages based on provided criteria</i>
         </span></li><br/>
-        <li><b>💾 Search settings</b> <span align="justify"> - It can take some time to set up the proper criteria to scan given pages - with this You can save Your settings and reuse them for example next week, or just change some keywords and save them as new setting,</span></li><br/>
-        <li><b>📨 Mail templates</b> - <span align="justify"> Create mail template which can be used to generate mail content upon displaying search results.
-            </span></li><br/>
+        <li><b>💾 Search settings</b> <span align="justify"> - <i>It can take some time to set up the proper criteria to scan given pages - with this You can save Your settings and reuse them for example next week, or just change some keywords and save them as new setting,</i></span></li><br/>
+        <li><b>📨 Mail templates</b> - <span align="justify"> <i>Create mail template which can be used to generate mail content upon displaying search results.
+            </i></span></li><br/>
 </ol>
 
 <h2>Preview</h2>
