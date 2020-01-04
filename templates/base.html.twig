@@ -28,6 +28,7 @@
 {% set TEMPLATE_TYPE_SEARCH_RESULT_DETAILS          = constant(dialogController ~ 'TEMPLATE_TYPE_SEARCH_RESULT_DETAILS') %}
 {% set TEMPLATE_JOB_SEARCH_RESULTS                  = constant(jobOfferScrappingAction~ 'TEMPLATE_JOB_SEARCH_RESULTS') %}
 {% set TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE    = constant(dialogController~ 'TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE') %}
+{% set TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS           = constant(dialogController~ 'TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS') %}
 
 {% set MENU_ELEMENT_JOB_SEARCH               = constant(constantsControllerClass ~ 'MENU_ELEMENT_JOB_SEARCH') %}
 {% set MENU_ELEMENT_MAIL_TEMPLATES           = constant(constantsControllerClass ~ 'MENU_ELEMENT_MAIL_TEMPLATES') %}
@@ -57,6 +58,7 @@
     <script src="js/libs/bootbox/bootbox.min.js"></script>
     <script src="js/libs/DataTables/datatables.min.js"></script>
     <script src="js/libs/TinyMce/tinymce.min.js"></script>
+    <script src="js/libs/jqValidatation/jquery.validate.min.js"></script>
 
     {# Css libs #}
     <link rel="stylesheet" href="js/libs/DataTables/datatables.min.css">
@@ -121,6 +123,7 @@
     var TEMPLATE_TYPE_SEARCH_RESULT_DETAILS         = '{{ TEMPLATE_TYPE_SEARCH_RESULT_DETAILS }}';
     var TEMPLATE_JOB_SEARCH_RESULTS                 = '{{ TEMPLATE_JOB_SEARCH_RESULTS }}';
     var TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE   = '{{ TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE }}';
+    var TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS          = '{{ TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS }}';
 
     var MENU_ELEMENT_JOB_SEARCH              = '{{ MENU_ELEMENT_JOB_SEARCH }}';
     var MENU_ELEMENT_MAIL_TEMPLATES          = '{{ MENU_ELEMENT_MAIL_TEMPLATES }}';

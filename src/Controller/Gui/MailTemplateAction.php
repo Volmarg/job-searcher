@@ -12,6 +12,7 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -138,10 +139,13 @@ class MailTemplateAction extends AbstractController
      * This function handles removing mail template
      * @Route("mail-template/ajax/remove/{id}", name="mail_template_ajax_remove")
      * @param string $id
+     * @return Response
      * @throws ORMException
      */
-    public function removeTemplateViaAjax(string $id): void {
+    public function removeTemplateViaAjax(string $id): Response {
         $this->app->getRepositories()->mailTemplateRepository()->removeMailTemplateForId($id);
+        $message = $this->app->getTranslator()->trans('mailTemplate.remove.success');
+        return Utils::buildAjaxResponse($message, false, 200);
     }
 
     /**

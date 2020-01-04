@@ -22,6 +22,11 @@ var dialogs = {
             jobOfferUrlForMail          : "#jobOfferUrlForMail",
             generatedEmailTitle         : "#generatedEmailTitle",
             generatedEmailDescription   : "#generatedEmailDescription",
+        },
+        classes: {
+            dialogBody          : ".modal-body",
+            dialogFooter        : ".modal-footer",
+            dialogAcceptButton  : ".bootbox-accept"
         }
     },
     /**
@@ -99,6 +104,33 @@ var dialogs = {
                 $jobOfferHeaderInput.val(jobOfferHeader);
                 $jobOfferUrlInput.val(jobOfferUrl);
                 events.buttons.attachGenerateMailFromTemplateEvent();
+            }
+            case TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS:
+            {
+                let $dialogBody   = $(dialogs.selectors.classes.dialogBody);
+                let $dialogFooter = $(dialogs.selectors.classes.dialogFooter);
+
+                let $acceptButton = $dialogFooter.find(dialogs.selectors.classes.dialogAcceptButton);
+                let $inputs       = $dialogBody.find('input');
+
+                $.each($inputs, (index, input) => {
+                   let $input = $(input);
+                    $acceptButton.addClass("disabled");
+
+                    $input.on('change', () => {
+
+                       if(
+                                "undefined" !== $input.attr("required")
+                            &&  "" === $input.val()
+                       ){
+                            $acceptButton.addClass("disabled");
+                       }else {
+                            $acceptButton.removeClass("disabled");
+                       }
+
+                   });
+
+                });
             }
                 break;
             default:

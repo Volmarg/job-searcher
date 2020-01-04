@@ -107,6 +107,8 @@ mailTemplate:
     success: Mail template has been saved
     fail:
       noEntity: Could not update mail template - no entity for given id
+  remove:
+    success: Mail template has been removed
 request:
   missingKey: "Missing key in request: "
 searchSetting:

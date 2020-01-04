@@ -92,6 +92,7 @@ var events = {
     init: function(){
       this.attachCallBootBoxDialog();
       this.attachAjaxPageContentLoadOnElementClick();
+      this.attachFormSubmitButtonsOnInvalidForm();
       this.buttons.attachRemoveEntitiesEvent();
       this.buttons.attachLoadMailTemplateEvent();
       this.buttons.attachClearMailTemplateFormEvent();
@@ -146,6 +147,10 @@ var events = {
             $element.on("click", function(event){
                 event.preventDefault();
 
+                if( $element.hasClass("disabled") ){
+                    return;
+                }
+
                 bootboxMessage = ( "undefined" == typeof bootboxMessage || "" === bootboxMessage ? "&nbsp;" : bootboxMessage);
 
                 // call bootbox
@@ -161,7 +166,6 @@ var events = {
 
                 });
 
-                bootboxInstance.unbind(_this.eventsNames.bootstrap.showModal);
                 bootboxInstance.bind(_this.eventsNames.bootstrap.showModal, () => {
                     // add content to dialog body
                     switch(bootboxCallbackType){
@@ -176,7 +180,6 @@ var events = {
                                 })
                             }
 
-                            // todo:
                             let $bootboxBody = $(_this.selectors.classes.bootboxBody);
                             let callback = function(){
                                 tables.datatables.domElements.init();
@@ -191,6 +194,8 @@ var events = {
                             dialogs.setDialogBody($bootboxBody);
                             dialogs.makeAjaxCallForDialogTemplateType(templateType, callback, params);
 
+                            //needs to be unbinded after logic is done, otherwise will break other bootbox calls
+                            bootboxInstance.unbind(_this.eventsNames.bootstrap.showModal);
                             break;
                         default:
                             throw({
@@ -247,7 +252,7 @@ var events = {
                 switch(method) {
                     case "saveSearchSetting" :
                         let name = $element.val();
-                        let id   = ""; //todo : temporary solution
+                        let id   = "";
 
                         let jsonObject = {
                             "name": name,
@@ -273,7 +278,6 @@ var events = {
         })
 
     },
-
     /**
      * This function will search for elements with given attr. and attach an ajax call event on them
      */
@@ -329,6 +333,30 @@ var events = {
         })
     },
     /**
+     * This function will attach event which will prevent submiting form if the fileds are invlalid
+     */
+    attachFormSubmitButtonsOnInvalidForm: function(){
+        let $allFormsToHandle = $('form');
+
+        $.each($allFormsToHandle, (index, form) => {
+            let $form      = $(form);
+            let $allInputs = $form.find('input');
+            let $buttons   = $form.find('button');
+
+            $allInputs.on('change', () => {
+                let isFormValid = $form.valid();
+
+                if( !isFormValid ){
+                    $buttons.addClass('disabled');
+                }else{
+                    $buttons.removeClass('disabled');
+                }
+            })
+
+
+        })
+    },
+    /**
      * Handle general ajax call
      */
     ajaxCalls: {
@@ -341,6 +369,11 @@ var events = {
             let paramsObject        = JSON.parse(jsonParams);
             let $form               = $(events.selectors.query.jobSearchForm);
             let serializedFormArray = $form.serializeArray();
+            let isFormValid         = $form.valid();
+
+            if( !isFormValid ){
+                return;
+            }
 
             try{
                 var id   = paramsObject.id;
@@ -446,6 +479,7 @@ var events = {
                    });
                 });
 
+                $jobSearchForm.valid();
                 selectize.init();
                 infoBox.showSuccessBox(message);
             });
@@ -757,7 +791,7 @@ var events = {
 
                     loaders.spinner.showSpinner();
 
-                    bootbox.confirm({
+                    let boot = bootbox.confirm({
                         message : "Do You really want to remove this record?",
                         backdrop: true,
                         size    : BOOTBOX_SIZE_SMALL,
@@ -796,12 +830,6 @@ var events = {
                             }
                         }
                     });
-
-
-
-
-
-
                 });
             })
         },
@@ -937,6 +965,10 @@ var events = {
 
                 $submitButton.on('click', function(event) {
                     event.preventDefault();
+
+                    if( $submitButton.hasClass("disabled") ){
+                        return;
+                    }
 
                    let serializedForm = $form.serializeArray();
                    let ajaxUrl        = $form.attr(events.attributes.data.forms.ajaxUrl);

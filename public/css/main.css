@@ -24,3 +24,32 @@
 .pointer {
     cursor: pointer;
 }
+
+/* Misc */
+label.required:after {
+    content: "*";
+    color:red;
+    position: absolute;
+    right: 0px;
+}
+
+label.required {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: row !important;
+}
+
+/* Forms */
+label.error{
+    color: rgba(217, 30, 24, 1) !important;
+}
+
+.selectize-input{
+    overflow: visible;
+}
+
+.selectize-input > label.error {
+    position: absolute;
+    top: 32px;
+    left: 0px;
+}

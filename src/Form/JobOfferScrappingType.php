@@ -90,12 +90,13 @@ class JobOfferScrappingType extends AbstractType
             ->add(SearchSetting::KEY_REJECTED_KEYWORDS, TextType::class, [
                 "attr" => [
                     "placeholder"       => $this->app->getTranslator()->trans("forms.JobOfferScrappingType.placeholders.rejectedKeywords"),
-                    "data-is-selectize" => "true"
+                    "data-is-selectize" => "true",
                 ]
             ])
             ->add( $this->app->getTranslator()->trans("forms.buttons.submit"), SubmitType::class, [
                 "attr" => [
-                    "data-ajax-form-submit" => "true"
+                    "data-ajax-form-submit" => "true",
+                    "class"                 => "btn-primary btn disabled",
                 ]
             ])
             ->add( $this->app->getTranslator()->trans(self::KEY_SAVE_SEARCH_SETTING), SubmitType::class, [
@@ -105,6 +106,7 @@ class JobOfferScrappingType extends AbstractType
                     "data-bootbox-size"                         => BootboxController::BOOTBOX_SIZE_LARGE,
                     "data-bootbox-type"                         => BootboxController::BOOTBOX_TYPE_CONFIRM,
                     "data-bootbox-callback-type"                => BootboxController::BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE,
+                    "class"                                     => "btn-primary btn disabled",
                 ]
             ])
         ;
