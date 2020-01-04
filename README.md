@@ -39,7 +39,7 @@
 
 <h2>Preview</h2>
 
-<p align="center">Fully accessible demo can be found <a href="http://185.204.216.136:8001"><b>⇛Here⇚</b></a>.</p>
+<p align="center">Fully accessible demo can be found <a href="http://185.204.216.136:8002"><b>⇛Here⇚</b></a>.</p>
 <p align="center"><i><b>Info!</b> All data is removed daily - so better don't store any settings here.</i></p>
 
 <img src="https://github.com/Volmarg/job-searcher/blob/master/github/screen1.jpg?raw=true">
@@ -81,6 +81,34 @@
 
 
 <h2>How to use</h2>
+
+<p align="justify">
+<i>
+	You will need to analyse the job offer page to get the parameters used for job searching.
+</i>
+</p>
+
+- Example job portal: https://indeed.com/
+- Make a search on this page like this: https://www.indeed.com/jobs?q=php+developer&l=New+York%2C+NY
+- Now go to second pagination: https://www.indeed.com/jobs?q=php+developer&l=New+York%2C+NY&start=10
+- As You can see the pagination url contains now:
+  - start=10
+- Now go to next page: https://www.indeed.com/jobs?q=php+developer&l=New+York%2C+NY&start=20
+  - start=20
+- With this we just found:
+  - <b>Page offset steps:</b> 10 (each pager increments the value by 10), 
+  - <b>Url pattern: </b> https://www.indeed.com/jobs?q=php+developer&l=New+York%2C+NY&start={number} (place where the number in url changes)
+   - <b>Page offset replace pattern: </b> the pattern that You used above (in this case {number})
+ - By knowing the offset You can decide how many pages You want to search - lets say from page 1 (10) to 5 (50)
+   - <b>Start page offset: </b> 10
+   - <b>End page offset: </b> 10
+- Go to: https://www.indeed.com/jobs?q=php+developer&l=New+York%2C+NY&start=10
+   - use dev tool to find out what is the <i>css</i> selector for <b>A</b> tag with link to offer details (<b>Link query selector</b>)
+- Open one of the offers <b> in new window(!)</b>: https://www.indeed.com/viewjob?jk=4186f34508d6716e&tk=1dtp90jft0mpf000&from=serp&vjs=3
+  - use dev tool to find out what is the <i>css</i> selector for job title, (<b>Header query selector</b>)
+  - use dev tool to find out what is the <i>css</i> selector for job description, (<b>Body query selector</b>)
+- if there are some annoying job links based on ads - You can prepare regex which will be used to skip links that match given regex (<b>Do not insert flags and limiters like #/</b>)
+- provide accepted/rejected keywords by which the offer will be <b>judged</b>, (<b>at least one keyword is required for each keywords fields. Add keyword and hit enter to save it in input</b>)
 
 <h2>Future development plans</h2>
 
