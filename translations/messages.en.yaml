@@ -38,6 +38,8 @@ modules:
       compose: COMPOSE
       savedTemplates: Saved templates
       variables: Variables
+      header: Generate mail from selected template
+      subheader: Variables for given offer will be inserted into email template
     load:
       success: Mail template has been successfully loaded
       fail:
@@ -78,6 +80,13 @@ dialogs:
       name: Name
     buttons:
       remove: Remove
+    save:
+      headers: Save search setting
+      placeholder: Name for saved setting
+    load:
+      header: Saved search settings
+      subheader: Click on name to load setting
+
   messages:
     success:
       templateLoadedSuccessfully: Template has been loaded successfully

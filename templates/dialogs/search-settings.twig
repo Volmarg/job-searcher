@@ -2,12 +2,12 @@
 {% set constantsControllerClass   = "App\\Controller\\ConstantsController::" %}
 
 {% set TWIG_VAR_SEARCH_SETTINGS   = constant(dialogsController ~ 'TWIG_VAR_SEARCH_SETTINGS') %}
-{% set ENTITY_NAME_SEARCH_SETTING =  constant(constantsControllerClass ~ 'ENTITY_NAME_SEARCH_SETTING') %}
+{% set ENTITY_NAME_SEARCH_SETTING = constant(constantsControllerClass ~ 'ENTITY_NAME_SEARCH_SETTING') %}
 
 <div id="searchSettingsDialogWrapper" style="padding:5px;">
 
-    <h4 style="text-align: center;"> Saved search settings </h4> {#todo: move to translate#}
-    <h5 style="text-align: center;"> <i> Click on name to load setting </i> </h5> {#todo: move to translate#}
+    <h4 style="text-align: center;">{{ "dialogs.searchSettings.load.header" | trans }}</h4>
+    <h5 style="text-align: center;"> <i> {{ "dialogs.searchSettings.load.subheader" | trans }}</i> </h5>
 
     <table data-is-datatable="true" class="table table-hover table-bordered">
         <thead>

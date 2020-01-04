@@ -1,9 +1,10 @@
-{# todo: move this all to includable file? + add includable file for js based vars?#}
+{# Classes #}
 {% set constantsControllerClass         = "App\\Controller\\ConstantsController::" %}
 {% set bootboxController                = "App\\Controller\\BootboxController::" %}
 {% set dialogController                 = "App\\Controller\\DialogsController::" %}
 {% set jobOfferScrappingAction          = "App\\Controller\\Gui\\JobOfferScrappingAction::" %}
 
+{# Constants #}
 {% set KEY_JSON_RESPONSE_ERROR            =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_ERROR') %}
 {% set KEY_JSON_RESPONSE_MESSAGE          =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_MESSAGE') %}
 {% set KEY_JSON_RESPONSE_TEMPLATE         =  constant(constantsControllerClass ~ 'KEY_JSON_RESPONSE_TEMPLATE') %}
@@ -31,11 +32,9 @@
 {% set MENU_ELEMENT_JOB_SEARCH               = constant(constantsControllerClass ~ 'MENU_ELEMENT_JOB_SEARCH') %}
 {% set MENU_ELEMENT_MAIL_TEMPLATES           = constant(constantsControllerClass ~ 'MENU_ELEMENT_MAIL_TEMPLATES') %}
 {% set MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING  = constant(constantsControllerClass ~ 'MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING') %}
+
 <!DOCTYPE html>
-<!--[if lt IE 7 ]>              <html class="ie ie6" lang="en"> <![endif]-->
-<!--[if IE 7 ]>                 <html class="ie ie7" lang="en"> <![endif]-->
-<!--[if IE 8 ]>                 <html class="ie ie8" lang="en"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!--> <html lang="en">                <!--<![endif]-->
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">

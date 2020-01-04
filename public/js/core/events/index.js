@@ -112,8 +112,6 @@ var events = {
             let bootboxCallbackType = $element.attr(_this.attributes.data.bootbox.bootboxCallbackType);
             let bootboxMessage      = $element.attr(_this.attributes.data.bootbox.bootboxMessage);
 
-            bootboxMessage = ( "undefined" == typeof bootboxMessage ? "" : bootboxMessage);
-
             if( "undefined" == typeof bootboxType){
                 throw({
                     "message": "bootboxType was not defined"
@@ -147,6 +145,8 @@ var events = {
             $element.off("click");
             $element.on("click", function(event){
                 event.preventDefault();
+
+                bootboxMessage = ( "undefined" == typeof bootboxMessage || "" === bootboxMessage ? "&nbsp;" : bootboxMessage);
 
                 // call bootbox
                 let bootboxInstance = bootbox[bootboxType]({

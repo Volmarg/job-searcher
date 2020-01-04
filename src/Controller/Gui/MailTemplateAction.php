@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class MailTemplateAction extends AbstractController
 {
 
-    const TWIG_TEMPLATE_SHOW_MANAGEMENT_PAGE = "modules/mail-templates/manage.twig";
+    const TWIG_TEMPLATE_SHOW_MANAGEMENT_PAGE = "modules/mail-templates/ajax-calls/manage.twig";
 
     /**
      * @var Application $app

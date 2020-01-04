@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class JobOfferScrappingAction extends AbstractController
 {
     const MAIN_PAGE_TWIG_TPL            = "dashboard/index.html.twig";
-    const TEMPLATE_JOB_SEARCH_RESULTS   = "modules/job-search/job-search-results.twig";
+    const TEMPLATE_JOB_SEARCH_RESULTS   = "modules/job-search/ajax-calls/job-search-results.twig";
 
     const TEMPLATE_VAR_JOB_OFFER_DATA_DTOS = "jobOfferDataDtos";
 

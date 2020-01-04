@@ -1,11 +1,11 @@
 {% set mailTemplateTypeClass   = "App\\Form\\MailTemplateType::" %}
 {% set mailTemplateEntityClass = "App\\Entity\\MailTemplate::" %}
+
 {% set KEY_NAME              = constant(mailTemplateEntityClass ~ "KEY_NAME") %}
 {% set KEY_DESCRIPTION       = constant(mailTemplateEntityClass ~ "KEY_DESCRIPTION") %}
 {% set KEY_SAVE              = constant(mailTemplateTypeClass ~ "KEY_SAVE") %}
 {% set KEY_TITLE             = constant(mailTemplateEntityClass ~ "KEY_TITLE") %}
 {% set KEY_ATTACHMENT_LINKS = constant(mailTemplateEntityClass ~ "KEY_ATTACHMENT_LINKS") %}
-{# todo: move to dir: ajaxCalls/ etc.#}
 
 <div class="row" style="margin-top:50px;">
     <div class="col-sm-12">
