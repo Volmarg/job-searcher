@@ -83,7 +83,7 @@ class JobOfferScrappingAction extends AbstractController
 
         if( $isAjax ){
             $viewContent = $renderedView->getContent();
-            return Utils::buildAjaxResponse('', false, 200, null, $viewContent);
+            return Utils::buildAjaxResponse('', false, 200, $viewContent);
         }
 
         return $renderedView;

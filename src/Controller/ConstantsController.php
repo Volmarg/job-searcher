@@ -14,6 +14,7 @@ class ConstantsController {
     const KEY_JSON_RESPONSE_TEMPLATE         = "template";
     const KEY_JSON_RESPONSE_MAIL_DESCRIPTION = "mailDescription";
     const KEY_JSON_RESPONSE_MAIL_TITLE       = "mailTitle";
+    const KEY_JSON_RESPONSE_SCRIPT_SOURCES   = "scriptsSources";
 
     const KEY_JSON_RESPONSE_JOB_OFFER_DATA_DTOS = "jobOfferDataDtos";
 

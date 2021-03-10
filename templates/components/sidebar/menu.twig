@@ -6,15 +6,14 @@
 {% set MENU_ELEMENT_MAIL_TEMPLATES           = constant(constantsController ~ 'MENU_ELEMENT_MAIL_TEMPLATES') %}
 {% set MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING  = constant(constantsController ~ 'MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING') %}
 
-<ul id="sidebarCookie">
+<ul id="sidebar-menu">
     <li class="spacer"></li>
     <li class="spacer"></li>
     <li class="nav-item">
-        <a class="" href="#"
+        <a class=""
            id="{{ MENU_ELEMENT_JOB_SEARCH }}"
-           data-load-page-content="true"
-           data-load-page-content-url="{{ path('job_search') }}"
-           data-load-page-content-method="GET"
+           data-ajax-href="{{ path('job_search') }}"
+           @click.prevent="loadPageContent($event)"
         >
             <i class="feather icon-sidebar"></i>
             <span class="menu-title">{{ 'menu.jobSearch.label' | trans }}</span>
@@ -24,13 +23,13 @@
                     <li class="nav-item">
                         <a class="nav-link wave-effect waves-effect waves-block"
                            id="{{ MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING }}"
-                           href="#"
                            {# bootbox dialog data#}
                            data-call-bootbox-dialog="true"
                            data-bootbox-size="{{ BOOTBOX_SIZE_LARGE }}"
                            data-bootbox-type="{{ BOOTBOX_TYPE_ALERT }}"
                            data-bootbox-callback-type="{{ BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE }}"
                            data-bootbox-callback-type-template-name="{{ TEMPLATE_TYPE_SEARCH_SETTINGS }}"
+                           @click.prevent
                         >
                             <i class="feather icon-layout"></i>
                             <span class="menu-title">{{ 'menu.jobSearch.loadSetting' | trans }}</span>
@@ -38,14 +37,12 @@
                     </li>
                 </ul>
             </div>
-
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link wave-effect collapsed" id="{{ MENU_ELEMENT_MAIL_TEMPLATES }}"
-           data-load-page-content="true"
-           data-load-page-content-url="{{ path('mail_template_ajax_page') }}"
-           data-load-page-content-method="GET"
+           data-ajax-href="{{ path('mail_template_manage') }}"
+           @click.prevent="loadPageContent($event)"
         >
             <i class="feather icon-mail"></i>
             <span class="menu-title">{{ 'menu.mailTemplates' | trans }}</span>

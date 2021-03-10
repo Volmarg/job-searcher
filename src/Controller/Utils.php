@@ -3,13 +3,8 @@
 
 namespace App\Controller;
 
-use App\Entity\MailTemplate;
-use App\Entity\SearchSetting;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 class Utils extends AbstractController {
 
@@ -20,40 +15,27 @@ class Utils extends AbstractController {
      * @param string $message
      * @param bool $error
      * @param int $code
-     * @param SearchSetting|null $searchSetting
      * @param string|null $template
-     * @param MailTemplate|null $mailTemplate
+     * @param array $scriptSources
      * @return JsonResponse
      */
     public static function buildAjaxResponse(
         string        $message,
         bool          $error,
         int           $code,
-        SearchSetting $searchSetting = null,
         string        $template      = null,
-        MailTemplate  $mailTemplate  = null
+        array         $scriptSources = []
     ): JsonResponse {
 
-        $serializer = new Serializer([new GetSetMethodNormalizer()], [new JsonEncoder()]);
-
         $responseData = [
-          ConstantsController::KEY_JSON_RESPONSE_MESSAGE => $message,
-          ConstantsController::KEY_JSON_RESPONSE_ERROR   => $error,
-          ConstantsController::KEY_JSON_RESPONSE_CODE    => $code,
+          ConstantsController::KEY_JSON_RESPONSE_MESSAGE        => $message,
+          ConstantsController::KEY_JSON_RESPONSE_ERROR          => $error,
+          ConstantsController::KEY_JSON_RESPONSE_CODE           => $code,
+          ConstantsController::KEY_JSON_RESPONSE_SCRIPT_SOURCES => $scriptSources,
         ];
-
-        if( !empty($searchSetting) ){
-            $serializedSearchSetting = $serializer->serialize($searchSetting, 'json');
-            $responseData[ConstantsController::KEY_JSON_RESPONSE_SEARCH_SETTING] = $serializedSearchSetting;
-        }
 
         if( !empty($template) ){
             $responseData[ConstantsController::KEY_JSON_RESPONSE_TEMPLATE] = $template;
-        }
-
-        if( !empty($mailTemplate) ){
-            $serializedMailTemplate = $serializer->serialize($mailTemplate, 'json');
-            $responseData[ConstantsController::KEY_JSON_RESPONSE_MAIL_TEMPLATE] = $serializedMailTemplate;
         }
 
         $jsonResponse = new JsonResponse($responseData, 200);

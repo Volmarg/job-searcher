@@ -8,7 +8,8 @@ Encore
     .setOutputPath('public/build/')
     .setPublicPath('/build')
     .addEntry('app', './assets/app.js')
-    .splitEntryChunks()
+    .addEntry('page-mail-templates-manage', './assets/vue/pages/mail/template/manage.vue')
+    .addEntry('sidebar', './assets/vue/page-elements/sidebar.vue')
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
     .enableBuildNotifications()
@@ -31,6 +32,22 @@ Encore
     .enableTypeScriptLoader(function (typeScriptConfigOptions) {
         typeScriptConfigOptions.transpileOnly = true;
         typeScriptConfigOptions.configFile    = 'tsconfig.json';
+    }).configureSplitChunks(function(splitChunks) {
+    /**
+     * @description this configuration splits the common logic used in scripts and create `vendors.js` which contains it all
+     *              this is required due to fact that scripts are being dynamically loaded thus the vendor must be always
+     *              there once. It's impossible to just call entryName as if there are few entry names - without this
+     *              the common vendor logic in each chunk will interfere and will break the scripts logic
+     */
+    splitChunks.cacheGroups = {
+           commons: {
+               test: /[\\/]node_modules[\\/]/,
+                   name: 'vendors',
+                   chunks: 'all'
+           }
+       }
     });
 
-module.exports = Encore.getWebpackConfig();
+let config = Encore.getWebpackConfig();
+
+module.exports = config;

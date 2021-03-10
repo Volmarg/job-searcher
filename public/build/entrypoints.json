@@ -3,10 +3,22 @@
     "app": {
       "js": [
         "/build/runtime.js",
+        "/build/vendors.js",
         "/build/app.js"
-      ],
-      "css": [
-        "/build/app.css"
+      ]
+    },
+    "page-mail-templates-manage": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors.js",
+        "/build/page-mail-templates-manage.js"
+      ]
+    },
+    "sidebar": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors.js",
+        "/build/sidebar.js"
       ]
     }
   }

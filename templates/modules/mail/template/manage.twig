@@ -1,0 +1,135 @@
+{% set extendedTemplate = ( isAjax ? "blank.html.twig" : "base.html.twig" ) %}
+{% extends extendedTemplate %}
+
+{% set mailTemplateTypeClass   = "App\\Form\\MailTemplateType::" %}
+{% set mailTemplateEntityClass = "App\\Entity\\MailTemplate::" %}
+
+{% set KEY_NAME             = constant(mailTemplateEntityClass ~ "KEY_NAME") %}
+{% set KEY_DESCRIPTION      = constant(mailTemplateEntityClass ~ "KEY_DESCRIPTION") %}
+{% set KEY_SAVE             = constant(mailTemplateTypeClass ~ "KEY_SAVE") %}
+{% set KEY_TITLE            = constant(mailTemplateEntityClass ~ "KEY_TITLE") %}
+{% set KEY_ATTACHMENT_LINKS = constant(mailTemplateEntityClass ~ "KEY_ATTACHMENT_LINKS") %}
+
+{% block mainContainerWrapper %}
+    <div class="row" style="margin-top:50px;" id="mail-template-manage">
+
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="d-md-flex justify-content-center">
+                        <div>
+                            <h4 class="card-title text-center" >     {{ "modules.mailTemplatesManage.header.main" | trans }}    </h4>
+                            <p class="card-subtitle text-center"><i> {{ "modules.mailTemplatesManage.header.sub"  | trans }}     </i></p>
+                        </div>
+                    </div>
+
+                    <section id="mailManageWrapper" style="padding:5px;" class="container-fluid ">
+
+                        <div class="row">
+                            <div class="col-sm-3 col-md-2">
+                                <div class="p-2">
+                                    <a class="btn btn-danger btn-block"
+                                       data-clean-mail-template-form="true"
+                                       role="button"
+                                       @click.prevent="testLog()"
+                                    >{{ 'modules.mailTemplatesManage.builder.compose' | trans }}</a>
+                                </div>
+
+                                <ul class="list-group mt-4">
+                                    <li class="list-group-item list-group-item-title font-weight-bold">{{ 'modules.mailTemplatesManage.builder.savedTemplates' | trans }}</li>
+                                    {% for template in templates %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <a @click.prevent
+                                               class="active list-group-item-action"
+                                               data-mail-template-id="{{ template.getId() }}"
+                                               data-load-mail-template="true"
+                                            >
+                                                <i class="mdi mdi-inbox"></i> {{ template.getName() }}
+                                            </a>
+                                            <i class="feather icon-trash hoverable pointer"
+                                               id="mailTemplateRemove_{{ template.getId() }}"
+                                               data-remove-entity="true"
+                                               data-entity-removal-ajax-link="{{ path('mail_template_ajax_remove', {"id": template.getId()}) }}"
+                                               data-entity-removed-ids-elements-selector="#mailTemplateRemove_{{ template.getId() }}"
+                                               data-entity-id="{{ template.getId() }}"
+                                               data-parent-element-to-remove-selector="li"
+                                               style="padding-left:5px;"
+                                            ></i>
+                                        </li>
+                                    {% endfor %}
+                                    <li style="list-style-type: none; padding-top:15px;"></li>
+                                    <li class="list-group-item-title font-weight-bold text-center" style="list-style-type: none;">{{ 'modules.mailTemplatesManage.builder.variables' | trans }}</li>
+
+                                    {% for templateVariable in templateVariables %}
+                                        <li class="list-group-item-title text-center" style="list-style-type: none;">
+                                            {{ templateVariable }}
+                                        </li>
+                                    {% endfor %}
+
+                                </ul>
+
+                            </div>
+                            <div class="col-sm-9 col-md-10">
+                                <div class="card">
+                                    {{ form_start(form, {
+                                        "attr": {
+                                            "data-ajax-url"         : path('mail_template_ajax_save', {"id": null} ),
+                                            "data-submit-via-ajax"  : "true"
+                                        }
+                                    }) }}
+
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            {{ form_widget(form[KEY_NAME]) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            {{ form_widget(form[KEY_TITLE]) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            {{ form_widget(form[KEY_DESCRIPTION], {
+                                                "attr": {
+                                                    "data-is-tinymce": "true"
+                                                }
+                                            }) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            {{ form_widget(form[KEY_SAVE], {
+                                                "attr": {
+                                                    "data-load-page-content-url"    : path('mail_template_ajax_page') ,
+                                                    "data-load-page-content-method" : "GET",
+                                                    "ref"                           : "saveTemplateButton"
+                                                }
+                                            }) }}
+                                        </div>
+                                    </div>
+
+                                    {{ form_end(form) }}
+                                </div>
+                            </div>
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scriptsAfterMainContainerWrapper %}
+    {% for scriptSource in scriptsSources %}
+        <script src="{{ scriptSource }}"></script>
+    {% endfor %}
+{% endblock %}

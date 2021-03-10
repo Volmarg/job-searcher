@@ -53,27 +53,21 @@
 
     <link rel="shortcut icon" href="/bootadmin/images/favicon/favicon.ico">
 
-    {# Js Libs #}
-    <script src="js/libs/jQuery/jquery-3.4.1.min.js"></script>
-    <script src="js/libs/bootbox/bootbox.min.js"></script>
-    <script src="js/libs/DataTables/datatables.min.js"></script>
-    <script src="js/libs/TinyMce/tinymce.min.js"></script>
-    <script src="js/libs/jqValidatation/jquery.validate.min.js"></script>
-
-    {# Css libs #}
-    <link rel="stylesheet" href="js/libs/DataTables/datatables.min.css">
-    <link rel="stylesheet" href="js/libs/selectize/selectize.bootstrap3.css">
-
     {# Main css #}
     <link rel="stylesheet" href="css/main.css">
 
+    <script src="{{ getRuntimeJsScriptChunkFileLocation() }}"></script>
+    <script src="{{ getVendorJsScriptChunkFileLocation() }}"></script>
+
+    {% block headStylesheets %}{% endblock %}
+    {% block headScripts %}{% endblock %}
 </head>
 
 <body id="landing" class="sidebar-open">
 <div class="spinner d-none">
     <div class="loading-center"><img src="images/spinner.gif" alt="Loading" /></div>
 </div>
-<div class="page-container animsition">
+<div class="page-container">
     <div id="dashboardPage">
 
         <!-- Main Menu -->
@@ -81,8 +75,8 @@
         {% include 'components/sidebar.twig' %}
         <main>
             <div class="container-fluid main-container-wrapper">
-                {% block mainContainerWrapper %}
-                {% endblock %}
+                {% block mainContainerWrapper %}{% endblock %}
+                {% block scriptsAfterMainContainerWrapper %}{% endblock %}
             </div>
             {% include 'components/fotter.twig' %}
         </main>
@@ -90,18 +84,7 @@
 
 </div>
 
-<!-- Bootadmin core js -->
-<script src="/js/libs/jQueryUi/jquery-ui.min.js"></script>
-<script src="/js/libs/popper/popper.min.js"></script>
-<script src="/js/libs/selectize/standalone.js"></script>
-<script src="/bootadmin/scripts/vendor/bootstrap.min.js"></script>
-<script src="/bootadmin/scripts/vendor/library.min.js"></script>
-<script src="/bootadmin/scripts/core/main.js"></script>
-
-{# Libs #}
-<script src="/js/libs/bootstrapNotify/bootstrap-notify.min.js"></script>
-
-{# Core #}
+{# todo: move this out of here, or remove completely #}
 <script>
     var KEY_JSON_RESPONSE_ERROR            = '{{ KEY_JSON_RESPONSE_ERROR }}';
     var KEY_JSON_RESPONSE_MESSAGE          = '{{ KEY_JSON_RESPONSE_MESSAGE }}';
@@ -133,16 +116,7 @@
     var KEY_REQUEST_NAME = '{{ KEY_REQUEST_NAME }}';
 </script>
 
-{# Core personall libs#}
-<script src="/js/core/loaders/index.js"></script>
-<script src="/js/core/infoBox/index.js"></script>
-<script src="/js/core/tables/index.js"></script>
-<script src="/js/core/selectize/index.js"></script>
-<script src="/js/core/tinymce/index.js"></script>
-
-<script src="/js/core/dialogs/index.js"></script>
-<script src="/js/core/events/index.js"></script>
-<script src="/js/core/nav/index.js"></script>
+<script src="{{ getJsChunkFileLocationForChunkName("sidebar") }}"></script>
 
 </body>
 </html>
