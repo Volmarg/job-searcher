@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Controller\Application;
+use App\Controller\Core\Application;
 use App\DTO\JobSearchRequestDTO;
 use App\DTO\JobSearchResponseDTO;
 use Curl\Curl;

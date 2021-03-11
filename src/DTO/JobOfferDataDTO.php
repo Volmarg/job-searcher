@@ -3,7 +3,7 @@
 
 namespace App\DTO;
 
-use App\Controller\Logic\JobOffer\DecisionController;
+use App\Controller\Module\JobSearch\JobSearchDecisionController;
 
 /**
  * This class contains data of job offer after all filtering and checking keywords
@@ -45,7 +45,7 @@ class JobOfferDataDTO {
     /**
      * @var string $acceptReason
      */
-    private $acceptReason = DecisionController::ACCEPTANCE_REASON_INITIAL;
+    private $acceptReason = JobSearchDecisionController::ACCEPTANCE_REASON_INITIAL;
 
     /**
      * @var string $rejectReason

@@ -1,0 +1,6 @@
+menu:
+  mailTemplates: Mail templates
+  jobSearch:
+    label: Job search
+    loadSetting: Load setting
+  about: About

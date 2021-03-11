@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Core\ConstantsController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 

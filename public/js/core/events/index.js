@@ -796,7 +796,7 @@ var events = {
                     let boot = bootbox.confirm({
                         message : "Do You really want to remove this record?",
                         backdrop: true,
-                        size    : BOOTBOX_SIZE_SMALL,
+                        size    : "small",
                         callback: function (result) {
                             if(result){
 

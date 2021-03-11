@@ -1,0 +1,23 @@
+forms:
+  buttons:
+    submit: Submit
+    save: Save
+  JobOfferScrappingType:
+    placeholders:
+      urlPattern: "Pattern for search result page, example: https://de.indeed.com/Jobs?q=php+developer&l=Frankfurt+am+Main&start={test}"
+      pageOffsetReplacePattern: "The same pattern as in urlPattern, example: {test}"
+      pageOffsetSteps: "Steps between each search results, example: 10"
+      endPageOffset: "Last page number to scrap from, example: 10"
+      startPageOffset: "Start page number to scrap from, example: 10"
+      bodyQuerySelector: "Css selector for element that contain job offer description (from offer page - not search page), example: .body div.offer .description"
+      headerQuerySelector: "Css selector for element that contain job offer header (from offer page - not search page), example: .body div.offer .header"
+      linksQuerySelector: "Css selector for job offers (will be scrapped from search result page), example: .body div.offer"
+      regexForLinksSkipping: "Regex rule for skipping links with given format, example: #/ad-paid-offer/#"
+      acceptedKeywords: "This keywords will be used to mark job offer as accepted/rejected"
+      rejectedKeywords: "This keywords will be used to mark job offer as accepted/rejected"
+  MailTemplateType:
+    placeholders:
+      name: Template name
+      title: Mail title
+      description: Mail content
+      attachmentLinks: Attached files links - absolute paths

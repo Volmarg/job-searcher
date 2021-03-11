@@ -1,0 +1,23 @@
+dialogs:
+  searchSettings:
+    table:
+      id: Id
+      name: Name
+    buttons:
+      remove: Remove
+    save:
+      headers: Save search setting
+      placeholder: Name for saved setting
+    load:
+      header: Saved search settings
+      subheader: Click on name to load setting
+  messages:
+    success:
+      templateLoadedSuccessfully: Template has been loaded successfully
+    failure:
+      dialogTypeWasNotProvided: Dialog type was not provided
+      thisDialogTypeIsNotSupported: This dialog type is not supported
+  jobSearchDetails:
+    headers:
+      rejectedKeywords: Rejected keywords
+      acceptedKeywords: Accepted keywords

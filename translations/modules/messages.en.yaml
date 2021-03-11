@@ -1,0 +1,38 @@
+modules:
+  jobSearch:
+    header:
+      main: Job search
+      sub: Fill required fields to start searching for job offers
+  jobSearchResults:
+    table:
+      header: Name
+      status:
+        label: Status
+      email:
+        label: Email
+      actions: Actions
+      url: Url
+      reason: Reason
+    header:
+      main: Job search results
+      sub: Click on name for more details
+    missingParamForDetailPage: "Missing param for detail page: "
+  mailTemplatesManage:
+    header:
+      main: Mail templates
+      sub: Save new template or edit existing one
+    builder:
+      compose: COMPOSE
+      savedTemplates: Saved templates
+      variables: Variables
+      header: Generate mail from selected template
+      subheader: Variables for given offer will be inserted into email template
+    load:
+      success: Mail template has been successfully loaded
+      fail:
+        noTemplateFoundForId: No template was found for given id
+    message:
+      success:
+        emailGenerated: Email has been generated
+      fail:
+        noEntity: Could not generate email - no template was found for given id

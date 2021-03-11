@@ -1,25 +1,30 @@
-<div class="row" style="margin-top:50px;" id="jobSearchMainContent">
-    <div class="col-sm-12">
-        <div class="card">
-            <div class="card-body">
+{% set extendedTemplate = ( isAjax ? "blank.html.twig" : "base.html.twig" ) %}
+{% extends extendedTemplate %}
 
-                <div class="d-md-flex align-items-center">
-                    <div class="display-flex justify-content-around flex-column w-100">
-                        <h4 class="card-title text-center">{{ "modules.jobSearch.header.main" | trans }}</h4>
-                        <i class="card-subtitle text-center">{{ "modules.jobSearch.header.sub" | trans }}</i>
+{% block mainContainerWrapper %}
+    <div class="row" style="margin-top:50px;" id="jobSearchMainContent">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="d-md-flex align-items-center">
+                        <div class="display-flex justify-content-around flex-column w-100">
+                            <h4 class="card-title text-center">{{ "modules.jobSearch.header.main" | trans }}</h4>
+                            <i class="card-subtitle text-center">{{ "modules.jobSearch.header.sub" | trans }}</i>
+                        </div>
                     </div>
+
                 </div>
 
+            <section id="jobSearchWrapper">
+                {{ form_start(jobOfferScrappingForm, {"attr": {
+                    "data-submit-via-ajax": "true",
+                    "data-ajax-url"       : path("ajax_scrap_data_for_request")
+                }}) }}
+                {{ form_end(jobOfferScrappingForm) }}
+            </section>
+
             </div>
-
-        <section id="jobSearchWrapper">
-            {{ form_start(jobOfferScrappingForm, {"attr": {
-                "data-submit-via-ajax": "true",
-                "data-ajax-url"       : path("ajax_scrap_data_for_request")
-            }}) }}
-            {{ form_end(jobOfferScrappingForm) }}
-        </section>
-
         </div>
     </div>
-</div>
+{% endblock %}

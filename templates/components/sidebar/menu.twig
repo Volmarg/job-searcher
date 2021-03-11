@@ -1,17 +1,11 @@
-{% set dialogsController             = "App\\Controller\\DialogsController::" %}
-{% set constantsController           = "App\\Controller\\ConstantsController::" %}
-
-{% set TEMPLATE_TYPE_SEARCH_SETTINGS         = constant(dialogsController ~ 'TEMPLATE_TYPE_SEARCH_SETTINGS') %}
-{% set MENU_ELEMENT_JOB_SEARCH               = constant(constantsController ~ 'MENU_ELEMENT_JOB_SEARCH') %}
-{% set MENU_ELEMENT_MAIL_TEMPLATES           = constant(constantsController ~ 'MENU_ELEMENT_MAIL_TEMPLATES') %}
-{% set MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING  = constant(constantsController ~ 'MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING') %}
+{% set dialogsController             = "App\\Controller\\Core\\DialogsController::" %}
+{% set TEMPLATE_TYPE_SEARCH_SETTINGS = constant(dialogsController ~ 'TEMPLATE_TYPE_SEARCH_SETTINGS') %}
 
 <ul id="sidebar-menu">
     <li class="spacer"></li>
     <li class="spacer"></li>
     <li class="nav-item">
         <a class=""
-           id="{{ MENU_ELEMENT_JOB_SEARCH }}"
            data-ajax-href="{{ path('job_search') }}"
            @click.prevent="loadPageContent($event)"
         >
@@ -22,12 +16,11 @@
                 <ul class="flex-column sub-menu">
                     <li class="nav-item">
                         <a class="nav-link wave-effect waves-effect waves-block"
-                           id="{{ MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING }}"
                            {# bootbox dialog data#}
                            data-call-bootbox-dialog="true"
-                           data-bootbox-size="{{ BOOTBOX_SIZE_LARGE }}"
-                           data-bootbox-type="{{ BOOTBOX_TYPE_ALERT }}"
-                           data-bootbox-callback-type="{{ BOOTBOX_CALLBACK_TYPE_LOAD_TEMPLATE }}"
+                           data-bootbox-size="large"
+                           data-bootbox-type="alert"
+                           data-bootbox-callback-type="load-template"
                            data-bootbox-callback-type-template-name="{{ TEMPLATE_TYPE_SEARCH_SETTINGS }}"
                            @click.prevent
                         >
@@ -40,7 +33,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link wave-effect collapsed" id="{{ MENU_ELEMENT_MAIL_TEMPLATES }}"
+        <a class="nav-link wave-effect collapsed"
            data-ajax-href="{{ path('mail_template_manage') }}"
            @click.prevent="loadPageContent($event)"
         >
