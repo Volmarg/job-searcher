@@ -1,4 +1,4 @@
-{% set dialogsController             = "App\\Controller\\Core\\DialogsController::" %}
+{% set dialogsController             = "App\\Action\\Dialog\\DialogAction::" %}
 {% set TEMPLATE_TYPE_SEARCH_SETTINGS = constant(dialogsController ~ 'TEMPLATE_TYPE_SEARCH_SETTINGS') %}
 
 <ul id="sidebar-menu">
@@ -17,12 +17,11 @@
                     <li class="nav-item">
                         <a class="nav-link wave-effect waves-effect waves-block"
                            {# bootbox dialog data#}
-                           data-call-bootbox-dialog="true"
-                           data-bootbox-size="large"
-                           data-bootbox-type="alert"
-                           data-bootbox-callback-type="load-template"
-                           data-bootbox-callback-type-template-name="{{ TEMPLATE_TYPE_SEARCH_SETTINGS }}"
-                           @click.prevent
+                           data-ajax-href="{{ path('dialog_template_ajax_load_template_type', {
+                               "templateType" : TEMPLATE_TYPE_SEARCH_SETTINGS
+                           }) }}"
+                           {# todo: add params to load via bootbox + add scripts #}
+                           @click.prevent="loadPageContent($event)"
                         >
                             <i class="feather icon-layout"></i>
                             <span class="menu-title">{{ 'menu.jobSearch.loadSetting' | trans }}</span>

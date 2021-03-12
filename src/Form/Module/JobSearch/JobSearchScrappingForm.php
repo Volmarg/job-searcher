@@ -4,7 +4,7 @@ namespace App\Form\Module\JobSearch;
 
 use App\Controller\Core\Application;
 use App\Controller\Core\ConstantsController;
-use App\Controller\Core\DialogsController;
+use App\Action\Dialog\DialogAction;
 use App\Entity\Module\JobSearch\JobSearchSetting;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -103,7 +103,7 @@ class JobSearchScrappingForm extends AbstractType
             ])
             ->add( $this->app->getTranslator()->trans(self::KEY_SAVE_SEARCH_SETTING), SubmitType::class, [
                 "attr" => [
-                    "data-bootbox-callback-type-template-name"  => DialogsController::TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS,
+                    "data-bootbox-callback-type-template-name"  => DialogAction::TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS,
                     "data-call-bootbox-dialog"                  => "true",
                     "data-bootbox-size"                         => "large",
                     "data-bootbox-type"                         => "confirm",

@@ -1,15 +1,18 @@
 <?php
 
-namespace App\Controller\Core;
+namespace App\Action\Dialog;
 
+use App\Controller\Core\Application;
+use App\Controller\Core\ConstantsController;
 use App\Controller\Utils;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DialogsController extends AbstractController {
+class DialogAction extends AbstractController {
 
     const DIALOG_TEMPLATE_SEARCH_SETTINGS             = "dialogs/search-settings.twig";
     const DIALOG_TEMPLATE_SAVE_SEARCH_SETTING         = "dialogs/save-search-settings.twig";
@@ -22,6 +25,7 @@ class DialogsController extends AbstractController {
     const KEY_PARAM_JOB_OFFER_HEADER       = "jobOfferHeader";
     const KEY_PARAM_JOB_OFFER_REJECTED_KEYWORDS = "jobOfferRejectedKeywords";
     const KEY_PARAM_JOB_OFFER_ACCEPTED_KEYWORDS = "jobOfferAcceptedKeywords";
+    const KEY_PARAM_IS_AJAX                     = "isAjax";
 
     const TEMPLATE_TYPE_SEARCH_SETTINGS             = "templateTypeSearchSettings";
     const TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS        = "templateTypeSaveSearchSettings";
@@ -57,19 +61,21 @@ class DialogsController extends AbstractController {
             $message = $this->app->getTranslator()->trans("dialogs.messages.failure.dialogTypeWasNotProvided");
         }
 
+        $isAJax = $request->isXmlHttpRequest();
+
         try {
             switch($templateType){
                 case self::TEMPLATE_TYPE_SEARCH_SETTINGS:
-                    $template = $this->getTemplateForSearchSettingsDialog();
+                    $template = $this->getTemplateForSearchSettingsDialog($isAJax);
                     break;
                 case self::TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS:
-                    $template = $this->getTemplateForSavingSearchSetting();
+                    $template = $this->getTemplateForSavingSearchSetting($isAJax);
                     break;
                 case self::TEMPLATE_TYPE_SEARCH_RESULT_DETAILS:
-                    $template = $this->getTemplateForSearchResultDetails($request);
+                    $template = $this->getTemplateForSearchResultDetails($request, $isAJax);
                     break;
                 case self::TEMPLATE_TYPE_GENERATE_MAIL_FROM_TEMPLATE:
-                    $template = $this->generateMailFromTemplate($request);
+                    $template = $this->generateMailFromTemplate($request, $isAJax);
                     break;
                 default:
                     $code    = 500;
@@ -78,24 +84,24 @@ class DialogsController extends AbstractController {
         } catch (Exception $e) {
             $message = $this->app->getTranslator()->trans("dialogs.messages.failure.exception");
             $code    = 500;
+            throw $e;
         }
 
+        if($request->isXmlHttpRequest()){
+            return Utils::buildAjaxResponse($message, $errors, Response::HTTP_OK, $template, []);
+        }
 
-        $responseData = [
-          ConstantsController::KEY_JSON_RESPONSE_ERROR    => $errors,
-          ConstantsController::KEY_JSON_RESPONSE_MESSAGE  => $message,
-          ConstantsController::KEY_JSON_RESPONSE_TEMPLATE => $template,
-        ];
-
-        $jsonResponse = new JsonResponse($responseData, $code);
-        return $jsonResponse;
+        throw new Exception("This call is only allowed for ajax!");
+        // todo: logger is missing
     }
 
-    private function getTemplateForSearchSettingsDialog(): string {
+    private function getTemplateForSearchSettingsDialog(bool $isAJax): string
+    {
 
         $allSearchSettings = $this->app->getRepositories()->searchSettingsRepository()->getAllSearchSettings();
         $templateData      = [
             self::TWIG_VAR_SEARCH_SETTINGS => $allSearchSettings,
+            self::KEY_PARAM_IS_AJAX        => $isAJax
         ];
         $templateResponse  = $this->render(self::DIALOG_TEMPLATE_SEARCH_SETTINGS, $templateData);
         $templateString    = $templateResponse->getContent();
@@ -103,9 +109,11 @@ class DialogsController extends AbstractController {
         return $templateString;
     }
 
-    private function getTemplateForSavingSearchSetting(){
+    private function getTemplateForSavingSearchSetting(bool $isAJax): string
+    {
 
-        $templateData      = [
+        $templateData = [
+            self::KEY_PARAM_IS_AJAX => $isAJax
         ];
         $templateResponse  = $this->render(self::DIALOG_TEMPLATE_SAVE_SEARCH_SETTING, $templateData);
         $templateString    = $templateResponse->getContent();
@@ -118,7 +126,7 @@ class DialogsController extends AbstractController {
      * @return false|string
      * @throws Exception
      */
-    private function getTemplateForSearchResultDetails(Request $request): string {
+    private function getTemplateForSearchResultDetails(Request $request, bool $isAjax): string {
 
         if( !$request->query->has(self::KEY_PARAMS) ){
             $message = $this->app->getTranslator()->trans("request.missingKey") . self::KEY_PARAMS;
@@ -150,6 +158,7 @@ class DialogsController extends AbstractController {
             self::KEY_PARAM_JOB_OFFER_DESCRIPTION       => $jobOfferDescription,
             self::KEY_PARAM_JOB_OFFER_REJECTED_KEYWORDS => json_decode(str_replace("'", '"', $jobOfferRejectedKeywords), true),
             self::KEY_PARAM_JOB_OFFER_ACCEPTED_KEYWORDS => json_decode(str_replace("'", '"', $jobOfferAcceptedKeywords), true),
+            self::KEY_PARAM_IS_AJAX                     => $isAjax
         ];
 
         $templateResponse  = $this->render(self::DIALOG_TEMPLATE_SEARCH_RESULT_DETAILS, $templateData);
@@ -162,11 +171,12 @@ class DialogsController extends AbstractController {
      * @param Request $request
      * @return string
      */
-    public function generateMailFromTemplate(Request $request): string {
+    public function generateMailFromTemplate(Request $request, bool $isAjax): string {
         $allSavedTemplates = $this->app->getRepositories()->mailTemplateRepository()->findAll();
 
         $templateData = [
-            'templates' => $allSavedTemplates,
+            self::KEY_PARAM_IS_AJAX => $isAjax,
+            'templates'             => $allSavedTemplates,
         ];
 
         $templateResponse  = $this->render(self::DIALOG_TEMPLATE_GENERATE_MAIL_FROM_TEMPLATE, $templateData);

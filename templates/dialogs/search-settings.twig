@@ -1,5 +1,5 @@
-{% set dialogsController          = "App\\Controller\\Core\\DialogsController::" %}
-{% set constantsControllerClass   = "App\\Controller\\ConstantsController::" %}
+{% set dialogsController          = "App\\Action\\Dialog\\DialogAction::" %}
+{% set constantsControllerClass   = "App\\Controller\\Core\\ConstantsController::" %}
 
 {% set TWIG_VAR_SEARCH_SETTINGS   = constant(dialogsController ~ 'TWIG_VAR_SEARCH_SETTINGS') %}
 {% set ENTITY_NAME_SEARCH_SETTING = constant(constantsControllerClass ~ 'ENTITY_NAME_SEARCH_SETTING') %}
