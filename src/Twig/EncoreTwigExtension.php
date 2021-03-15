@@ -31,8 +31,10 @@ class EncoreTwigExtension extends AbstractExtension
     {
         return [
             new TwigFunction("getVendorJsScriptChunkFileLocation",  [$this, 'getVendorJsScriptChunkFileLocation']),
+            new TwigFunction("getVendorCssScriptChunkFileLocation",  [$this, 'getVendorCssScriptChunkFileLocation']),
             new TwigFunction("getRuntimeJsScriptChunkFileLocation", [$this, 'getRuntimeJsScriptChunkFileLocation']),
             new TwigFunction("getJsChunkFileLocationForChunkName",  [$this, 'getJsChunkFileLocationForChunkName']),
+            new TwigFunction("getCssChunkFileLocationForChunkName",  [$this, 'getCssChunkFileLocationForChunkName']),
         ];
     }
 
@@ -48,6 +50,17 @@ class EncoreTwigExtension extends AbstractExtension
     }
 
     /**
+     * Will return the css chunk file location which consists of common code used for all chunks
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function getVendorCssScriptChunkFileLocation(): string
+    {
+        return $this->encoreService->getVendorCssScriptChunkFileLocation();
+    }
+
+    /**
      * Will return the webpack runtime chunk file location
      *
      * @return string
@@ -59,7 +72,7 @@ class EncoreTwigExtension extends AbstractExtension
     }
 
     /**
-     * Will return the webpack chunk file location
+     * Will return the webpack chunk js file location
      *
      * @param string $chunkName
      * @return string
@@ -69,4 +82,17 @@ class EncoreTwigExtension extends AbstractExtension
     {
         return $this->encoreService->getJsChunkFileLocationForChunkName($chunkName);
     }
+
+    /**
+     * Will return the webpack chunk css file location
+     *
+     * @param string $chunkName
+     * @return string
+     * @throws Exception
+     */
+    public function getCssChunkFileLocationForChunkName(string $chunkName): string
+    {
+        return $this->encoreService->getCssChunkFileLocationForChunkName($chunkName);
+    }
+
 }

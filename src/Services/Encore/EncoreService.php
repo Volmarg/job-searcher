@@ -10,7 +10,6 @@ use TypeError;
 
 /**
  * Contains special logic to handle manipulated webpack and the way that Vue.js works like with the ajax loaded content
- * This does not support fetching the css files at this moment, it was not required on implementation
  *
  * Class EncoreService
  * @package App\Services\Encore
@@ -34,6 +33,11 @@ class EncoreService
      */
     private array $appEntryPointScriptFiles = [];
 
+    /**
+     * @var array $appEntryPointCssFiles
+     */
+    private array $appEntryPointCssFiles = [];
+
     public function __construct(EntrypointLookupCollectionInterface $entrypointLookupCollection)
     {
         $this->entrypointLookupCollection = $entrypointLookupCollection;
@@ -44,6 +48,7 @@ class EncoreService
          * as no more files with logic are generated per chunk (this might interfere with symfony encore twig methods!)
          */
         $this->appEntryPointScriptFiles = $this->entrypointLookupCollection->getEntrypointLookup()->getJavaScriptFiles("app");
+        $this->appEntryPointCssFiles    = $this->entrypointLookupCollection->getEntrypointLookup()->getCssFiles("app");
     }
 
     /**
@@ -55,6 +60,17 @@ class EncoreService
     public function getVendorJsScriptChunkFileLocation(): string
     {
         return $this->getJsScriptChunkFileLocation(self::CHUNK_VENDOR_NAME, $this->appEntryPointScriptFiles);
+    }
+
+    /**
+     * Will return the css chunk file location which consists of common code used for all chunks
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function getVendorCssScriptChunkFileLocation(): string
+    {
+        return $this->getCssChunkFileLocation(self::CHUNK_VENDOR_NAME, $this->appEntryPointCssFiles);
     }
 
     /**
@@ -91,6 +107,42 @@ class EncoreService
      * @throws Exception
      */
     private function getJsScriptChunkFileLocation(string $chunkName, array $filesLocations)
+    {
+        try{
+            $matches          = preg_grep("#" . $chunkName . "#", $filesLocations);
+            $firstMatchingKey = array_key_first($matches);
+
+            $chunkLocation = $matches[$firstMatchingKey];
+        }catch(Exception | TypeError $e){
+            throw new Exception("Could not get the chunk: {$chunkName}");
+        }
+
+        return $chunkLocation;
+    }
+
+    /**
+     * Will return the webpack chunk file location
+     *
+     * @param string $chunkName
+     * @return string
+     * @throws Exception
+     */
+    public function getCssChunkFileLocationForChunkName(string $chunkName): string
+    {
+        $filesLocations           = $this->entrypointLookupCollection->getEntrypointLookup()->getCssFiles($chunkName);
+        $fileLocationForChunkName = $this->getCssChunkFileLocation($chunkName, $filesLocations);
+        return $fileLocationForChunkName;
+    }
+
+    /**
+     * Will return the css chunk file location for chunk name
+     *
+     * @param string $chunkName
+     * @param array $filesLocations
+     * @return mixed
+     * @throws Exception
+     */
+    private function getCssChunkFileLocation(string $chunkName, array $filesLocations)
     {
         try{
             $matches          = preg_grep("#" . $chunkName . "#", $filesLocations);

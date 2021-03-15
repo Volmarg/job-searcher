@@ -19,6 +19,7 @@
 
     {# Main css #}
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="{{ getCssChunkFileLocationForChunkName('bootstrap') }}" />
 
     <script src="{{ getRuntimeJsScriptChunkFileLocation() }}"></script>
     <script src="{{ getVendorJsScriptChunkFileLocation() }}"></script>
@@ -47,6 +48,7 @@
 </div>
 
 <script src="{{ getJsChunkFileLocationForChunkName("sidebar") }}"></script>
+<script src="{{ getJsChunkFileLocationForChunkName("bootstrap") }}"></script>
 
 </body>
 </html>

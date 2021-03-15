@@ -10,6 +10,7 @@ Encore
     .addEntry('app', './assets/app.js')
     .addEntry('page-mail-templates-manage', './assets/vue/pages/mail/template/manage.vue')
     .addEntry('sidebar', './assets/vue/page-elements/sidebar.vue')
+    .addEntry("bootstrap", './assets/bootstrap.js')
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
     .enableBuildNotifications()
@@ -43,7 +44,13 @@ Encore
            commons: {
                test: /[\\/]node_modules[\\/]/,
                    name: 'vendors',
-                   chunks: 'all'
+                   chunks(chunk){
+                       /**
+                        * @description exclude putting logic from this chunks into the vendor chunk
+                        *              - bootstrap, due to the issues where some libs in output bundle break the bootstrap
+                        */
+                       return chunk.name !== 'bootstrap';
+                   }
            }
        }
     });

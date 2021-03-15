@@ -20,6 +20,15 @@
         "/build/vendors.js",
         "/build/sidebar.js"
       ]
+    },
+    "bootstrap": {
+      "js": [
+        "/build/runtime.js",
+        "/build/bootstrap.js"
+      ],
+      "css": [
+        "/build/bootstrap.css"
+      ]
     }
   }
 }

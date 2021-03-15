@@ -9,6 +9,7 @@
     "@symfony/webpack-encore": "^1.1.2",
     "axios": "^0.21.1",
     "bootbox": "^5.5.2",
+    "bootstrap": "^5.0.0-beta2",
     "selectize": "^0.12.6",
     "tippy.js": "^6.3.1"
   },

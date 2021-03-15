@@ -2,6 +2,8 @@
   "build/app.js": "/build/app.js",
   "build/page-mail-templates-manage.js": "/build/page-mail-templates-manage.js",
   "build/sidebar.js": "/build/sidebar.js",
+  "build/bootstrap.css": "/build/bootstrap.css",
+  "build/bootstrap.js": "/build/bootstrap.js",
   "build/runtime.js": "/build/runtime.js",
   "build/vendors.js": "/build/vendors.js"
 }
