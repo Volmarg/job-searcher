@@ -9,11 +9,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AjaxResponse extends AbstractController {
 
-    const KEY_CODE     = "code";
-    const KEY_MESSAGE  = "message";
-    const KEY_TEMPLATE = "template";
-    const KEY_SUCCESS  = "success";
-    const KEY_DATA_BAG = "dataBag";
+    const KEY_CODE             = "code";
+    const KEY_MESSAGE          = "message";
+    const KEY_TEMPLATE         = "template";
+    const KEY_SUCCESS          = "success";
+    const KEY_DATA_BAG         = "dataBag";
+    const KEY_SCRIPTS_SOURCES  = "scriptsSources";
 
     /**
      * @var int $code
@@ -36,10 +37,11 @@ class AjaxResponse extends AbstractController {
     private $success = true;
 
     /**
-     * Used on front to find the form fields
-     * @var string $validatedFormPrefix
+     * Special array that contains locations of scripts which should be loaded additionally to the template
+     *
+     * @var array $scriptSources
      */
-    private $validatedFormPrefix = "";
+    private $scriptSources = [];
 
     /**
      * @var array $dataBag
@@ -103,13 +105,6 @@ class AjaxResponse extends AbstractController {
     }
 
     /**
-     * @param string $validatedFormPrefix
-     */
-    public function setValidatedFormPrefix(string $validatedFormPrefix): void {
-        $this->validatedFormPrefix = $validatedFormPrefix;
-    }
-
-    /**
      * @return array
      */
     public function getDataBag(): array
@@ -126,57 +121,28 @@ class AjaxResponse extends AbstractController {
     }
 
     /**
-     * @param int           $code
-     * @param string        $message
-     * @param string|null   $template
-     * @param bool          $success
-     * @param array         $dataBag
-     * @return JsonResponse
-     * @throws Exception
+     * @return array
      */
-    public static function buildJsonResponseForAjaxCall(
-        int     $code,
-        string  $message  = "",
-        ?string $template = null,
-        bool    $success  = true,
-        array   $dataBag  = []
-    ): JsonResponse {
-
-        $responseData = [
-            self::KEY_CODE    => $code,
-            self::KEY_MESSAGE => $message,
-        ];
-
-        if( !empty($template) ){
-            $responseData[self::KEY_TEMPLATE] = $template;
-        }
-
-
-        $responseData[self::KEY_SUCCESS]  = $success;
-        $responseData[self::KEY_DATA_BAG] = $dataBag;
-
-        $response = new JsonResponse($responseData, 200);
-        return $response;
+    public function getScriptSources(): array
+    {
+        return $this->scriptSources;
     }
 
     /**
-     * Will pre-fill code/message from Response and return AjaxResponse
-     * @param Response $response
-     * @return AjaxResponse
+     * @param array $scriptSources
      */
-    public static function initializeFromResponse(Response $response): AjaxResponse
+    public function setScriptSources(array $scriptSources): void
     {
-        $ajaxResponseDto = new AjaxResponse();
-
-        $message = $response->getContent();
-        $code    = $response->getStatusCode();
-
-        $ajaxResponseDto->setMessage($message);
-        $ajaxResponseDto->setCode($code);
-
-        return $ajaxResponseDto;
+        $this->scriptSources = $scriptSources;
     }
-    
+
+    public function __construct(string $message = "", bool $isSuccess = true, int $code = Response::HTTP_OK)
+    {
+        $this->message = $message;
+        $this->code    = $code;
+        $this->success = $isSuccess;
+    }
+
     /**
      * Transforms AjaxResponse to JsonResponse usable for Ajax call
      * @return JsonResponse
@@ -184,11 +150,12 @@ class AjaxResponse extends AbstractController {
     public function buildJsonResponse(): JsonResponse
     {
         $responseData = [
-            self::KEY_CODE     => $this->getCode(),
-            self::KEY_MESSAGE  => $this->getMessage(),
-            self::KEY_TEMPLATE => $this->getTemplate(),
-            self::KEY_SUCCESS  => $this->isSuccess(),
-            self::KEY_DATA_BAG => $this->getDataBag(),
+            self::KEY_CODE            => $this->getCode(),
+            self::KEY_MESSAGE         => $this->getMessage(),
+            self::KEY_TEMPLATE        => $this->getTemplate(),
+            self::KEY_SUCCESS         => $this->isSuccess(),
+            self::KEY_DATA_BAG        => $this->getDataBag(),
+            self::KEY_SCRIPTS_SOURCES => $this->getScriptSources(),
         ];
 
         $response = new JsonResponse($responseData, Response::HTTP_OK);

@@ -2,6 +2,7 @@
 
 namespace App\Action\Module\JobSearch;
 
+use App\Controller\Core\AjaxResponse;
 use App\Controller\Core\Application;
 use App\Controller\Core\ConstantsController;
 use App\Controller\Module\JobSearch\ToRework\JobSearchScrappingController;
@@ -82,8 +83,12 @@ class JobSearchAction extends AbstractController
         $renderedView = $this->render(self::MAIN_PAGE_TWIG_TPL, $data);
 
         if( $isAjax ){
-            $viewContent = $renderedView->getContent();
-            return Utils::buildAjaxResponse('', false, 200, $viewContent);
+            $viewContent  = $renderedView->getContent();
+            $ajaxResponse = new AjaxResponse();
+            $ajaxResponse->setCode(Response::HTTP_OK);
+            $ajaxResponse->setSuccess(true);
+            $ajaxResponse->setTemplate($viewContent);
+            return $ajaxResponse->buildJsonResponse();
         }
 
         return $renderedView;

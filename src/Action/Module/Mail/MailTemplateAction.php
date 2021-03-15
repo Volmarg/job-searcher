@@ -2,6 +2,7 @@
 
 namespace App\Action\Module\Mail;
 
+use App\Controller\Core\AjaxResponse;
 use App\Controller\Core\Application;
 use App\Controller\Core\ConstantsController;
 use App\Controller\Module\Mail\MailTemplateController;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use TypeError;
 
 /**
  * This class is responsible for handling the logic of loading/saving search settings
@@ -24,6 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class MailTemplateAction extends AbstractController
 {
     const TWIG_MAIL_TEMPLATE_MANAGE = "modules/mail/manage-templates.twig";
+    const KEY_MAIL_TEMPLATE         = "mailTemplate";
 
     /**
      * @var Application $app
@@ -56,6 +59,8 @@ class MailTemplateAction extends AbstractController
      */
     public function getManagementPageContent(Request $request): Response
     {
+        $ajaxResponse = new AjaxResponse();
+
         $allSavedTemplates = $this->app->getRepositories()->mailTemplateRepository()->findAll();
         $form              = $this->app->getForms()->getMailTemplateForm();
 
@@ -74,7 +79,15 @@ class MailTemplateAction extends AbstractController
 
         $renderedPage = $this->render(self::TWIG_MAIL_TEMPLATE_MANAGE, $templateData);
         if( $request->isXmlHttpRequest() ){
-            return Utils::buildAjaxResponse('', false, Response::HTTP_OK, $renderedPage->getContent(), $scriptSources);
+            $ajaxResponse->setMessage("");
+            $ajaxResponse->setSuccess(true);;
+            $ajaxResponse->setCode(Response::HTTP_OK);
+            $ajaxResponse->setTemplate($renderedPage->getContent());
+            $ajaxResponse->setDataBag([
+                AjaxResponse::KEY_SCRIPTS_SOURCES => $scriptSources,
+            ]);
+
+            return $ajaxResponse->buildJsonResponse();
         }
 
         return $renderedPage;
@@ -87,39 +100,54 @@ class MailTemplateAction extends AbstractController
      * @return JsonResponse
      */
     public function loadTemplateViaAjax(string $id): JsonResponse {
+        $ajaxResponse = new AjaxResponse();
         $mailTemplate = $this->app->getRepositories()->mailTemplateRepository()->find($id);
 
         if( empty($mailTemplate) ){
             $message = $this->app->getTranslator()->trans("modules.mailTemplatesManage.load.fail.noTemplateFoundForId");
-            return Utils::buildAjaxResponse($message, true, 200);
+            $ajaxResponse->setCode(Response::HTTP_NOT_FOUND);
+            $ajaxResponse->setSuccess(false);
+            $ajaxResponse->setMessage($message);
+            return $ajaxResponse->buildJsonResponse();
         }
 
         $message = $this->app->getTranslator()->trans("modules.mailTemplatesManage.load.success");
-        return Utils::buildAjaxResponse($message, false, 200, null, null, $mailTemplate);
+        $ajaxResponse->setMessage($message);
+        $ajaxResponse->setSuccess(true);
+        $ajaxResponse->setCode(Response::HTTP_OK);
+        $ajaxResponse->setDataBag([
+            self::KEY_MAIL_TEMPLATE => $mailTemplate,
+        ]);
+        return $ajaxResponse->buildJsonResponse();
     }
 
     /**
      * This function handles saving mail template
      * @Route("mail-template/ajax/save/{id}", name="mail_template_ajax_save")
      * @param Request $request
-     * @param string $id
+     * @param string|null $id
      * @return JsonResponse
      * @throws ORMException
      * @throws OptimisticLockException
-     * @throws Exception
      */
-    public function saveTemplateViaAjax(Request $request, string $id = null): JsonResponse {
+    public function saveTemplateViaAjax(Request $request, ?string $id = null): JsonResponse {
+
+        $ajaxResponse = new AjaxResponse();
 
         $message = $this->app->getTranslator()->trans("mailTemplate.save.success");
-        $code    = 200;
-        $error   = false;
+        $ajaxResponse->setCode(Response::HTTP_OK);
+        $ajaxResponse->setSuccess(true);
+        $ajaxResponse->setMessage($message);
 
         try{
             $mailTemplateForm        = $this->app->getForms()->getMailTemplateForm()->handleRequest($request);
             $mailTemplateFromRequest = $this->mailTemplateController->buildMailTemplateEntityFromForm($mailTemplateForm);
         } catch (Exception $e){
             $message = $this->app->getTranslator()->trans("mailTemplate.save.fail.couldNotHandleRequest");
-            return Utils::buildAjaxResponse($message, true, 400);
+
+            $ajaxResponse->setMessage($message);
+            $ajaxResponse->setCode(Response::HTTP_BAD_REQUEST);
+            return $ajaxResponse->buildJsonResponse();
         }
 
         if( empty($id) ){
@@ -129,8 +157,10 @@ class MailTemplateAction extends AbstractController
 
             if( empty($mailTemplate) ){
                 $message = $this->app->getTranslator()->trans("mailTemplate.save.fail.noEntity");
-                $code    = 500;
-                $error   = true;
+
+                $ajaxResponse->setCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+                $ajaxResponse->setSuccess(false);
+                $ajaxResponse->setMessage($message);
             }else{
                 $attachmentLinks = $mailTemplateFromRequest->getAttachmentLinks();
                 $description     = $mailTemplateFromRequest->getDescription();
@@ -149,14 +179,7 @@ class MailTemplateAction extends AbstractController
             $this->app->getRepositories()->mailTemplateRepository()->saveMailTemplate($mailTemplate);
         }
 
-        $responseData = [
-            ConstantsController::KEY_JSON_RESPONSE_MESSAGE => $message,
-            ConstantsController::KEY_JSON_RESPONSE_ERROR   => $error,
-        ];
-
-        $jsonResponse = new JsonResponse($responseData, $code);
-
-        return $jsonResponse;
+        return $ajaxResponse->buildJsonResponse();
     }
 
     /**
@@ -164,12 +187,24 @@ class MailTemplateAction extends AbstractController
      * @Route("mail-template/ajax/remove/{id}", name="mail_template_ajax_remove")
      * @param string $id
      * @return Response
-     * @throws ORMException
      */
     public function removeTemplateViaAjax(string $id): Response {
-        $this->app->getRepositories()->mailTemplateRepository()->removeMailTemplateForId($id);
-        $message = $this->app->getTranslator()->trans('mailTemplate.remove.success');
-        return Utils::buildAjaxResponse($message, false, 200);
+        $ajaxResponse = new AjaxResponse();
+
+        try{
+            $this->app->getRepositories()->mailTemplateRepository()->removeMailTemplateForId($id);
+            $message = $this->app->getTranslator()->trans('mailTemplate.remove.success');
+
+            $ajaxResponse->setMessage($message);
+            $ajaxResponse->setSuccess(true);
+            $ajaxResponse->setCode(Response::HTTP_OK);
+        }catch(Exception | TypeError $e){
+            $this->app->logException($e);
+            $ajaxResponse->setCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+            $ajaxResponse->setSuccess(false);
+        }
+
+        return $ajaxResponse->buildJsonResponse();
     }
 
     /**
@@ -182,30 +217,35 @@ class MailTemplateAction extends AbstractController
     public function buildEmailFromTemplate(Request $request, string $id): JsonResponse {
         $jobOfferUrl    = $request->request->get(MailTemplateController::MAIL_TEMPLATE_VARIABLE_JOB_OFFER_URL, "");
         $jobOfferHeader = $request->request->get(MailTemplateController::MAIL_TEMPLATE_VARIABLE_JOB_OFFER_HEADER, "");
+        $ajaxResponse   = new AjaxResponse();
 
         $mailTemplate = $this->app->getRepositories()->mailTemplateRepository()->find($id);
 
         if( empty($mailTemplate) ){
             $message = $this->app->getTranslator()->trans("modules.mailTemplatesManage.message.fail.noEntity");
-            return Utils::buildAjaxResponse($message, true, 200);
+
+            $ajaxResponse->setCode(Response::HTTP_NOT_FOUND);
+            $ajaxResponse->setSuccess(false);
+            $ajaxResponse->setMessage($message);
+
+            return $ajaxResponse->buildJsonResponse();
         }
 
         $message         = $this->app->getTranslator()->trans("modules.mailTemplatesManage.message.success.emailGenerated");
-        $error           = false;
-        $code            = 200;
         $mailTitle       = $this->replaceMailTemplateVariablesWithStrings($mailTemplate->getTitle(), $jobOfferUrl, $jobOfferHeader);
         $mailDescription = $this->replaceMailTemplateVariablesWithStrings($mailTemplate->getDescription(), $jobOfferUrl, $jobOfferHeader);
 
-        $responseData = [
-            ConstantsController::KEY_JSON_RESPONSE_MESSAGE          => $message,
-            ConstantsController::KEY_JSON_RESPONSE_ERROR            => $error,
-            ConstantsController::KEY_JSON_RESPONSE_CODE             => $code,
+        $dataBag = [
             ConstantsController::KEY_JSON_RESPONSE_MAIL_DESCRIPTION => $mailDescription,
             ConstantsController::KEY_JSON_RESPONSE_MAIL_TITLE       => strip_tags($mailTitle),
         ];
 
-        $jsonResponse = new JsonResponse($responseData, 200);
-        return $jsonResponse;
+        $ajaxResponse->setMessage($message);
+        $ajaxResponse->setSuccess(true);
+        $ajaxResponse->setCode(Response::HTTP_OK);
+        $ajaxResponse->setDataBag($dataBag);;
+
+        return $ajaxResponse->buildJsonResponse();
     }
 
     /**

@@ -2,8 +2,8 @@
 
 namespace App\Action\Dialog;
 
+use App\Controller\Core\AjaxResponse;
 use App\Controller\Core\Application;
-use App\Controller\Core\ConstantsController;
 use App\Controller\Utils;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,24 +44,28 @@ class DialogAction extends AbstractController {
     }
 
     /**
-     * @Route("/dialog-template/ajax/load/{templateType}", name="dialog_template_ajax_load_template_type")
+     * @Route("/dialog-template/load/{templateType}", name="dialog_template_load_template_type")
      * @param Request $request
      * @param string $templateType
      * @return JsonResponse
+     * @throws Exception
      */
     public function getDialogTemplate(Request $request, string $templateType = ""): JsonResponse {
 
-        $template = "";
-        $errors   = false;
-        $code     = 200;
-        $message  = $this->app->getTranslator()->trans("dialogs.messages.success.templateLoadedSuccessfully");
+        $message      = $this->app->getTranslator()->trans("dialogs.messages.success.templateLoadedSuccessfully");
+        $ajaxResponse = new AjaxResponse();
+        $ajaxResponse->setSuccess(false);
+        $ajaxResponse->setCode(Response::HTTP_OK);
+        $ajaxResponse->setMessage($message);
 
         if( empty($templateType) ){
-            $code    = 400;
             $message = $this->app->getTranslator()->trans("dialogs.messages.failure.dialogTypeWasNotProvided");
+            $ajaxResponse->setCode(Response::HTTP_BAD_REQUEST);
+            $ajaxResponse->setMessage($message);
         }
 
-        $isAJax = $request->isXmlHttpRequest();
+        $isAJax   = $request->isXmlHttpRequest();
+        $template = "";
 
         try {
             switch($templateType){
@@ -78,21 +82,30 @@ class DialogAction extends AbstractController {
                     $template = $this->generateMailFromTemplate($request, $isAJax);
                     break;
                 default:
-                    $code    = 500;
                     $message = $this->app->getTranslator()->trans("dialogs.messages.failure.thisDialogTypeIsNotSupported");
+                    $ajaxResponse->setCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+                    $ajaxResponse->setMessage($message);
+
+                    $this->app->getLogger()->critical($message, [
+                        'templateType' => $templateType,
+                    ]);
             }
+            $ajaxResponse->setTemplate($template);
         } catch (Exception $e) {
-            $message = $this->app->getTranslator()->trans("dialogs.messages.failure.exception");
-            $code    = 500;
-            throw $e;
+            $this->app->logException($e);
+            $ajaxResponse->setCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+            $ajaxResponse->setMessage($message);
+
+            return $ajaxResponse->buildJsonResponse();
         }
 
-        if($request->isXmlHttpRequest()){
-            return Utils::buildAjaxResponse($message, $errors, Response::HTTP_OK, $template, []);
+        if( $request->isXmlHttpRequest() ){
+            return $ajaxResponse->buildJsonResponse();
         }
 
-        throw new Exception("This call is only allowed for ajax!");
-        // todo: logger is missing
+        $message = "This call is only allowed for ajax!";
+        $this->app->getLogger()->critical($message);
+        throw new Exception();
     }
 
     private function getTemplateForSearchSettingsDialog(bool $isAJax): string
@@ -138,12 +151,14 @@ class DialogAction extends AbstractController {
 
         if( !array_key_exists(self::KEY_PARAM_JOB_OFFER_DESCRIPTION, $paramsArray) ){
             $message = $this->app->getTranslator()->trans("modules.jobSearchResults.missingParamForDetailPage" . self::KEY_PARAM_JOB_OFFER_DESCRIPTION);
-            throw new Exception($message , 400);
+            $this->app->getLogger()->critical($message);
+            throw new Exception($message , Response::HTTP_BAD_REQUEST);
         }
 
         if( !array_key_exists(self::KEY_PARAM_JOB_OFFER_LINK, $paramsArray) ){
             $message = $this->app->getTranslator()->trans("modules.jobSearchResults.missingParamForDetailPage" . self::KEY_PARAM_JOB_OFFER_LINK);
-            throw new Exception($message, 400);
+            $this->app->getLogger()->critical($message);
+            throw new Exception($message , Response::HTTP_BAD_REQUEST);
         }
 
         $jobOfferLink             = $paramsArray[self::KEY_PARAM_JOB_OFFER_LINK];

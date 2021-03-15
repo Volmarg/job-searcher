@@ -8,6 +8,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 class Application extends AbstractController
 {
@@ -69,6 +70,21 @@ class Application extends AbstractController
         $this->logger       = $logger;
         $this->forms        = $forms;
         $this->serializer   = new Serializer([new GetSetMethodNormalizer()], [new JsonEncoder()]);
+    }
+
+    /**
+     * Will log the exception
+     *
+     * @param Throwable $exception
+     * @param array $dataBag
+     */
+    public function logException(Throwable $exception, array $dataBag = []): void
+    {
+        $this->logger->critical("Exception was thrown", [
+            "code"           => $exception->getCode(),
+            "message"        => $exception->getMessage(),
+            "additionalData" => $dataBag,
+        ]);
     }
 
 }

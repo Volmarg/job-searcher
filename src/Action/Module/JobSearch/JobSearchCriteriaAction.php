@@ -2,6 +2,7 @@
 
 namespace App\Action\Module\JobSearch;
 
+use App\Controller\Core\AjaxResponse;
 use App\Controller\Core\Application;
 use App\Controller\Core\ConstantsController;
 use App\Controller\Utils;
@@ -10,6 +11,7 @@ use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -19,6 +21,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class JobSearchCriteriaAction extends AbstractController
 {
+
+    const KEY_SETTING = "setting";
 
     /**
      * @var Application $app
@@ -41,7 +45,7 @@ class JobSearchCriteriaAction extends AbstractController
 
         if( !$request->request->has(ConstantsController::KEY_REQUEST_NAME) ){
             $message = $this->app->getTranslator()->trans("request.missingKey") . ConstantsController::KEY_REQUEST_NAME;
-            return Utils::buildAjaxResponse($message, true, 500);
+            return (new AjaxResponse($message, false, Response::HTTP_BAD_REQUEST))->buildJsonResponse();
         }
 
         $id   = $request->request->get(ConstantsController::KEY_REQUEST_ID, "");
@@ -55,7 +59,7 @@ class JobSearchCriteriaAction extends AbstractController
 
             if( empty($searchSetting) ){
                 $message = $this->app->getTranslator()->trans("searchSetting.save.failure.noSearchSettingForId");
-                return Utils::buildAjaxResponse($message, true, 500);
+                return (new AjaxResponse($message, false, Response::HTTP_BAD_REQUEST))->buildJsonResponse();
             }
 
         } else {
@@ -64,7 +68,7 @@ class JobSearchCriteriaAction extends AbstractController
 
         if( empty($name) ){
             $message = $this->app->getTranslator()->trans("searchSetting.save.failure.nameMissing");
-            return Utils::buildAjaxResponse($message, true, 400);
+            return (new AjaxResponse($message, false, Response::HTTP_BAD_REQUEST))->buildJsonResponse();
         }
 
         $searchSetting->setName($name);
@@ -72,7 +76,7 @@ class JobSearchCriteriaAction extends AbstractController
 
         $this->app->getRepositories()->searchSettingsRepository()->saveSettings($searchSetting);
 
-        return Utils::buildAjaxResponse($message, false, 200);
+        return (new AjaxResponse($message, true, Response::HTTP_OK))->buildJsonResponse();
     }
 
     /**
@@ -87,10 +91,18 @@ class JobSearchCriteriaAction extends AbstractController
 
         if( empty($setting) ){
             $message = $this->app->getTranslator()->trans("searchSetting.load.noEntityForId");
-            return Utils::buildAjaxResponse($message, true, 400);
+            return (new AjaxResponse($message, false, Response::HTTP_BAD_REQUEST))->buildJsonResponse();
         }
 
-        return Utils::buildAjaxResponse($message, false, 200, $setting);
+        $ajaxResponse = new AjaxResponse();
+        $ajaxResponse->setMessage($message);
+        $ajaxResponse->setSuccess(false);
+        $ajaxResponse->setCode(Response::HTTP_OK);
+        $ajaxResponse->setDataBag([
+            self::KEY_SETTING => $setting,
+        ]);
+
+        return $ajaxResponse->buildJsonResponse();
     }
 
     /**
@@ -103,7 +115,7 @@ class JobSearchCriteriaAction extends AbstractController
 
         if( !$request->request->has(ConstantsController::KEY_REQUEST_IDS) ){
             $message = $this->app->getTranslator()->trans("request.missingKey") . ConstantsController::KEY_REQUEST_IDS;
-            return Utils::buildAjaxResponse($message, true, 400);
+            return (new AjaxResponse($message, false, Response::HTTP_BAD_REQUEST))->buildJsonResponse();
         }
 
         try{
@@ -112,11 +124,11 @@ class JobSearchCriteriaAction extends AbstractController
         }catch( \Exception $e){
             $message = $this->app->getTranslator()->trans("searchSetting.remove.fail.noEntityForId");
             $code    = $e->getCode();
-            return Utils::buildAjaxResponse($message, true, $code);
+            return (new AjaxResponse($message, false, $code))->buildJsonResponse();
         }
 
         $message = $this->app->getTranslator()->trans("searchSetting.remove.success");
-        return Utils::buildAjaxResponse($message, false, 200);
+        return (new AjaxResponse($message, false, Response::HTTP_OK))->buildJsonResponse();
     }
 
 }
