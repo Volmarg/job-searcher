@@ -16,11 +16,10 @@
                 <ul class="flex-column sub-menu">
                     <li class="nav-item">
                         <a class="nav-link wave-effect waves-effect waves-block"
-                           {# bootbox dialog data#}
-                           data-ajax-href="{{ path('dialog_template_ajax_load_template_type', {
+                           data-ajax-href="{{ path('dialog_template_load_template_type', {
                                "templateType" : TEMPLATE_TYPE_SEARCH_SETTINGS
                            }) }}"
-                           {# todo: add params to load via bootbox + add scripts #}
+                           data-load-in-bootbox
                            @click.prevent="loadPageContent($event)"
                         >
                             <i class="feather icon-layout"></i>
