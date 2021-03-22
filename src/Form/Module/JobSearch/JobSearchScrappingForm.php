@@ -118,7 +118,9 @@ class JobSearchScrappingForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => JobSearchSetting::class,
+            'data_class'         => JobSearchSetting::class,
+            "allow_extra_fields" => true,
+            "csrf_protection"    => false,
         ]);
     }
 }

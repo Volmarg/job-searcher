@@ -12,7 +12,6 @@ Encore
     .addEntry('sidebar', './assets/vue/page-elements/sidebar.vue')
     .addEntry('job-search', './assets/vue/pages/job-search/job-search.vue')
     .addEntry("bootstrap", './assets/bootstrap.js')
-    .addEntry("dialog-save-search-settings", "./assets/vue/page-elements/dialogs/save-search-settings.vue")
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
     .enableBuildNotifications()

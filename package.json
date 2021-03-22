@@ -9,6 +9,7 @@
     "@symfony/webpack-encore": "^1.1.2",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.0-beta2",
+    "notyf": "^3.9.0",
     "selectize": "^0.12.6",
     "sweetalert2": "^10.15.5",
     "tippy.js": "^6.3.1"

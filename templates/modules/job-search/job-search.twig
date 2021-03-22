@@ -222,6 +222,8 @@
                      cancel-button-string="{{ 'dialogs.saveSearchSettings.buttons.cancel' | trans }}"
                      header-string="{{ 'dialogs.saveSearchSettings.header' | trans }}"
                      @confirm-button-clicked="saveJobSearchSettingsDialogConfirmed()"
+                     id="saveSearchSettingsDialog"
+                     ref="saveSearchSettingsDialog"
         >
             <template #body-content>
                 {% include 'dialogs/save-search-settings.twig' %}

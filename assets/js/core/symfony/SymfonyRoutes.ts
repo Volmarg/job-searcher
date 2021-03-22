@@ -10,12 +10,6 @@ export default class SymfonyRoutes {
      */
     static readonly ROUTE_SAVE_JOB_SEARCH_SETTINGS : string = "/search-settings/ajax/save";
 
-
-    /**
-     * @description dialogs templates types for calling the dialogs content via action
-     */
-    static readonly DIALOG_TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS = "templateTypeSaveSearchSettings";
-
     /**
      * @description will handle loading the dialog html content template via action call
      */

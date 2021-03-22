@@ -27,8 +27,7 @@ export default class SweetAlert {
             }
         }
 
-        //todo: add some animation
-        console.log(dialogDomElement);
+        dialogDomElement.classList.remove("d-none");
     }
 
     /**
@@ -43,8 +42,7 @@ export default class SweetAlert {
             }
         }
 
-        //todo: add some animation
-        console.log(dialogDomElement);
+        dialogDomElement.classList.add("d-none");
     }
 
 }

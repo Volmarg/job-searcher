@@ -32,7 +32,6 @@ class EncoreService
     const CHUNK_RUNTIME_NAME                = "runtime";
     const CHUNK_PAGE_MAIL_TEMPLATES_MANAGE  = "page-mail-templates-manage";
     const CHUNK_PAGE_JOB_SEARCH             = 'job-search';
-    const CHUNK_DIALOG_SAVE_SEARCH_SETTINGS = 'dialog-save-search-settings';
 
     /**
      * @var EntrypointLookupCollectionInterface $entrypointLookupCollection

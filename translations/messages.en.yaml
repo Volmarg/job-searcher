@@ -1,4 +1,6 @@
 missingRequestParameterWithName: "Missing request parameter with name:"
+internalServerError: "Internal server error"
+badRequest: "Bad request"
 
 domCrawlerController:
   crawlerWasNotInitialized: "Crawler for DomCrawlerController was not initialized"

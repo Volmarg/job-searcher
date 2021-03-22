@@ -1,6 +1,6 @@
 <!-- Template -->
 <template>
-  <div class="swal2-container swal2-center swal2-backdrop-show dialog-container" :id="id">
+  <div class="swal2-container swal2-center swal2-backdrop-show dialog-container d-none" :id="id">
     <div aria-labelledby="swal2-title" aria-describedby="swal2-content"
          class="swal2-popup swal2-modal swal2-icon-warning swal2-show d-flex" tabindex="-1" role="dialog" aria-live="assertive"
          aria-modal="true">
@@ -59,6 +59,9 @@ export default {
   methods: {
     closeDialog(){
       SweetAlert.hideDialogForId(this.id);
+    },
+    showDialog(){
+      SweetAlert.showDialogForId(this.id);
     }
   }
 };
