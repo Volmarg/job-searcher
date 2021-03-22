@@ -8,8 +8,8 @@ use App\Controller\Core\ConstantsController;
 use App\Controller\Module\JobSearch\ToRework\JobSearchScrappingController;
 use App\Controller\Module\JobSearch\ToRework\ScrappingController;
 use App\Controller\Module\JobSearch\JobSearchDomCrawlerController;
-use App\Controller\Utils;
 use App\DTO\JobOfferDataDTO;
+use App\Services\Encore\EncoreService;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,8 +24,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class JobSearchAction extends AbstractController
 {
-    const MAIN_PAGE_TWIG_TPL            = "modules/job-search/job-search.twig";
-    const TEMPLATE_JOB_SEARCH_RESULTS   = "modules/job-search/ajax-calls/job-search-results.twig";
+    const TEMPLATE_JOB_SEARCH         = "modules/job-search/job-search.twig";
+    const TEMPLATE_JOB_SEARCH_RESULTS = "modules/job-search/ajax-calls/job-search-results.twig";
 
     const TEMPLATE_VAR_JOB_OFFER_DATA_DTOS = "jobOfferDataDtos";
 
@@ -49,17 +49,23 @@ class JobSearchAction extends AbstractController
      */
     private $app;
 
+    /**
+     * @var EncoreService $encoreService
+     */
+    private EncoreService $encoreService;
+
     public function __construct(
-        ScrappingController         $scrappingController,
-        JobSearchDomCrawlerController        $textFilterController,
-        JobSearchScrappingController $jobOfferScrappingController,
-        Application                 $app
+        ScrappingController             $scrappingController,
+        JobSearchDomCrawlerController   $textFilterController,
+        JobSearchScrappingController    $jobOfferScrappingController,
+        Application                     $app,
+        EncoreService                   $encoreService
     ) {
         $this->app                          = $app;
+        $this->encoreService                = $encoreService;
         $this->scrappingController          = $scrappingController;
         $this->domCrawlerController         = $textFilterController;
         $this->jobOfferScrappingController  = $jobOfferScrappingController;
-
     }
 
     /**
@@ -67,31 +73,52 @@ class JobSearchAction extends AbstractController
      * @Route("/", name="job_search")
      * @param Request $request
      * @return Response
+     * @throws Exception
      */
     public function index(Request $request): Response
     {
-        $jobOfferScrappingForm = $this->app->getForms()->getJobSearchScrappingForm();
-        $searchSettings        = $this->app->getRepositories()->searchSettingsRepository()->findAll();
-        $isAjax                = $request->isXmlHttpRequest();
+        $ajaxResponse = new AjaxResponse();
+        $isAjax       = $request->isXmlHttpRequest();
 
-        $data = [
-            "jobOfferScrappingForm" => $jobOfferScrappingForm->createView(),
-            "searchSettings"        => $searchSettings,
-            "isAjax"                => $isAjax,
-        ];
+        try{
+            $jobOfferScrappingForm = $this->app->getForms()->getJobSearchScrappingForm();
+            $searchSettings        = $this->app->getRepositories()->searchSettingsRepository()->findAll();
 
-        $renderedView = $this->render(self::MAIN_PAGE_TWIG_TPL, $data);
+            $templateData = [
+                "jobOfferScrappingForm" => $jobOfferScrappingForm->createView(),
+                "searchSettings"        => $searchSettings,
+                "isAjax"                => $isAjax,
+            ];
 
-        if( $isAjax ){
-            $viewContent  = $renderedView->getContent();
-            $ajaxResponse = new AjaxResponse();
-            $ajaxResponse->setCode(Response::HTTP_OK);
-            $ajaxResponse->setSuccess(true);
-            $ajaxResponse->setTemplate($viewContent);
-            return $ajaxResponse->buildJsonResponse();
+            $scriptSources = $this->encoreService->getJsChunkFileLocationForChunkName(EncoreService::CHUNK_PAGE_JOB_SEARCH);
+
+            if( !$request->isXmlHttpRequest() ){
+                $templateData['scriptsSources'] = [$scriptSources];
+            }
+
+            $renderedView = $this->render(self::TEMPLATE_JOB_SEARCH, $templateData);
+
+            if( $isAjax ){
+                $viewContent  = $renderedView->getContent();
+                $ajaxResponse->setCode(Response::HTTP_OK);
+                $ajaxResponse->setSuccess(true);
+                $ajaxResponse->setTemplate($viewContent);
+                $ajaxResponse->setScriptSources([$scriptSources]);
+                return $ajaxResponse->buildJsonResponse();
+            }
+
+            return $renderedView;
+        }catch(Exception $e){
+            $this->app->logException($e);
+
+            if($isAjax){
+                $ajaxResponse->setCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+                $ajaxResponse->setSuccess(false);
+                return $ajaxResponse->buildJsonResponse();
+            }
+            throw $e;
         }
 
-        return $renderedView;
     }
 
     /**

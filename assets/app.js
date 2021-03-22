@@ -1,4 +1,6 @@
 import * as Vue from 'vue';
+import './app.scss';
+
 /**
  * @description this file MUST remain empty! Only the top import should remain there.
  *              It's used to extract vendor/runtime js, and cannot contain any additional logic at all

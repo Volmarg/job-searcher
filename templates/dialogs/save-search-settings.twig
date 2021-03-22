@@ -1,22 +1,18 @@
-<h5>{{ "dialogs.searchSettings.save.headers" | trans }}</h5>
-
-<div class="form-group row">
-    <label class = "col-form-label col-sm-2 required"
-           for   = "search">
-        Name {# todo: add to trans #}
-    </label>
-    <div class="col-sm-10">
-        <input type         = "text"
-               name         = "search_setting_saved_name"
-               required     = "required"
-               id           = "search_setting_saved_name"
-               placeholder  = "{{ "dialogs.searchSettings.save.placeholder" | trans }}"
-               class        = "form-control"
-                {# Data for hadling ajax call on click #}
-               data-ajax-call-on-click           = "true"
-               data-ajax-call-method             = "saveSearchSetting"
-               data-ajax-call-method-params      = ""
-               data-call-ajax-for-selector-click = ".modal-footer .bootbox-accept"
-        >
+<section id="saveSearchSettingsDialog">
+    <div class="form-group row">
+        <label class = "col-form-label col-sm-2 required"
+               for   = "search">
+            Name {# todo: add to trans #}
+        </label>
+        <div class="col-sm-10">
+            <input type         = "text"
+                   name         = "search_setting_saved_name"
+                   required     = "required"
+                   id           = "search_setting_saved_name"
+                   placeholder  = "{{ "dialogs.searchSettings.save.placeholder" | trans }}"
+                   class        = "form-control"
+                   ref          = "dialogTest"
+            >
+        </div>
     </div>
-</div>
+</section>

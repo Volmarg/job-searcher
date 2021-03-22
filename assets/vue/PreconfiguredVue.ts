@@ -1,5 +1,14 @@
 import * as vue from "vue";
 
+/**
+ * @description this class contains a logic for initializing the vue components in this project
+ *              it's required to use the preconfigured vue as this is not a SPA / neither is it a
+ *              standard project using <component> injection, rather a combination of
+ *              - symfony (backend),
+ *              - twig (render template),
+ *              - vue,
+ *              - ts
+ */
 export default class PreconfiguredVue
 {
     /**
@@ -17,7 +26,8 @@ export default class PreconfiguredVue
     public static createApp(domElementSelector: string, options)
     {
         //@ts-ignore
-        options.delimiters = PreconfiguredVue.VUE_DEFAULT_DELIMITERS;
-        vue.createApp(options).mount(domElementSelector);
+        options.delimiter = PreconfiguredVue.VUE_DEFAULT_DELIMITERS;
+        let vueApp = vue.createApp(options);
+        vueApp.mount(domElementSelector);
     }
 }

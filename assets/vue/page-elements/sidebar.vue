@@ -2,8 +2,10 @@
 import AjaxResponseDto  from "../../js/core/dto/AjaxResponseDto";
 import AjaxContentLoad  from "../../js/core/Ajax/AjaxContentLoad";
 import PreconfiguredVue from "../PreconfiguredVue";
-import axios            from 'axios';
+import Axios            from "../../js/libs/axios/Axios";
 import SweetAlert       from "../../js/libs/sweetalert/SweetAlert";
+
+let axios = Axios.getAxiosInstanceForSymfony();
 
 PreconfiguredVue.createApp('#sidebar-menu', {
   methods: {
@@ -14,7 +16,6 @@ PreconfiguredVue.createApp('#sidebar-menu', {
 
       let clickedHtmlElement = event.currentTarget;
       let url                = clickedHtmlElement.dataset.ajaxHref;
-      axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'; // this makes symfony think that this is ajax request
 
       let pageContentLoadPromise = axios.get(url).then( (response) => {
         let ajaxResponseDto = AjaxResponseDto.fromAxiosResponse(response.data);
@@ -22,7 +23,8 @@ PreconfiguredVue.createApp('#sidebar-menu', {
       });
 
       if( "undefined" !== typeof clickedHtmlElement.dataset.loadInBootbox ){
-        SweetAlert.showSimpleAlertForDialogTemplate(pageContentLoadPromise);
+        // SweetAlert.showSimpleAlertForDialogTemplate(pageContentLoadPromise);
+        // todo
       }else{
         pageContentLoadPromise.then( (ajaxResponseDto) => {
           AjaxContentLoad.loadContentIntoMainWrapper(ajaxResponseDto.template);

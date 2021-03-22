@@ -15,7 +15,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class DialogAction extends AbstractController {
 
     const DIALOG_TEMPLATE_SEARCH_SETTINGS             = "dialogs/search-settings.twig";
-    const DIALOG_TEMPLATE_SAVE_SEARCH_SETTING         = "dialogs/save-search-settings.twig";
     const DIALOG_TEMPLATE_SEARCH_RESULT_DETAILS       = "dialogs/search-result-details.twig";
     const DIALOG_TEMPLATE_GENERATE_MAIL_FROM_TEMPLATE = "dialogs/generate-mail-from-template.twig";
 
@@ -72,9 +71,6 @@ class DialogAction extends AbstractController {
                 case self::TEMPLATE_TYPE_SEARCH_SETTINGS:
                     $template = $this->getTemplateForSearchSettingsDialog($isAJax);
                     break;
-                case self::TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS:
-                    $template = $this->getTemplateForSavingSearchSetting($isAJax);
-                    break;
                 case self::TEMPLATE_TYPE_SEARCH_RESULT_DETAILS:
                     $template = $this->getTemplateForSearchResultDetails($request, $isAJax);
                     break;
@@ -117,18 +113,6 @@ class DialogAction extends AbstractController {
             self::KEY_PARAM_IS_AJAX        => $isAJax
         ];
         $templateResponse  = $this->render(self::DIALOG_TEMPLATE_SEARCH_SETTINGS, $templateData);
-        $templateString    = $templateResponse->getContent();
-
-        return $templateString;
-    }
-
-    private function getTemplateForSavingSearchSetting(bool $isAJax): string
-    {
-
-        $templateData = [
-            self::KEY_PARAM_IS_AJAX => $isAJax
-        ];
-        $templateResponse  = $this->render(self::DIALOG_TEMPLATE_SAVE_SEARCH_SETTING, $templateData);
         $templateString    = $templateResponse->getContent();
 
         return $templateString;

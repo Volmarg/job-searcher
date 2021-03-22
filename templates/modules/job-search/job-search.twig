@@ -1,3 +1,21 @@
+{% set jobSearchSettingClass       = 'App\\Entity\\Module\\JobSearch\\JobSearchSetting::' %}
+{% set jobSearchScrappingFormClass = 'App\\Form\\Module\\JobSearch\\JobSearchScrappingForm::' %}
+
+{% set KEY_URL_PATTERN                 = constant(jobSearchSettingClass ~ "KEY_URL_PATTERN") %}
+{% set KEY_START_PAGE_OFFSET           = constant(jobSearchSettingClass ~ "KEY_START_PAGE_OFFSET") %}
+{% set KEY_END_PAGE_OFFSET             = constant(jobSearchSettingClass ~ "KEY_END_PAGE_OFFSET") %}
+{% set KEY_PAGE_OFFSET_STEPS           = constant(jobSearchSettingClass ~ "KEY_PAGE_OFFSET_STEPS") %}
+{% set KEY_PAGE_OFFSET_REPLACE_PATTERN = constant(jobSearchSettingClass ~ "KEY_PAGE_OFFSET_REPLACE_PATTERN") %}
+{% set KEY_BODY_QUERY_SELECTOR         = constant(jobSearchSettingClass ~ "KEY_BODY_QUERY_SELECTOR") %}
+{% set KEY_HEADER_QUERY_SELECTOR       = constant(jobSearchSettingClass ~ "KEY_HEADER_QUERY_SELECTOR") %}
+{% set KEY_LINK_QUERY_SELECTOR         = constant(jobSearchSettingClass ~ "KEY_LINK_QUERY_SELECTOR") %}
+{% set KEY_LINKS_SKIPPING_REGEX        = constant(jobSearchSettingClass ~ "KEY_LINKS_SKIPPING_REGEX") %}
+{% set KEY_ACCEPTED_KEYWORDS           = constant(jobSearchSettingClass ~ "KEY_ACCEPTED_KEYWORDS") %}
+{% set KEY_REJECTED_KEYWORDS           = constant(jobSearchSettingClass ~ "KEY_REJECTED_KEYWORDS") %}
+
+{% set KEY_SUBMIT              = constant(jobSearchScrappingFormClass ~ "KEY_SUBMIT") %}
+{% set KEY_SAVE_SEARCH_SETTING = constant(jobSearchScrappingFormClass ~ "KEY_SAVE_SEARCH_SETTING") %}
+
 {% set extendedTemplate = ( isAjax ? "blank.html.twig" : "base.html.twig" ) %}
 {% extends extendedTemplate %}
 
@@ -21,10 +39,200 @@
                     "data-submit-via-ajax": "true",
                     "data-ajax-url"       : path("ajax_scrap_data_for_request")
                 }}) }}
+
+                {# Url pattern #}
+                <div class="form-group row">
+                    {{ form_label(jobOfferScrappingForm[KEY_URL_PATTERN]) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(jobOfferScrappingForm[KEY_URL_PATTERN], {
+                            attr: {
+                                "ref"     : "urlPatternInput",
+                                "@input"  : "checkIfFormIsValid()"
+                            }
+                        }) }}
+                    </div>
+                </div>
+
+                {# Page offset replace pattern #}
+                <div class="form-group row">
+                    {{ form_label(jobOfferScrappingForm[KEY_PAGE_OFFSET_REPLACE_PATTERN]) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(jobOfferScrappingForm[KEY_PAGE_OFFSET_REPLACE_PATTERN], {
+                            attr: {
+                                "ref"     : "pageOffsetReplacePatternInput",
+                                "@input"  : "checkIfFormIsValid()"
+                            }
+                        }) }}
+                    </div>
+                </div>
+
+                {# Page offset steps #}
+                <div class="form-group row">
+                    {{ form_label(jobOfferScrappingForm[KEY_PAGE_OFFSET_STEPS]) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(jobOfferScrappingForm[KEY_PAGE_OFFSET_STEPS], {
+                            attr: {
+                                "ref"     : "pageOffsetStepsInput",
+                                "@input"  : "checkIfFormIsValid()"
+                            }
+                        }) }}
+                    </div>
+                </div>
+
+                {# Start page offset #}
+                <div class="form-group row">
+                    {{ form_label(jobOfferScrappingForm[KEY_START_PAGE_OFFSET]) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(jobOfferScrappingForm[KEY_START_PAGE_OFFSET], {
+                            attr: {
+                                "ref"     : "startPageOffsetInput",
+                                "@input"  : "checkIfFormIsValid()"
+                            }
+                        }) }}
+                    </div>
+                </div>
+
+                {# End page offset #}
+                <div class="form-group row">
+                    {{ form_label(jobOfferScrappingForm[KEY_END_PAGE_OFFSET]) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(jobOfferScrappingForm[KEY_END_PAGE_OFFSET], {
+                            attr: {
+                                "ref"     : "endPageOffsetInput",
+                                "@input"  : "checkIfFormIsValid()"
+                            }
+                        }) }}
+                    </div>
+                </div>
+
+
+                {# Body query selector #}
+                <div class="form-group row">
+                    {{ form_label(jobOfferScrappingForm[KEY_BODY_QUERY_SELECTOR]) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(jobOfferScrappingForm[KEY_BODY_QUERY_SELECTOR], {
+                            attr: {
+                                "ref"     : "bodyQuerySelectrInput",
+                                "@input"  : "checkIfFormIsValid()"
+                            }
+                        }) }}
+                    </div>
+                </div>
+
+                {# Header query selector #}
+                <div class="form-group row">
+                    {{ form_label(jobOfferScrappingForm[KEY_HEADER_QUERY_SELECTOR]) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(jobOfferScrappingForm[KEY_HEADER_QUERY_SELECTOR], {
+                            attr: {
+                                "ref"     : "headerQuerySelectorInput",
+                                "@input"  : "checkIfFormIsValid()"
+                            }
+                        }) }}
+                    </div>
+                </div>
+
+                {# Link query selector #}
+                <div class="form-group row">
+                    {{ form_label(jobOfferScrappingForm[KEY_LINK_QUERY_SELECTOR]) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(jobOfferScrappingForm[KEY_LINK_QUERY_SELECTOR], {
+                            attr: {
+                                "ref"     : "linkQuerySelectorInput",
+                                "@input"  : "checkIfFormIsValid()"
+                            }
+                        }) }}
+                    </div>
+                </div>
+
+                {# Links skipping regex #}
+                <div class="form-group row">
+                    {{ form_label(jobOfferScrappingForm[KEY_LINKS_SKIPPING_REGEX]) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(jobOfferScrappingForm[KEY_LINKS_SKIPPING_REGEX], {
+                            attr: {
+                                "ref"     : "linksSkippingRegexInput",
+                                "@input"  : "checkIfFormIsValid()"
+                            }
+                        }) }}
+                    </div>
+                </div>
+
+                {# Accepted keywords #}
+                <div class="form-group row">
+                    {{ form_label(jobOfferScrappingForm[KEY_ACCEPTED_KEYWORDS]) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(jobOfferScrappingForm[KEY_ACCEPTED_KEYWORDS], {
+                            attr: {
+                                "ref"     : "acceptedKeywordsInput",
+                                "@input"  : "checkIfFormIsValid()"
+                            }
+                        }) }}
+                    </div>
+                </div>
+
+                {# Rejected keywords #}
+                <div class="form-group row">
+                    {{ form_label(jobOfferScrappingForm[KEY_REJECTED_KEYWORDS]) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(jobOfferScrappingForm[KEY_REJECTED_KEYWORDS], {
+                            attr: {
+                                "ref"     : "rejectedKeywordsInput",
+                                "@input"  : "checkIfFormIsValid()"
+                            }
+                        }) }}
+                    </div>
+                </div>
+
+                {# Submit #}
+                <div class="form-group row">
+                    <div class="col-12">
+                        {{ form_widget(jobOfferScrappingForm[KEY_SUBMIT], {
+                            attr: {
+                                "ref"             : "submitButton",
+                                ":class"          : "[[{disabled: !isFormValid}]]",
+                                "@click.prevent"  : "submitButtonClicked()"
+                            }
+                        }) }}
+                    </div>
+                </div>
+
+                {# Save search settings #}
+                <div class="form-group row">
+                    <div class="col-12">
+                        {{ form_widget(jobOfferScrappingForm[KEY_SAVE_SEARCH_SETTING], {
+                            attr: {
+                                "ref"            : "saveSearchSettingsButton",
+                                ":class"         : "[[{disabled: !isFormValid}]]",
+                                "@click.prevent" : "saveButtonClicked()"
+                            }
+                        }) }}
+                    </div>
+                </div>
+
                 {{ form_end(jobOfferScrappingForm) }}
             </section>
 
             </div>
         </div>
+
+        {# Used to handle the child/parent communication withing vue components #}
+        <sweet-alert @saveJobSearchSettings="saveJobSearchSettingsDialogConfirmed()"
+                     confirm-button-string="{{ 'dialogs.saveSearchSettings.header' | trans }}"
+                     cancel-button-string="{{ 'dialogs.saveSearchSettings.buttons.cancel' | trans }}"
+                     header-string="{{ 'dialogs.saveSearchSettings.header' | trans }}"
+                     @confirm-button-clicked="saveJobSearchSettingsDialogConfirmed()"
+        >
+            <template #body-content>
+                {% include 'dialogs/save-search-settings.twig' %}
+            </template>
+
+        </sweet-alert>
     </div>
+{% endblock %}
+
+{% block scriptsAfterMainContainerWrapper %}
+    {% for scriptSource in scriptsSources %}
+        <script src="{{ scriptSource }}"></script>
+    {% endfor %}
 {% endblock %}

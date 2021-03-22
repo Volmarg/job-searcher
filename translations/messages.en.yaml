@@ -22,6 +22,7 @@ mailTemplate:
     success: Mail template has been removed
 request:
   missingKey: "Missing key in request: "
+  malformedData: "Malformed data"
 searchSetting:
   save:
     failure:

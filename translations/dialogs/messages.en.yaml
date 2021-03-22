@@ -21,3 +21,8 @@ dialogs:
     headers:
       rejectedKeywords: Rejected keywords
       acceptedKeywords: Accepted keywords
+  saveSearchSettings:
+    buttons:
+      confirm: Save
+      cancel: Cancel
+    header: Save search settings

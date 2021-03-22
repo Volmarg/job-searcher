@@ -16,6 +16,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class JobSearchScrappingForm extends AbstractType
 {
 
+    const KEY_SUBMIT              = "submit";
     const KEY_SAVE_SEARCH_SETTING = "saveSearchSetting";
 
     /**
@@ -94,21 +95,21 @@ class JobSearchScrappingForm extends AbstractType
                     "data-is-selectize" => "true",
                 ]
             ])
-            ->add( $this->app->getTranslator()->trans("forms.buttons.submit"), SubmitType::class, [
+            ->add( self::KEY_SUBMIT, SubmitType::class, [
                 "attr" => [
                     "data-menu-elements-ids-to-hide" => '["' . ConstantsController::MENU_ELEMENT_JOB_SEARCH_LOAD_SETTING . '"]',
                     "data-ajax-form-submit"          => "true",
-                    "class"                          => "btn-primary btn disabled",
+                    "class"                          => "btn-primary btn",
                 ]
             ])
-            ->add( $this->app->getTranslator()->trans(self::KEY_SAVE_SEARCH_SETTING), SubmitType::class, [
+            ->add( self::KEY_SAVE_SEARCH_SETTING, SubmitType::class, [
                 "attr" => [
                     "data-bootbox-callback-type-template-name"  => DialogAction::TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS,
                     "data-call-bootbox-dialog"                  => "true",
                     "data-bootbox-size"                         => "large",
                     "data-bootbox-type"                         => "confirm",
                     "data-bootbox-callback-type"                => "load-template",
-                    "class"                                     => "btn-primary btn disabled",
+                    "class"                                     => "btn-primary btn",
                 ]
             ])
         ;

@@ -5,7 +5,6 @@ namespace App\Action\Module\JobSearch;
 use App\Controller\Core\AjaxResponse;
 use App\Controller\Core\Application;
 use App\Controller\Core\ConstantsController;
-use App\Controller\Utils;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,10 +18,12 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class DecisionController
  * @package App\Controller\Logic
  */
-class JobSearchCriteriaAction extends AbstractController
+class JobSearchSettingsAction extends AbstractController
 {
 
-    const KEY_SETTING = "setting";
+    const KEY_REQUEST_ID    = "id";
+    const KEY_REQUEST_NAME  = "name";
+    const KEY_SETTING       = "setting";
 
     /**
      * @var Application $app
@@ -43,13 +44,18 @@ class JobSearchCriteriaAction extends AbstractController
      */
     public function ajaxSaveSettings(Request $request): JsonResponse {
 
-        if( !$request->request->has(ConstantsController::KEY_REQUEST_NAME) ){
-            $message = $this->app->getTranslator()->trans("request.missingKey") . ConstantsController::KEY_REQUEST_NAME;
+        $dataArray = json_decode($request->getContent(), true);
+        if( JSON_ERROR_NONE !== json_last_error() ){
+            $this->app->getLogger()->critical("Data provided in the request is malformed", [
+                "requestContent" => $request->getContent(),
+            ]);
+
+            $message = $this->app->getTranslator()->trans('request.malformedData');
             return (new AjaxResponse($message, false, Response::HTTP_BAD_REQUEST))->buildJsonResponse();
         }
 
-        $id   = $request->request->get(ConstantsController::KEY_REQUEST_ID, "");
-        $name = $request->request->get(ConstantsController::KEY_REQUEST_NAME);
+        $id   = in_array(self::KEY_REQUEST_ID, $dataArray)   ?? "";
+        $name = in_array(self::KEY_REQUEST_NAME, $dataArray) ?? "";
 
         $jobScrappingForm = $this->app->getForms()->getJobSearchScrappingForm();
         $jobScrappingForm->handleRequest($request);

@@ -1,0 +1,39 @@
+/**
+ * @description contains symfony routes based reusable logic:
+ *              - definitions of routes,
+ *              - building route with parameters,
+ */
+export default class SymfonyRoutes {
+
+    /**
+     * @description will save the job search settings into the database
+     */
+    static readonly ROUTE_SAVE_JOB_SEARCH_SETTINGS : string = "/search-settings/ajax/save";
+
+
+    /**
+     * @description dialogs templates types for calling the dialogs content via action
+     */
+    static readonly DIALOG_TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS = "templateTypeSaveSearchSettings";
+
+    /**
+     * @description will handle loading the dialog html content template via action call
+     */
+    static readonly ROUTE_GET_DIALOG_TEMPLATE : string            = "/dialog-template/load/{templateType}";
+    static readonly ROUTE_GET_DIALOG_TEMPLATE_PARAM_TEMPLATE_TYPE = "{templateType}"
+
+    /**
+     * @description will build the final/target route by replacing the parameters in symfony route
+     */
+    public static buildRouteWithParameters(route: string, parameters: object): string
+    {
+        let finalRoute      = route;
+        let parametersNames = Object.keys(parameters);
+        for(let parameterName of parametersNames){
+            let parameterValue = parameters[parameterName];
+            finalRoute = finalRoute.replace(parameterName, parameterValue);
+        }
+
+        return finalRoute;
+    }
+}

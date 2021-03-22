@@ -35,6 +35,7 @@ class EncoreTwigExtension extends AbstractExtension
             new TwigFunction("getRuntimeJsScriptChunkFileLocation", [$this, 'getRuntimeJsScriptChunkFileLocation']),
             new TwigFunction("getJsChunkFileLocationForChunkName",  [$this, 'getJsChunkFileLocationForChunkName']),
             new TwigFunction("getCssChunkFileLocationForChunkName",  [$this, 'getCssChunkFileLocationForChunkName']),
+            new TwigFunction("getAppCssScriptChunkFileLocation",  [$this, 'getAppCssScriptChunkFileLocation']),
         ];
     }
 
@@ -93,6 +94,17 @@ class EncoreTwigExtension extends AbstractExtension
     public function getCssChunkFileLocationForChunkName(string $chunkName): string
     {
         return $this->encoreService->getCssChunkFileLocationForChunkName($chunkName);
+    }
+
+    /**
+     * Will return the app chunk css
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function getAppCssScriptChunkFileLocation(): string
+    {
+        return $this->encoreService->getAppCssScriptChunkFileLocation();
     }
 
 }

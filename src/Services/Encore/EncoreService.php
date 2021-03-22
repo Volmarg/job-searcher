@@ -10,6 +10,14 @@ use TypeError;
 
 /**
  * Contains special logic to handle manipulated webpack and the way that Vue.js works like with the ajax loaded content
+ * the strange solution with extracting runtime/vendor/app from `app` chunk is required since the webpack adds the
+ * vendor/runtime to each chunk and it cannot be included on page more than once.
+ *
+ * Additionally seems like Encore clears the array of da for chunk so it's also required to have separated methods
+ * to fetch vendor/runtime/app.
+ *
+ * Also the special methods for extracting css/js are needed due to the fact that for example chunk 'bootstrap'
+ * will also contain 'vendor/runtime' but only the `bootstrap` part is required from array.
  *
  * Class EncoreService
  * @package App\Services\Encore
@@ -19,9 +27,12 @@ class EncoreService
     const CHUNK_TYPE_CSS = "css";
     const CHUNK__TYPE_JS = "js";
 
-    const CHUNK_VENDOR_NAME  = "vendor";
-    const CHUNK_RUNTIME_NAME = "runtime";
-    const CHUNK_PAGE_MAIL_TEMPLATES_MANAGE = "page-mail-templates-manage";
+    const CHUNK_VENDOR_NAME                 = "vendor";
+    const CHUNK_APP_NAME                    = "app";
+    const CHUNK_RUNTIME_NAME                = "runtime";
+    const CHUNK_PAGE_MAIL_TEMPLATES_MANAGE  = "page-mail-templates-manage";
+    const CHUNK_PAGE_JOB_SEARCH             = 'job-search';
+    const CHUNK_DIALOG_SAVE_SEARCH_SETTINGS = 'dialog-save-search-settings';
 
     /**
      * @var EntrypointLookupCollectionInterface $entrypointLookupCollection
@@ -71,6 +82,17 @@ class EncoreService
     public function getVendorCssScriptChunkFileLocation(): string
     {
         return $this->getCssChunkFileLocation(self::CHUNK_VENDOR_NAME, $this->appEntryPointCssFiles);
+    }
+
+    /**
+     * Will return the app chunk file location
+     *
+     * @return string
+     * @throws Exception
+     */
+    public function getAppCssScriptChunkFileLocation(): string
+    {
+        return $this->getCssChunkFileLocation(self::CHUNK_APP_NAME, $this->appEntryPointCssFiles);
     }
 
     /**
