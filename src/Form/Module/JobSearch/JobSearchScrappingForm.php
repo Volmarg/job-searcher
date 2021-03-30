@@ -104,12 +104,7 @@ class JobSearchScrappingForm extends AbstractType
             ])
             ->add( self::KEY_SAVE_SEARCH_SETTING, SubmitType::class, [
                 "attr" => [
-                    "data-bootbox-callback-type-template-name"  => DialogAction::TEMPLATE_TYPE_SAVE_SEARCH_SETTINGS,
-                    "data-call-bootbox-dialog"                  => "true",
-                    "data-bootbox-size"                         => "large",
-                    "data-bootbox-type"                         => "confirm",
-                    "data-bootbox-callback-type"                => "load-template",
-                    "class"                                     => "btn-primary btn",
+                    "class" => "btn-primary btn",
                 ]
             ])
         ;

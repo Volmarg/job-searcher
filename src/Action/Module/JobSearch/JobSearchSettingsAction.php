@@ -4,13 +4,13 @@ namespace App\Action\Module\JobSearch;
 
 use App\Controller\Core\AjaxResponse;
 use App\Controller\Core\Application;
-use App\Controller\Core\ConstantsController;
 use App\Services\Form\FormService;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use TypeError;
 
@@ -63,6 +63,7 @@ class JobSearchSettingsAction extends AbstractController
 
             $id   = $dataArray[self::KEY_REQUEST_ID]   ?? "";
             $name = $dataArray[self::KEY_REQUEST_NAME] ?? "";
+            dump($dataArray);
 
             $jobScrappingForm = $this->app->getForms()->getJobSearchScrappingForm();
             $this->formService->handlePostFormForAxiosCall($jobScrappingForm, $request);
@@ -110,7 +111,7 @@ class JobSearchSettingsAction extends AbstractController
 
     /**
      * This function handles loading saved in DB via ajax call
-     * @Route("/search-settings/ajax/load/{id}", name="search_settings_ajax_load")
+     * @Route("/search-settings/ajax/load/{id}", name="search_settings_ajax_load", methods={"GET"})
      * @param string $id
      * @return JsonResponse
      */
@@ -130,7 +131,7 @@ class JobSearchSettingsAction extends AbstractController
             $ajaxResponse->setSuccess(false);
             $ajaxResponse->setCode(Response::HTTP_OK);
             $ajaxResponse->setDataBag([
-                self::KEY_SETTING => $setting,
+                self::KEY_SETTING => $setting->toJson(),
             ]);
 
             return $ajaxResponse->buildJsonResponse();
@@ -143,28 +144,27 @@ class JobSearchSettingsAction extends AbstractController
 
     /**
      * This function handles removing settings via ajax call
-     * @Route("/search-settings/ajax/remove/", name="search_settings_ajax_remove")
+     * @Route("/search-settings/ajax/remove/{id}", name="search_settings_ajax_remove", methods={"POST"})
      * @param Request $request
+     * @param int $id
      * @return JsonResponse
      */
-    public function ajaxRemoveSettings(Request $request): JsonResponse {
-
-        if( !$request->request->has(ConstantsController::KEY_REQUEST_IDS) ){
-            $message = $this->app->getTranslator()->trans("request.missingKey") . ConstantsController::KEY_REQUEST_IDS;
-            return (new AjaxResponse($message, false, Response::HTTP_BAD_REQUEST))->buildJsonResponse();
-        }
+    public function ajaxRemoveSettings(Request $request, int $id): JsonResponse {
 
         try{
-            $ids = $request->request->get(ConstantsController::KEY_REQUEST_IDS);
-            $this->app->getRepositories()->searchSettingsRepository()->removeSettingsForIds($ids);
-        }catch( Exception $e){
+            $this->app->getRepositories()->searchSettingsRepository()->removeSettingForId($id);
+        }catch(NotFoundHttpException $ne){
+            $this->app->logException($ne);
             $message = $this->app->getTranslator()->trans("searchSetting.remove.fail.noEntityForId");
-            $code    = $e->getCode();
-            return (new AjaxResponse($message, false, $code))->buildJsonResponse();
+            return (new AjaxResponse($message, false, Response::HTTP_NOT_FOUND))->buildJsonResponse();
+        }catch(Exception $e){
+            $this->app->logException($e);
+            $message = $this->app->getTranslator()->trans("internalServerError");
+            return (new AjaxResponse($message, false, Response::HTTP_INTERNAL_SERVER_ERROR))->buildJsonResponse();
         }
 
         $message = $this->app->getTranslator()->trans("searchSetting.remove.success");
-        return (new AjaxResponse($message, false, Response::HTTP_OK))->buildJsonResponse();
+        return (new AjaxResponse($message, true, Response::HTTP_OK))->buildJsonResponse();
     }
 
 }

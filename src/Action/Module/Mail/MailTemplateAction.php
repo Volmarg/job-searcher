@@ -6,7 +6,6 @@ use App\Controller\Core\AjaxResponse;
 use App\Controller\Core\Application;
 use App\Controller\Core\ConstantsController;
 use App\Controller\Module\Mail\MailTemplateController;
-use App\Controller\Utils;
 use App\Services\Encore\EncoreService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -46,7 +45,7 @@ class MailTemplateAction extends AbstractController
     public function __construct(Application $app, MailTemplateController $mailTemplateController, EncoreService $encoreService) {
         $this->mailTemplateController = $mailTemplateController;
         $this->encoreService          = $encoreService;
-        $this->app = $app;
+        $this->app                    = $app;
     }
 
     /**

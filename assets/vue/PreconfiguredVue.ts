@@ -26,7 +26,7 @@ export default class PreconfiguredVue
     public static createApp(domElementSelector: string, options)
     {
         //@ts-ignore
-        options.delimiter = PreconfiguredVue.VUE_DEFAULT_DELIMITERS;
+        options.delimiters = PreconfiguredVue.VUE_DEFAULT_DELIMITERS;
         let vueApp = vue.createApp(options);
         vueApp.mount(domElementSelector);
     }

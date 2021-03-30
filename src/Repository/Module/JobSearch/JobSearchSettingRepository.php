@@ -8,6 +8,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @method JobSearchSetting|null find($id, $lockMode = null, $lockVersion = null)
@@ -38,16 +39,15 @@ class JobSearchSettingRepository extends ServiceEntityRepository
      */
     public function removeSettingForId(string $id): void {
 
-        $settings = $this->_em->getRepository(JobSearchSetting::class)->find($id);
+        $setting = $this->find($id);
 
-        if( !empty($settings) ){
-            $setting = reset($settings);
+        if( !is_null($setting) ){
             $this->_em->remove($setting);
             $this->_em->flush();
             return;
         }
 
-        throw new \Exception("No search setting was found for id {$id}.", 400);
+        throw new NotFoundHttpException("No search setting was found for id {$id}.");
     }
 
     /**
@@ -78,7 +78,7 @@ class JobSearchSettingRepository extends ServiceEntityRepository
      * @return JobSearchSetting[]
      */
     public function getAllSearchSettings(): array {
-        $searchSettings = $this->_em->getRepository(JobSearchSetting::class)->findAll();
+        $searchSettings = $this->findAll();
         return $searchSettings;
     }
 }

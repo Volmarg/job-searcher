@@ -8,9 +8,6 @@ dialogs:
     save:
       headers: Save search setting
       placeholder: Name for saved setting
-    load:
-      header: Saved search settings
-      subheader: Click on name to load setting
   messages:
     success:
       templateLoadedSuccessfully: Template has been loaded successfully
@@ -26,3 +23,11 @@ dialogs:
       confirm: Save
       cancel: Cancel
     header: Save search settings
+  manageSearchSettings:
+    buttons:
+      close: Close
+    header: Manage search settings
+    table:
+      header:
+        load: Load
+        remove: Remove

@@ -3,6 +3,8 @@ modules:
     header:
       main: Job search
       sub: Fill required fields to start searching for job offers
+    button:
+      manageSearchSetting: Manage search setting
   jobSearchResults:
     table:
       header: Name

@@ -46,7 +46,7 @@
                     <div class="col-sm-10">
                         {{ form_widget(jobOfferScrappingForm[KEY_URL_PATTERN], {
                             attr: {
-                                "ref"     : "urlPatternInput",
+                                "v-model" : "urlPatternInput",
                                 "@input"  : "checkIfFormIsValid()"
                             }
                         }) }}
@@ -59,7 +59,7 @@
                     <div class="col-sm-10">
                         {{ form_widget(jobOfferScrappingForm[KEY_PAGE_OFFSET_REPLACE_PATTERN], {
                             attr: {
-                                "ref"     : "pageOffsetReplacePatternInput",
+                                "v-model" : "pageOffsetReplacePatternInput",
                                 "@input"  : "checkIfFormIsValid()"
                             }
                         }) }}
@@ -72,7 +72,7 @@
                     <div class="col-sm-10">
                         {{ form_widget(jobOfferScrappingForm[KEY_PAGE_OFFSET_STEPS], {
                             attr: {
-                                "ref"     : "pageOffsetStepsInput",
+                                "v-model" : "pageOffsetStepsInput",
                                 "@input"  : "checkIfFormIsValid()"
                             }
                         }) }}
@@ -85,7 +85,7 @@
                     <div class="col-sm-10">
                         {{ form_widget(jobOfferScrappingForm[KEY_START_PAGE_OFFSET], {
                             attr: {
-                                "ref"     : "startPageOffsetInput",
+                                "v-model" : "startPageOffsetInput",
                                 "@input"  : "checkIfFormIsValid()"
                             }
                         }) }}
@@ -98,7 +98,7 @@
                     <div class="col-sm-10">
                         {{ form_widget(jobOfferScrappingForm[KEY_END_PAGE_OFFSET], {
                             attr: {
-                                "ref"     : "endPageOffsetInput",
+                                "v-model" : "endPageOffsetInput",
                                 "@input"  : "checkIfFormIsValid()"
                             }
                         }) }}
@@ -112,7 +112,7 @@
                     <div class="col-sm-10">
                         {{ form_widget(jobOfferScrappingForm[KEY_BODY_QUERY_SELECTOR], {
                             attr: {
-                                "ref"     : "bodyQuerySelectrInput",
+                                "v-model" : "bodyQuerySelectorInput",
                                 "@input"  : "checkIfFormIsValid()"
                             }
                         }) }}
@@ -125,7 +125,7 @@
                     <div class="col-sm-10">
                         {{ form_widget(jobOfferScrappingForm[KEY_HEADER_QUERY_SELECTOR], {
                             attr: {
-                                "ref"     : "headerQuerySelectorInput",
+                                "v-model" : "headerQuerySelectorInput",
                                 "@input"  : "checkIfFormIsValid()"
                             }
                         }) }}
@@ -138,7 +138,7 @@
                     <div class="col-sm-10">
                         {{ form_widget(jobOfferScrappingForm[KEY_LINK_QUERY_SELECTOR], {
                             attr: {
-                                "ref"     : "linkQuerySelectorInput",
+                                "v-model" : "linkQuerySelectorInput",
                                 "@input"  : "checkIfFormIsValid()"
                             }
                         }) }}
@@ -151,7 +151,7 @@
                     <div class="col-sm-10">
                         {{ form_widget(jobOfferScrappingForm[KEY_LINKS_SKIPPING_REGEX], {
                             attr: {
-                                "ref"     : "linksSkippingRegexInput",
+                                "v-model" : "linksSkippingRegexInput",
                                 "@input"  : "checkIfFormIsValid()"
                             }
                         }) }}
@@ -164,7 +164,7 @@
                     <div class="col-sm-10">
                         {{ form_widget(jobOfferScrappingForm[KEY_ACCEPTED_KEYWORDS], {
                             attr: {
-                                "ref"     : "acceptedKeywordsInput",
+                                "v-model" : "acceptedKeywordsInput",
                                 "@input"  : "checkIfFormIsValid()"
                             }
                         }) }}
@@ -177,7 +177,7 @@
                     <div class="col-sm-10">
                         {{ form_widget(jobOfferScrappingForm[KEY_REJECTED_KEYWORDS], {
                             attr: {
-                                "ref"     : "rejectedKeywordsInput",
+                                "v-model" : "rejectedKeywordsInput",
                                 "@input"  : "checkIfFormIsValid()"
                             }
                         }) }}
@@ -190,7 +190,7 @@
                         {{ form_widget(jobOfferScrappingForm[KEY_SUBMIT], {
                             attr: {
                                 "ref"             : "submitButton",
-                                ":class"          : "[[{disabled: !isFormValid}]]",
+                                ":class"          : "{disabled: !isFormValid}",
                                 "@click.prevent"  : "submitButtonClicked()"
                             }
                         }) }}
@@ -203,10 +203,22 @@
                         {{ form_widget(jobOfferScrappingForm[KEY_SAVE_SEARCH_SETTING], {
                             attr: {
                                 "ref"            : "saveSearchSettingsButton",
-                                ":class"         : "[[{disabled: !isFormValid}]]",
+                                ":class"         : "{disabled: !isFormValid}",
                                 "@click.prevent" : "saveButtonClicked()"
                             }
                         }) }}
+                    </div>
+                </div>
+
+                {# Manage search settings #}
+                <div class="form-group row">
+                    <div class="col-12">
+                        <button type="button"
+                                class="btn-primary btn btn"
+                                ref="manageSearchSettingsButton"
+                                @click.prevent="manageButtonClicked()">
+                            {{ 'modules.jobSearch.button.manageSearchSetting' | trans }}
+                        </button>
                     </div>
                 </div>
 
@@ -217,8 +229,7 @@
         </div>
 
         {# Used to handle the child/parent communication withing vue components #}
-        <sweet-alert @saveJobSearchSettings="saveJobSearchSettingsDialogConfirmed()"
-                     confirm-button-string="{{ 'dialogs.saveSearchSettings.header' | trans }}"
+        <sweet-alert confirm-button-string="{{ 'dialogs.saveSearchSettings.header' | trans }}"
                      cancel-button-string="{{ 'dialogs.saveSearchSettings.buttons.cancel' | trans }}"
                      header-string="{{ 'dialogs.saveSearchSettings.header' | trans }}"
                      @confirm-button-clicked="saveJobSearchSettingsDialogConfirmed()"
@@ -228,9 +239,28 @@
             <template #body-content>
                 {% include 'dialogs/save-search-settings.twig' %}
             </template>
+        </sweet-alert>
 
+        {# todo: change called methods names #}
+        {#
+            Todo: must be reworked, it cannot act like this,
+                  it seems like in twig it can be only one createApp().mount() per section,
+                  this section must then contain REAL components in order to make the reusable + allow them to communicate with parents
+                   every other twig based `mount()` component IS NOT allowed in that section then, must be handled by the main mount in section.
+        #}
+        <sweet-alert cancel-button-string="{{ 'dialogs.manageSearchSettings.buttons.close' | trans }}"
+                     header-string="{{ 'dialogs.manageSearchSettings.header' | trans }}"
+                     id="manageSearchSettingsDialog"
+                     ref="manageSearchSettingsDialog"
+        >
+            <template #body-content>
+                {% include 'dialogs/manage-search-settings.twig' with {
+                    searchSettings: searchSettings
+                } %}
+            </template>
         </sweet-alert>
     </div>
+
 {% endblock %}
 
 {% block scriptsAfterMainContainerWrapper %}

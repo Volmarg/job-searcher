@@ -1,0 +1,35 @@
+{% set constantsControllerClass   = "App\\Controller\\Core\\ConstantsController::" %}
+{% set ENTITY_NAME_SEARCH_SETTING = constant(constantsControllerClass ~ 'ENTITY_NAME_SEARCH_SETTING') %}
+
+<div
+        id="manageSearchSettingsDialogWrapper"
+        style="padding:5px;"
+>
+    <table data-is-datatable="true" class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th style="max-width: 12px;">{{ 'dialogs.manageSearchSettings.table.header.remove' | trans }}</th>
+                <th style="max-width: 12px;">{{ 'dialogs.manageSearchSettings.table.header.load' | trans }}</th>
+                <th>{{ "dialogs.searchSettings.table.name" | trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {# Rendered in backend #}
+            {% for searchSetting in searchSettings %}
+                <tr v-is="'table-row'"
+                    setting-id="{{ searchSetting.getId() }}"
+                    :remove-callback="removeSettingInManageDialogClicked"
+                    :load-callback="loadSettingInManageDialogClicked"
+                    setting-name="{{ searchSetting.getName() }}"
+                ></tr>
+            {% endfor %}
+
+            {# Rendered dynamically on frontend #}
+            {# todo: now this causes issue where rows above are removed via dom manipulation and these here would need vue array manipulation ... #}
+        <tr v-is="'table-row'"
+            v-for="row in rows"
+        ></tr>
+        </tbody>
+    </table>
+
+</div>

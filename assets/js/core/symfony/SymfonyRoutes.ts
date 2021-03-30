@@ -16,6 +16,12 @@ export default class SymfonyRoutes {
     static readonly ROUTE_GET_DIALOG_TEMPLATE : string            = "/dialog-template/load/{templateType}";
     static readonly ROUTE_GET_DIALOG_TEMPLATE_PARAM_TEMPLATE_TYPE = "{templateType}"
 
+    static readonly REMOVE_SEARCH_SETTING          : string = "/search-settings/ajax/remove/{id}";
+    static readonly REMOVE_SEARCH_SETTING_ID_PARAM : string = "{id}";
+
+    static readonly LOAD_SEARCH_SETTING          : string = "/search-settings/ajax/load/{id}";
+    static readonly LOAD_SEARCH_SETTING_ID_PARAM : string = "{id}";
+
     /**
      * @description will build the final/target route by replacing the parameters in symfony route
      */

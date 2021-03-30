@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+// todo: cleanup no longer used dialogs
 class DialogAction extends AbstractController {
 
     const DIALOG_TEMPLATE_SEARCH_SETTINGS             = "dialogs/search-settings.twig";

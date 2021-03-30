@@ -17,7 +17,7 @@
       </div>
       <div class="swal2-actions">
         <div class="swal2-loader"></div>
-        <button type="button" class="btn btn-success" @click.prevent="$emit('confirmButtonClicked')">
+        <button type="button" class="btn btn-success" @click.prevent="$emit('confirmButtonClicked')" v-if="confirmButtonString">
           {{ confirmButtonString }}
         </button>
         <button type="button" class="btn btn-danger ml-3" @click="closeDialog()">
@@ -30,8 +30,7 @@
 
 <!-- Script !-->
 <script type="ts">
-import PreconfiguredVue from "../../../PreconfiguredVue";
-import SweetAlert       from "../../../../js/libs/sweetalert/SweetAlert";
+import SweetAlert from "../../../../js/libs/sweetalert/SweetAlert";
 
 export default {
   emits: [
@@ -40,7 +39,7 @@ export default {
   props: {
     confirmButtonString: {
       type     : String,
-      required : true
+      required : false
     },
     cancelButtonString: {
       type     : String,

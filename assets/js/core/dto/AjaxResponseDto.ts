@@ -7,6 +7,8 @@ import AbstractDto from "./AbstractDto";
  */
 export default class AjaxResponseDto extends AbstractDto {
 
+    static readonly KEY_DATA_BAG_SETTING = "setting";
+
     /**
      * @type int
      */

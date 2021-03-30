@@ -30,6 +30,5 @@ export default class AjaxContentLoad
             scriptToAppend.setAttribute('src', source);
             mainWrapper.appendChild(scriptToAppend);
         }
-
     }
 }

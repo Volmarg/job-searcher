@@ -82,7 +82,8 @@ class JobSearchAction extends AbstractController
 
         try{
             $jobOfferScrappingForm = $this->app->getForms()->getJobSearchScrappingForm();
-            $searchSettings        = $this->app->getRepositories()->searchSettingsRepository()->findAll();
+            $searchSettings        = $this->app->getRepositories()->searchSettingsRepository()->getAllSearchSettings();
+
 
             $templateData = [
                 "jobOfferScrappingForm" => $jobOfferScrappingForm->createView(),
@@ -90,10 +91,10 @@ class JobSearchAction extends AbstractController
                 "isAjax"                => $isAjax,
             ];
 
-            $scriptSources = $this->encoreService->getJsChunkFileLocationForChunkName(EncoreService::CHUNK_PAGE_JOB_SEARCH);
+            $scriptSources[] = $this->encoreService->getJsChunkFileLocationForChunkName(EncoreService::CHUNK_PAGE_JOB_SEARCH);
 
             if( !$request->isXmlHttpRequest() ){
-                $templateData['scriptsSources'] = [$scriptSources];
+                $templateData['scriptsSources'] = $scriptSources;
             }
 
             $renderedView = $this->render(self::TEMPLATE_JOB_SEARCH, $templateData);
@@ -103,7 +104,7 @@ class JobSearchAction extends AbstractController
                 $ajaxResponse->setCode(Response::HTTP_OK);
                 $ajaxResponse->setSuccess(true);
                 $ajaxResponse->setTemplate($viewContent);
-                $ajaxResponse->setScriptSources([$scriptSources]);
+                $ajaxResponse->setScriptSources($scriptSources);
                 return $ajaxResponse->buildJsonResponse();
             }
 

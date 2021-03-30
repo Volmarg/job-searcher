@@ -254,4 +254,29 @@ class JobSearchSetting
 
         return $this;
     }
+
+    /**
+     * Returns entity data in form of json
+     *
+     * @return string
+     */
+    public function toJson(): string
+    {
+        $dataArray = [
+            self::KEY_URL_PATTERN                 => $this->getUrlPattern(),
+            self::KEY_START_PAGE_OFFSET           => $this->getStartPageOffset(),
+            self::KEY_END_PAGE_OFFSET             => $this->getEndPageOffset(),
+            self::KEY_PAGE_OFFSET_STEPS           => $this->getPageOffsetSteps(),
+            self::KEY_PAGE_OFFSET_REPLACE_PATTERN => $this->getPageOffsetReplacePattern(),
+            self::KEY_BODY_QUERY_SELECTOR         => $this->getBodyQuerySelector(),
+            self::KEY_HEADER_QUERY_SELECTOR       => $this->getHeaderQuerySelector(),
+            self::KEY_LINK_QUERY_SELECTOR         => $this->getLinkQuerySelector(),
+            self::KEY_LINKS_SKIPPING_REGEX        => $this->getLinksSkippingRegex(),
+            self::KEY_ACCEPTED_KEYWORDS           => $this->getAcceptedKeywords(),
+            self::KEY_REJECTED_KEYWORDS           => $this->getRejectedKeywords(),
+        ];
+
+        return json_encode($dataArray);
+    }
+
 }
